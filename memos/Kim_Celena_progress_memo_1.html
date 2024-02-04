@@ -2655,19 +2655,18 @@ Github Repo Link
 </div>
 <section id="data-source-why-this-data" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="data-source-why-this-data">Data source &amp; Why this Data</h2>
-<p>The data that I chose for my project, <code>allies_data</code> was made from gathering data on the psychological analysis of comments under the Jubilee video titled <a href="https://www.youtube.com/watch?v=pXo2ub_nZFc">Are We Allies? Black Americans vs Asian Americans | Middle Ground</a> found on <a href="https://www.youtube.com">YouTube</a>. This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psych with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video through this project.</p>
+<p>The data that I chose for my project was derived from gathering data on the psychological analysis of comments under the Jubilee video titled <a href="https://www.youtube.com/watch?v=pXo2ub_nZFc">Are We Allies? Black Americans vs Asian Americans | Middle Ground</a> found on <a href="https://www.youtube.com">YouTube</a>. This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psych with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video through this project.</p>
 <div class="page-columns page-full"><p>Using Python code, I first extracted each comment and its details such as like count and number of replies and put them into a spreadsheet. Then, utilizing the software LIWC<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, a text analysis program that can categorize text by the overall emotion they convey, each comment was analyzed and given a score of how much they communicate each of 49 various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc.</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup> an explanation of how this software works can be found <a href="https://www.liwc.app/help/howitworks">here</a></p></li></div></div>
 </section>
 <section id="data-quality-complexity-check" class="level2">
 <h2 class="anchored" data-anchor-id="data-quality-complexity-check">Data quality &amp; complexity check</h2>
-<p>You should demonstrate that you can read in your dataset(s) — since we need proof of this, showing code is permitted or show code for the next steps. Quality check means providing answers to the following: How many variables and observations do you have? How many categorical vs numerical variables? Are there any missingness issues?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>allies_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;/Users/celenakim/Desktop/</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="st">                        stat 301-2/final-project-2-celenakim/</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">                        data/raw/allies_video_data.csv&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The raw <code>allies_data</code> data set contains 15,398 observations and 66 variables. Of these variables, there are 7 categorical and 59 numerical. There only seems to be missingness in the “P” variable, which corresponds to the ID of the parent comment. This does not seem to pose a significant issue, as this variable is not going to be important for my analysis.</p>
+<p>The data set that I created from the steps highlighted in the previous section is called <code>allies_data</code>. The raw data set contains 15,398 observations and 66 variables. Of these variables, there are 7 categorical and 59 numerical. There only seems to be missingness in the “P” variable, which corresponds to the ID of the parent comment. This does not seem to pose a significant issue, as this variable is not going to be important for my analysis.</p>
 </section>
 <section id="potential-data-issues" class="level2">
 <h2 class="anchored" data-anchor-id="potential-data-issues">Potential data issues</h2>
@@ -2675,16 +2674,24 @@ Github Repo Link
 </section>
 <section id="prediction-problem" class="level2">
 <h2 class="anchored" data-anchor-id="prediction-problem">Prediction Problem</h2>
-<p>Describe your prediction research question/objective and identify the type of prediction problem it is. This includes identifying a variable and clearly stating if it is a classification or regression problem. Provide a motivation for pursuing this particular problem: Why would having a prediction model be useful for this problem? Why is it interesting to you? Is this part of a larger research project? Just thought it would be fun? etc.</p>
+<p>My predictive research question is: What categories of emotion communicated through a comment lead to the most likes on that comment?</p>
+<p>This is a regression problem as I would like to predict a numerical outcome- the number of likes on a comment- and the target variable is the like count of a comment (variable “H” which will later be renamed to “like_count”). The predictors will be the emotional categories from LIWC. I also plan to create a categorical variable called “comment_length” that categories a comment based on a length of “one word”, “short” (1-3 sentences), or “long” (4+ sentences).</p>
+<p>This prediction model would be useful in determining what types of comments under a YouTube video are more likely to garner more attention/popularity. I think it would be very interesting to see overall the psychological implications of a comment’s emotional makeup and its engagement.</p>
 </section>
 <section id="target-variable-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="target-variable-analysis">Target variable analysis</h2>
-<p>A univariate analysis of the target variable. Identify and discuss potential issues (symmetry/unbalanced/skewness &amp; missingness) and discuss potential solutions such as transformations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># allies_data |&gt; </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   ggplot(aes(x = H)) +</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram() +</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   xlim(0, 9000) +</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   ylim(0, 100)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A univariate analysis of the target variable of comment like count (<code>H</code>) reveals that the distribution is skewed right. This means that a transformation may be necessary through means of log or square root transformation. There does not appear to be any missing values.</p>
 </section>
 <section id="misc" class="level2">
 <h2 class="anchored" data-anchor-id="misc">Misc</h2>
 <p>Students are encouraged to add any other information that they think would be useful to communicate about their data and their plan. Articulating a time line would be a good idea since fitting/training the models may take more time than expected (leave adequate time to train models and then analyze).</p>
-<p>Blah Blah</p>
 </section>
 
 

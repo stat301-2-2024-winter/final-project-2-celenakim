@@ -20,22 +20,22 @@ reference-location: margin
 citation-location: margin
 ---
 
-::: {.callout-tip icon=false}
-
+::: {.callout-tip icon="false"}
 ## Github Repo Link
 
 [Celena Kim Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-celenakim)
-
 :::
 
 ## Data source & Why this Data
-The data that I chose for my project, `allies_data` was made from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans | Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psych with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video through this project.
 
-Using Python code, I first extracted each comment and its details such as like count and number of replies and put them into a spreadsheet. Then, utilizing the software LIWC^[an explanation of how this software works can be found [here](https://www.liwc.app/help/howitworks)], a text analysis program that can categorize text by the overall emotion they convey, each comment was analyzed and given a score of how much they communicate each of 49 various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc. 
+The data that I chose for my project was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans \| Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psych with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video through this project.
+
+Using Python code, I first extracted each comment and its details such as like count and number of replies and put them into a spreadsheet. Then, utilizing the software LIWC[^1], a text analysis program that can categorize text by the overall emotion they convey, each comment was analyzed and given a score of how much they communicate each of 49 various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc.
+
+[^1]: an explanation of how this software works can be found [here](https://www.liwc.app/help/howitworks)
 
 ## Data quality & complexity check
 
-You should demonstrate that you can read in your dataset(s) --- since we need proof of this, showing code is permitted or show code for the next steps. Quality check means providing answers to the following: How many variables and observations do you have? How many categorical vs numerical variables? Are there any missingness issues?
 ```{r}
 library(tidyverse)
 allies_data <- read_csv("/Users/celenakim/Desktop/
@@ -43,25 +43,31 @@ allies_data <- read_csv("/Users/celenakim/Desktop/
                         data/raw/allies_video_data.csv")
 ```
 
-The raw `allies_data` data set contains 15,398 observations and 66 variables. Of these variables, there are 7 categorical and 59 numerical. There only seems to be missingness in the "P" variable, which corresponds to the ID of the parent comment. This does not seem to pose a significant issue, as this variable is not going to be important for my analysis.
-
+The data set that I created from the steps highlighted in the previous section is called `allies_data`. The raw data set contains 15,398 observations and 66 variables. Of these variables, there are 7 categorical and 59 numerical. There only seems to be missingness in the "P" variable, which corresponds to the ID of the parent comment. This does not seem to pose a significant issue, as this variable is not going to be important for my analysis.
 
 ## Potential data issues
+
 The biggest issue I see with my data is that the variable names regarding the basic details of the comments ("replies", "like_count", etc.) did not get copied over from the first spreadsheet and were thus replaced with letters A-P, so I will have to go back in and add those variable names once I clean this data set. Additionally, I may have to rename some of the emotion categories, as they may not be clear based on how they are named by LIWC.
 
-
 ## Prediction Problem
+My predictive research question is: What categories of emotion communicated through a comment lead to the most likes on that comment?
 
-Describe your prediction research question/objective and identify the type of prediction problem it is. This includes identifying a variable and clearly stating if it is a classification or regression problem. Provide a motivation for pursuing this particular problem: Why would having a prediction model be useful for this problem? Why is it interesting to you? Is this part of a larger research project? Just thought it would be fun? etc.
+This is a regression problem as I would like to predict a numerical outcome- the number of likes on a comment- and the target variable is the like count of a comment (variable "H" which will later be renamed to "like_count"). The predictors will be the emotional categories from LIWC. I also plan to create a categorical variable called "comment_length" that categories a comment based on a length of "one word", "short" (1-3 sentences), or "long" (4+ sentences).
 
-
-
+This prediction model would be useful in determining what types of comments under a YouTube video are more likely to garner more attention/popularity. I think it would be very interesting to see overall the psychological implications of a comment's emotional makeup and its engagement.
 
 ## Target variable analysis
-A univariate analysis of the target variable. Identify and discuss potential issues (symmetry/unbalanced/skewness & missingness) and discuss potential solutions such as transformations. 
 
+```{r}
+# allies_data |> 
+#   ggplot(aes(x = H)) +
+#   geom_histogram() +
+#   xlim(0, 9000) +
+#   ylim(0, 100)
+``` 
+A univariate analysis of the target variable of comment like count (`H`) reveals that the distribution is skewed right. This means that a transformation may be necessary through means of log or square root transformation. There does not appear to be any missing values.
 
 ## Misc
-Students are encouraged to add any other information that they think would be useful to communicate about their data and their plan. Articulating a time line would be a good idea since fitting/training the models may take more time than expected (leave adequate time to train models and then analyze). 
 
-Blah Blah
+Students are encouraged to add any other information that they think would be useful to communicate about their data and their plan. Articulating a time line would be a good idea since fitting/training the models may take more time than expected (leave adequate time to train models and then analyze).
+
