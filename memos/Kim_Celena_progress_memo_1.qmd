@@ -3,7 +3,7 @@ title: "Progress Memo 1"
 subtitle: |
   | Final Project 
   | Data Science 2 with R (STAT 301-2)
-author: "YOUR NAME"
+author: "Celena Kim"
 date: today
 
 format:
@@ -12,7 +12,7 @@ format:
     embed-resources: true
     
 execute:
-  echo: false
+  echo: true
   warning: false
 
 from: markdown+emoji 
@@ -20,47 +20,48 @@ reference-location: margin
 citation-location: margin
 ---
 
-::: {.callout-important}
-## Memo format
-
-Like all other submissions for this course, we expect the memo to be neat and well organized. This a template to get you started. 
-
-You should make this document your own. To help with this we have added a date to the yaml above (good whenever writing memos). You should remove this block when making this document your own.
-
-:::
-
 ::: {.callout-tip icon=false}
 
 ## Github Repo Link
 
-To link to your github **repo**sitory, appropriately edit the example link below. Meaning replace `https://your-github-repo-url` with your github repo url. Suggest verifying the link works before submitting.
-
-[https://your-github-repo-url](https://your-github-repo-url)
+[Celena Kim Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-celenakim)
 
 :::
 
-::: {.callout-warning}
-GitHub (free account) cannot store large files. If you try to commit and push a large dataset you will have an ERROR! Any file over 100 MB (100,000 KB) needs to be added to the `.gitignore` file BEFORE committing.
+## Data source & Why this Data
+The data that I chose for my project, `allies_data` was made from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans | Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psych with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video through this project.
 
-**We may need to do that for files in your final project!**
-:::
-
-## Data source
-
-Blah blah blah^[an example of footnote --- [content in margins](https://quarto.org/docs/blog/posts/2022-02-17-advanced-layout/)]
-
-## Why this data
-
-Blah blah blah^[another footnote]
+Using Python code, I first extracted each comment and its details such as like count and number of replies and put them into a spreadsheet. Then, utilizing the software LIWC^[an explanation of how this software works can be found [here](https://www.liwc.app/help/howitworks)], a text analysis program that can categorize text by the overall emotion they convey, each comment was analyzed and given a score of how much they communicate each of 49 various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc. 
 
 ## Data quality & complexity check
 
-Blah blah blah
+You should demonstrate that you can read in your dataset(s) --- since we need proof of this, showing code is permitted or show code for the next steps. Quality check means providing answers to the following: How many variables and observations do you have? How many categorical vs numerical variables? Are there any missingness issues?
+```{r}
+library(tidyverse)
+allies_data <- read_csv("/Users/celenakim/Desktop/
+                        stat 301-2/final-project-2-celenakim/
+                        data/raw/allies_video_data.csv")
+```
+
+The raw `allies_data` data set contains 15,398 observations and 66 variables. Of these variables, there are 7 categorical and 59 numerical. There only seems to be missingness in the "P" variable, which corresponds to the ID of the parent comment. This does not seem to pose a significant issue, as this variable is not going to be important for my analysis.
+
 
 ## Potential data issues
+The biggest issue I see with my data is that the variable names regarding the basic details of the comments ("replies", "like_count", etc.) did not get copied over from the first spreadsheet and were thus replaced with letters A-P, so I will have to go back in and add those variable names once I clean this data set. Additionally, I may have to rename some of the emotion categories, as they may not be clear based on how they are named by LIWC.
 
-Blah blah blah
+
+## Prediction Problem
+
+Describe your prediction research question/objective and identify the type of prediction problem it is. This includes identifying a variable and clearly stating if it is a classification or regression problem. Provide a motivation for pursuing this particular problem: Why would having a prediction model be useful for this problem? Why is it interesting to you? Is this part of a larger research project? Just thought it would be fun? etc.
+
+
+
+
+## Target variable analysis
+A univariate analysis of the target variable. Identify and discuss potential issues (symmetry/unbalanced/skewness & missingness) and discuss potential solutions such as transformations. 
+
 
 ## Misc
+Students are encouraged to add any other information that they think would be useful to communicate about their data and their plan. Articulating a time line would be a good idea since fitting/training the models may take more time than expected (leave adequate time to train models and then analyze). 
 
 Blah Blah
