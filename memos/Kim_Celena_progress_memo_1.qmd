@@ -50,7 +50,7 @@ The biggest issue I see with my data is that the variable names regarding the ba
 ## Prediction Problem
 My predictive research question is: What factors lead to a comment receiving more likes on the Jubilee video, "Are We Allies? Black Americans vs Asian Americans | Middle Ground"?
 
-This is a regression problem as I would like to predict a numerical outcome- the number of likes on a comment- and the target variable is the like count of a comment (variable "H" which will later be renamed to "like_count"). The predictors will be the emotional categories from LIWC. I also plan to create a categorical variable called "comment_length" that categories a comment based on a length of "one word", "short" (1-3 sentences), or "long" (4+ sentences) to be used as a predictor.
+This is a regression problem as I would like to predict a numerical outcome- the number of likes on a comment- and the target variable is the like count of a comment (variable `H` which will later be renamed to `like_count`). The predictors will be the emotional categories from LIWC. I also plan to create a categorical variable called "comment_length" that categories a comment based on a length of "one word", "short" (1-3 sentences), or "long" (4+ sentences) to be used as a predictor.
 
 This prediction model would be useful in determining what types of comments under the video are more likely to garner more attention/popularity. I think it would be very interesting to see overall the psychological implications of a comment's emotional makeup and its engagement, especially regarding a video that is so touching.
 
@@ -65,7 +65,7 @@ allies_data |>
 
 skimr::skim(allies_data$H)
 ``` 
-A univariate analysis of the target variable of comment like count (`H`) reveals that the distribution is skewed right. This means that a transformation may be necessary through means of log or square root transformation. A skim of the H variable shows that there does not appear to be any missing values.
+The target variable, `H` (which will later be renamed to `like_count`) is a numerical type variable. A univariate analysis reveals that the distribution is skewed right, showing that a majority of comments usually get a lower number of likes. This means that a transformation may be necessary through means of log or square root transformation. A skim of the H variable shows that there does not appear to be any missing values.
 
 ## Misc
 
