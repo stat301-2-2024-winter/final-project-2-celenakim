@@ -1,0 +1,41 @@
+---
+title: "Progress Memo 2"
+subtitle: |
+  | Final Project 
+  | Data Science 2 with R (STAT 301-2)
+author: "Celena Kim"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: true
+  warning: false
+
+from: markdown+emoji 
+reference-location: margin
+citation-location: margin
+---
+
+::: {.callout-tip icon="false"}
+## Github Repo Link
+
+[Celena Kim Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-celenakim)
+:::
+
+```{r}
+library(tidyverse)
+allies_data <- read_csv(here::here("data/raw/allies_video_data.csv"))
+```
+
+## Data Cleaning
+
+1. rename columns A-P to correct variable names
+  # 2. get rid of irrelevant variables/variables with missingness:
+    # 3. mutate the "comment_length" categorical variable
+  4. moving variables around to be in an order that makes more sense.
+    5. rename LIWC variable names to make more sense
+    6. create codebook

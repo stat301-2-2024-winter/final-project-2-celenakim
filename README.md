@@ -1,4 +1,7 @@
-## Basic repo setup for final project
+## Psychological Analysis of Comments Under Jubilee Video "Are We Allies? Black Americans vs Asian Americans"
 
-Describe project and general structure of repo ...
+This repository contains an analysis of ..... The purpose of the analysis is to investigate what ......
+
+
+### What is in the Repo
 
