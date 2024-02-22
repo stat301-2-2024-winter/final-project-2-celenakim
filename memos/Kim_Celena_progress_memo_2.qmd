@@ -27,15 +27,14 @@ citation-location: margin
 :::
 
 ```{r}
+#| echo: false
+
 library(tidyverse)
 allies_data <- read_csv(here::here("data/raw/allies_video_data.csv"))
 ```
 
 ## Data Cleaning
 
-1. rename columns A-P to correct variable names
-  # 2. get rid of irrelevant variables/variables with missingness:
-    # 3. mutate the "comment_length" categorical variable
-  4. moving variables around to be in an order that makes more sense.
-    5. rename LIWC variable names to make more sense
-    6. create codebook
+The data that I chose for my project, `allies`, was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans | Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). After a quick skim of my data set in progress memo 1, I realized that some cleaning needed to be carried out: renaming columns A-P to the correct variable names as they did not get copied over from the original spreadsheet when creating the data set, renaming the LIWC variable names such as "Sixltr" and "posemo" to make more sense to the audience, deleting variables irrelevant to my analysis/variables with missingness, mutating a categorical predictor variable called "comment_length" which categorizes a comment as short, medium, or long, and arranging variable order to be more organized. After these changes were made, my data was then ready for analyses to be performed.
+
+
