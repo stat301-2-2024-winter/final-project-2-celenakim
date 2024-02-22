@@ -39,6 +39,9 @@ The data that I chose for my project, `allies`, was derived from gathering data 
 
 
 ## Assessment Metric
+My predictive research question is: What psychological factors lead to a comment receiving more likes on the Jubilee video, "Are We Allies? Black Americans vs Asian Americans | Middle Ground"?
+
+This is a regression problem as I would like to predict a numerical outcome: `likes`, the like count of a comment. The predictors will be the emotional categories from LIWC, which are all numerical. I also created a categorical variable called "comment_length" that categories a comment based on its length being short, medium, or long.
 
 
 
