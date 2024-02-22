@@ -2537,6 +2537,11 @@ vertical-align: -.125em;
    
   <ul>
   <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link active" data-scroll-target="#data-cleaning">Data Cleaning</a></li>
+  <li><a href="#assessment-metric" id="toc-assessment-metric" class="nav-link" data-scroll-target="#assessment-metric">Assessment Metric</a></li>
+  <li><a href="#analysis-plan" id="toc-analysis-plan" class="nav-link" data-scroll-target="#analysis-plan">Analysis Plan</a></li>
+  <li><a href="#two-model-types" id="toc-two-model-types" class="nav-link" data-scroll-target="#two-model-types">Two Model Types</a></li>
+  <li><a href="#fit-success" id="toc-fit-success" class="nav-link" data-scroll-target="#fit-success">Fit Success</a></li>
+  <li><a href="#summarize-progress-next-steps" id="toc-summarize-progress-next-steps" class="nav-link" data-scroll-target="#summarize-progress-next-steps">Summarize Progress &amp; Next Steps</a></li>
   </ul>
 </nav>
 </div>
@@ -2585,11 +2590,31 @@ Github Repo Link
 <p><a href="https://github.com/stat301-2-2024-winter/final-project-2-celenakim">Celena Kim Repo Link</a></p>
 </div>
 </div>
+<div class="cell">
+
+</div>
 <section id="data-cleaning" class="level2">
 <h2 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h2>
-<ul>
-<li></li>
-</ul>
+<p>The data that I chose for my project, <code>allies</code>, was derived from gathering data on the psychological analysis of comments under the Jubilee video titled <a href="https://www.youtube.com/watch?v=pXo2ub_nZFc">Are We Allies? Black Americans vs Asian Americans | Middle Ground</a> found on <a href="https://www.youtube.com">YouTube</a>. After a quick skim of my data set in progress memo 1, I realized that some cleaning needed to be carried out: renaming columns A-P to the correct variable names as they did not get copied over from the original spreadsheet when creating the data set, renaming the LIWC variable names such as “Sixltr” and “posemo” to make more sense to the audience, deleting variables irrelevant to my analysis/variables with missingness, mutating a categorical predictor variable called “comment_length” which categorizes a comment as short, medium, or long, and arranging variable order to be more organized. After these changes were made, my data was then ready for analyses to be performed.</p>
+</section>
+<section id="assessment-metric" class="level2">
+<h2 class="anchored" data-anchor-id="assessment-metric">Assessment Metric</h2>
+</section>
+<section id="analysis-plan" class="level2">
+<h2 class="anchored" data-anchor-id="analysis-plan">Analysis Plan</h2>
+<p>data splitting, resampling (cross-validation, bootstrap, etc), which model types, how many recipes etc. Note that students should have this mapped out in their GitHub repo. That is, there should be place holder R scripts created. You don’t have to have everything coded, but the overall structure should be evident.</p>
+</section>
+<section id="two-model-types" class="level2">
+<h2 class="anchored" data-anchor-id="two-model-types">Two Model Types</h2>
+<p>have two model types defined and fitted to the resamples: null/baseline model and one other model type (likely standard linear or logistic model): The recipe can be very basic since we just want to see if you can get things running</p>
+</section>
+<section id="fit-success" class="level2">
+<h2 class="anchored" data-anchor-id="fit-success">Fit Success</h2>
+<p>demonstrate their fits are successful by displaying a table that contains each model’s assessment metric value.</p>
+</section>
+<section id="summarize-progress-next-steps" class="level2">
+<h2 class="anchored" data-anchor-id="summarize-progress-next-steps">Summarize Progress &amp; Next Steps</h2>
+<p>summarize their progress, where they are at, and what their next steps will be. Identifying and potential issues or concerns would be a good idea too.</p>
 </section>
 
 </main>

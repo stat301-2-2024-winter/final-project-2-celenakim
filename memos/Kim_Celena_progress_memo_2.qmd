@@ -38,3 +38,23 @@ allies_data <- read_csv(here::here("data/raw/allies_video_data.csv"))
 The data that I chose for my project, `allies`, was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans | Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). After a quick skim of my data set in progress memo 1, I realized that some cleaning needed to be carried out: renaming columns A-P to the correct variable names as they did not get copied over from the original spreadsheet when creating the data set, renaming the LIWC variable names such as "Sixltr" and "posemo" to make more sense to the audience, deleting variables irrelevant to my analysis/variables with missingness, mutating a categorical predictor variable called "comment_length" which categorizes a comment as short, medium, or long, and arranging variable order to be more organized. After these changes were made, my data was then ready for analyses to be performed.
 
 
+## Assessment Metric
+
+
+
+## Analysis Plan
+data splitting, resampling (cross-validation, bootstrap, etc), which model types, how many recipes etc. Note that students should have this mapped out in their GitHub repo. That is, there should be place holder R scripts created. You don't have to have everything coded, but the overall structure should be evident.   
+
+
+## Two Model Types
+have two model types defined and fitted to the resamples: null/baseline model and one other model type (likely standard linear or logistic model):
+The recipe can be very basic since we just want to see if you can get things running
+
+
+
+## Fit Success
+demonstrate their fits are successful by displaying a table that contains each model's assessment metric value.
+
+
+## Summarize Progress & Next Steps
+summarize their progress, where they are at, and what their next steps will be. Identifying and potential issues or concerns would be a good idea too.
