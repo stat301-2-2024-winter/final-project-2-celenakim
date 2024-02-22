@@ -5,7 +5,6 @@
 library(tidyverse)
 library(dplyr)
 library(here)
-library(stringi)
 
 # Github link ----
 # https://github.com/stat301-2-2024-winter/final-project-2-celenakim
@@ -16,7 +15,8 @@ allies_data <- read_csv(here::here("data/raw/allies_video_data.csv"))
 
 
 allies <- allies_data |> 
-  # 1. rename columns A-P to correct variable names
+  # 1. rename columns A-P to correct variable names, 
+  #    rename LIWC variable names to make more sense
   rename(
     comment_id = A,
     video_id = B,
@@ -33,8 +33,17 @@ allies <- allies_data |>
     comment_count = M,
     video_published_at = N,
     comment_type = O,
-    parent_comment_id = P
-  ) |> 
+    parent_comment_id = P,
+    word_count = WC,
+    words_per_sentence = WPS,
+    six_ltrs = Sixltr,
+    pos_emo = posemo,
+    neg_emo = negemo,
+    cog_proc = cogproc,
+    focus_past = focuspast,
+    focus_present = focuspresent,
+    focus_future = focusfuture) |> 
+  janitor::clean_names() |> 
   # 2. get rid of irrelevant variables/variables with missingness:
   select(-video_id,
          -video_title,
@@ -53,13 +62,12 @@ allies <- allies_data |>
   # 4. mutate the "comment_length" categorical variable
   mutate(
     comment_length = case_when(
-      str_count(comment, " ") + 1 <= 15 ~ "Short",
-      str_count(comment, " ") + 1 <= 25 ~ "Medium",
-      TRUE ~ "Long")) |> 
+      word_count <= 15 ~ "Short",
+      word_count <= 25 ~ "Medium",
+      TRUE ~ "Long"),
+    comment_length = as.factor(comment_length)) |> 
   # 5. move comment_length to be behind comment
   relocate(comment_length, 
-           .after = comment) |> 
-  # 6. rename LIWC variable names to make more sense
-  
+           .after = word_count) 
 
 write_csv(allies, "data/allies.csv")
