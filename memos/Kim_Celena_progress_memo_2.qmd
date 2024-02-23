@@ -30,7 +30,7 @@ citation-location: margin
 #| echo: false
 
 library(tidyverse)
-allies_data <- read_csv(here::here("data/raw/allies_video_data.csv"))
+allies <- read_csv(here::here("data/allies.csv"))
 ```
 
 ## Data Cleaning
@@ -51,6 +51,7 @@ data splitting, resampling (cross-validation, bootstrap, etc), which model types
 ## Two Model Types
 have two model types defined and fitted to the resamples: null/baseline model and one other model type (likely standard linear or logistic model):
 The recipe can be very basic since we just want to see if you can get things running
+
 
 
 
