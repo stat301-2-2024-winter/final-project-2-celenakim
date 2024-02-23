@@ -47,10 +47,11 @@ ggplot(allies, aes(x = comment_length)) +
        title = "Distribution of Comment Length")
 
 
+
+# LOG TRANSFORM--- MAYBE
 plot_numeric_distribution <- function(data) {
   numeric_vars <- select(data, where(is.numeric))
   
-  # Log-transform all numerical variables
   numeric_vars <- log1p(numeric_vars)
   
   for (var in colnames(numeric_vars)) {
@@ -61,9 +62,61 @@ plot_numeric_distribution <- function(data) {
   }
 }
 
-# Call the function with your dataset
 plot_numeric_distribution(allies)
 
 
+# SQUARE ROOT TRANSFORM-- MAYBE
+plot_numeric_distribution <- function(data) {
+  numeric_vars <- select(data, where(is.numeric))
+  
+  numeric_vars <- sqrt(numeric_vars)
+  
+  for (var in colnames(numeric_vars)) {
+    ggplot(data.frame(x = numeric_vars[[var]]), aes(x = x)) +
+      geom_density() +
+      labs(title = paste("Distribution of", var))
+    print(last_plot())
+  }
+}
+
+plot_numeric_distribution(allies)
 
 
+# SQUARE TRANSFORM--- NO 
+plot_numeric_distribution <- function(data) {
+  numeric_vars <- select(data, where(is.numeric))
+  
+  numeric_vars <- (numeric_vars)^2
+  
+  for (var in colnames(numeric_vars)) {
+    ggplot(data.frame(x = numeric_vars[[var]]), aes(x = x)) +
+      geom_density() +
+      labs(title = paste("Distribution of", var))
+    print(last_plot())
+  }
+}
+
+plot_numeric_distribution(allies)
+
+
+# SPLINES
+
+
+
+
+
+# CUBIC ROOT TRANSFORM
+plot_numeric_distribution <- function(data) {
+  numeric_vars <- select(data, where(is.numeric))
+  
+  numeric_vars <- (numeric_vars)^(1/3)
+  
+  for (var in colnames(numeric_vars)) {
+    ggplot(data.frame(x = numeric_vars[[var]]), aes(x = x)) +
+      geom_density() +
+      labs(title = paste("Distribution of", var))
+    print(last_plot())
+  }
+}
+
+plot_numeric_distribution(allies)

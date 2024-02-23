@@ -56,9 +56,8 @@ allies <- allies_data |>
          -video_published_at,
          -comment_type) |>
   # 3. move parent_comment_id to be behind comment_id
-  select(comment_id, 
-         parent_comment_id, 
-         everything()) |> 
+  relocate(parent_comment_id, 
+           .after = comment_id) |> 
   # 4. mutate the "comment_length" categorical variable
   mutate(
     comment_length = case_when(
