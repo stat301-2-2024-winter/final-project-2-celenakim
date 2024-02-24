@@ -15,7 +15,7 @@ load(here("data/allies.csv"))
 
 
 
-#### Task 1: VARIABLE DISTRIBUTION
+#### Task 1: VARIABLE DISTRIBUTION TRANSFORMATIONS -------------------------------------------
 # numerical:
 plot_numeric_distribution <- function(data) {
   numeric_vars <- select(data, 
@@ -29,7 +29,6 @@ plot_numeric_distribution <- function(data) {
     print(last_plot())
   }
 }
-
 plot_numeric_distribution(allies)
 
 # a majority of variables seem to be skewed right
@@ -47,12 +46,11 @@ ggplot(allies, aes(x = comment_length)) +
        title = "Distribution of Comment Length")
 
 
-
-# LOG TRANSFORM--- MAYBE
+# LOG10 TRANSFORM--- YES
 plot_numeric_distribution <- function(data) {
   numeric_vars <- select(data, where(is.numeric))
   
-  numeric_vars <- log1p(numeric_vars)
+  numeric_vars <- log10(numeric_vars)
   
   for (var in colnames(numeric_vars)) {
     ggplot(data.frame(x = numeric_vars[[var]]), aes(x = x)) +
@@ -61,11 +59,11 @@ plot_numeric_distribution <- function(data) {
     print(last_plot())
   }
 }
-
 plot_numeric_distribution(allies)
 
 
-# SQUARE ROOT TRANSFORM-- MAYBE
+
+# SQUARE ROOT TRANSFORM-- NO
 plot_numeric_distribution <- function(data) {
   numeric_vars <- select(data, where(is.numeric))
   
@@ -78,7 +76,6 @@ plot_numeric_distribution <- function(data) {
     print(last_plot())
   }
 }
-
 plot_numeric_distribution(allies)
 
 
@@ -95,7 +92,6 @@ plot_numeric_distribution <- function(data) {
     print(last_plot())
   }
 }
-
 plot_numeric_distribution(allies)
 
 
@@ -118,5 +114,7 @@ plot_numeric_distribution <- function(data) {
     print(last_plot())
   }
 }
-
 plot_numeric_distribution(allies)
+
+
+
