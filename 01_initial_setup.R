@@ -5,6 +5,7 @@
 library(tidyverse)
 library(tidymodels)
 library(here)
+library(MASS)
 
 # handle common conflicts
 tidymodels_prefer()
@@ -12,7 +13,8 @@ tidymodels_prefer()
 set.seed(301)
 load(here("data/allies.csv"))
 
-
+# Github link ----
+# https://github.com/stat301-2-2024-winter/final-project-2-celenakim
 
 
 #### Task 1: VARIABLE DISTRIBUTION TRANSFORMATIONS -------------------------------------------
@@ -61,6 +63,16 @@ plot_numeric_distribution <- function(data) {
 }
 plot_numeric_distribution(allies)
 
+ggplot(allies, aes(x = log1p(likes))) +
+  geom_density()
+
+
+
+
+
+# Plot the density of the transformed data
+ggplot(data.frame(transformed_likes), aes(x = transformed_likes)) +
+  geom_density()
 
 
 # SQUARE ROOT TRANSFORM-- NO
@@ -94,13 +106,6 @@ plot_numeric_distribution <- function(data) {
 }
 plot_numeric_distribution(allies)
 
-
-# SPLINES
-
-
-
-
-
 # CUBIC ROOT TRANSFORM
 plot_numeric_distribution <- function(data) {
   numeric_vars <- select(data, where(is.numeric))
@@ -116,5 +121,20 @@ plot_numeric_distribution <- function(data) {
 }
 plot_numeric_distribution(allies)
 
+
+
+# DATA SPLITTING ------------------------------------------------------------------------------------------
+
+allies_split <- allies |> 
+  initial_split(prop = 0.75, 
+                strata = likes)
+
+allies_train <- training(allies_split) 
+allies_test <- testing(allies_split)
+
+allies_folds <- vfold_cv(allies_train, v = 10, repeats = 5,
+                           strata = likes)
+
+save(allies_split, allies_train, allies_test, allies_folds, file = here("results/allies_split.rda"))
 
 
