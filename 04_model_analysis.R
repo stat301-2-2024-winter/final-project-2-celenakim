@@ -28,13 +28,13 @@ set.seed(301)
 
 
 
-
 lm_fit_recipe3 |> 
   collect_metrics() |> 
   mutate(model = "lm") |> 
   bind_rows(null_fit_recipe1 |> 
               collect_metrics() |>  
-              mutate(model = "null")) 
+              mutate(model = "null")) |> 
+  knitr::kable()
 
 
 
