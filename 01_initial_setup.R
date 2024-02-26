@@ -63,8 +63,17 @@ plot_numeric_distribution <- function(data) {
 }
 plot_numeric_distribution(allies)
 
-ggplot(allies, aes(x = log1p(likes))) +
+ggplot(allies, aes(x = log10(likes))) +
   geom_density()
+
+library(car)
+
+# Add a small positive constant to the data
+allies[allies == 0] <- 0.0001  # Adjust the constant as needed
+
+# Apply Box-Cox transformation
+allies_transformed <- predict(powerTransform(~., allies))$allies
+
 
 
 
@@ -123,6 +132,13 @@ plot_numeric_distribution(allies)
 
 
 
+
+
+
+
+
+
+
 # DATA SPLITTING ------------------------------------------------------------------------------------------
 
 allies_split <- allies |> 
@@ -136,5 +152,79 @@ allies_folds <- vfold_cv(allies_train, v = 10, repeats = 5,
                            strata = likes)
 
 save(allies_split, allies_train, allies_test, allies_folds, file = here("results/allies_split.rda"))
+
+
+# EXPLORING DATA --------------------------------------------------------------------
+allies_train |> 
+  ggplot(aes(x = neg_emo,
+             y = anger)) +
+  geom_point()
+# positive relationship
+
+allies_train |> 
+  ggplot(aes(x = neg_emo,
+             y = sad)) +
+  geom_point()
+# positive relationship
+
+allies_train |> 
+  ggplot(aes(x = pos_emo,
+             y = affect)) +
+  geom_point()
+# positive relationship
+
+allies_train |> 
+  ggplot(aes(x = informal,
+             y = swear)) +
+  geom_point()
+# positive relationship
+
+allies_train |> 
+  ggplot(aes(x = netspeak,
+             y = informal)) +
+  geom_point()
+# positive relationship
+
+allies_train |> 
+  ggplot(aes(x = cog_proc,
+             y = insight)) +
+  geom_point()
+# positive relationship
+
+allies_train |> 
+  ggplot(aes(x = netspeak,
+             y = swear)) +
+  geom_point()
+# positive relationship
+
+allies_train |> 
+  ggplot(aes(x = pos_emo,
+             y = focus_future)) +
+  geom_point()
+
+allies_train |> 
+  ggplot(aes(x = family,
+             y = affiliation)) +
+  geom_point()
+
+
+allies_train |> 
+  ggplot(aes(x = friend,
+             y = affiliation)) +
+  geom_point()
+
+
+allies_train |> 
+  ggplot(aes(x = pos_emo,
+             y = affiliation)) +
+  geom_point()
+
+allies_train |> 
+  ggplot(aes(x = tentat,
+             y = nonflu)) +
+  geom_point()
+
+
+
 
 

@@ -42,6 +42,8 @@ fit_lm_recipe2 <- fit_resamples(lm_wflow,
                           parallel_over = "everything"
                         ))
 
+tidy(fit_lm_recipe2)
+
 # write out results (fitted/trained workflows) ----
 save(fit_lm_recipe2, file = here("results/fit_lm_recipe2.rda"))
 

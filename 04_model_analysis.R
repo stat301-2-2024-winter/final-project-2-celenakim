@@ -26,24 +26,18 @@ load(here("results/allies_recipe2.rda"))
 set.seed(301)
 
 
-# lm model with allies_recipe2
-bind_rows(fit_lm_recipe2 |> 
-            collect_metrics() |>  
-            mutate(model = "lm")) |> 
-  select(.metric, mean, std_err, model)
+
 
 fit_lm_recipe2 |> 
   collect_metrics() |> 
   mutate(model = "lm") |> 
   bind_rows(null_fit_kitchen_sink |> 
               collect_metrics() |>  
-              mutate(model = "null"))
+              mutate(model = "null")) |> 
+  filter(.metric == "rmse")
 
 
-allies |> 
-  select(likes) |> 
-  summarize(mean = mean(likes))
 
-allies |> 
-  ggplot(aes(x = likes)) +
-  geom_density()
+
+
+

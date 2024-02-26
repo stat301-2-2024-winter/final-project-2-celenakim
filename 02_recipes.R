@@ -15,7 +15,9 @@ load(here("results/allies_split.rda"))
 # Github link ----
 # https://github.com/stat301-2-2024-winter/final-project-2-celenakim
 
-# KITCHEN SINK RECIPE
+
+
+# KITCHEN SINK RECIPE ----------------------------------------------------------------------
 kitchen_sink_recipe <- recipe(likes ~ .,
                           data = allies_train) |> 
   step_rm(comment_id, parent_comment_id, username, comment) |> 
@@ -30,7 +32,9 @@ prep_kitchen_sink_rec <- prep(kitchen_sink_recipe) |>
 view(prep_kitchen_sink_rec)
 save(kitchen_sink_recipe, file = here("results/kitchen_sink_recipe.rda"))
 
-# KITCHEN SINK RECIPE-- TREES
+
+
+# KITCHEN SINK RECIPE-- TREES ----------------------------------------------------------------------
 kitchen_sink_recipe_trees <- recipe(likes ~ .,
                               data = allies_train) |> 
   step_rm(comment_id, parent_comment_id, username, comment) |> 
@@ -46,7 +50,7 @@ view(prep_kitchen_sink_rec_trees)
 save(kitchen_sink_recipe_trees, file = here("results/kitchen_sink_recipe_trees.rda"))
 
 
-# RECIPE 2-- INTERACTION TERMS
+# RECIPE 2-- INTERACTION TERMS ----------------------------------------------------------------------
 allies_recipe2 <- recipe(likes ~ .,
                               data = allies_train) |> 
   step_rm(comment_id, parent_comment_id, username, comment) |> 
@@ -56,8 +60,9 @@ allies_recipe2 <- recipe(likes ~ .,
   step_normalize(all_predictors()) |> 
   step_interact(terms = ~neg_emo:sad) |> 
   step_interact(terms = ~neg_emo:anger) |> 
-  step_interact(terms = ~pos_emo:sad) |> 
-  step_interact(terms = ~informal:swear)
+  step_interact(terms = ~pos_emo:affect) |> 
+  step_interact(terms = ~informal:swear) |> 
+  step_interact(terms = ~cog_proc:insight)
 
 prep_allies_recipe2 <- prep(allies_recipe2) |> 
   bake(new_data = NULL)
