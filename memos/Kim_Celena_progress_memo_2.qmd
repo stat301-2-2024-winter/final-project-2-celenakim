@@ -40,13 +40,14 @@ tidymodels_prefer()
 
 # load training data/fits
 load(here("results/allies_split.rda"))
-load(here("results/fit_lm_recipe2.rda"))
+load(here("results/lm_fit_recipe3.rda"))
+load(here("results/null_fit_recipe1.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("results/kitchen_sink_recipe.rda"))
-load(here("results/kitchen_sink_recipe_trees.rda"))
-load(here("results/allies_recipe2.rda"))
-
+load(here("results/recipe1_kitchen_sink.rda"))
+load(here("results/recipe2_kitchen_sink_trees.rda"))
+load(here("results/recipe3_interactions.rda"))
+load(here("results/recipe4_trasnformed_trees.rda"))
 set.seed(301)
 ```
 
@@ -66,9 +67,9 @@ Data splitting: I will use a proportion of 0.75 to split the data and use strati
 
 Resampling: I will also apply V-fold cross validation to the training dataset using 10 folds and 5 repeats 
 
-Models: simple linear and null (in this memo)
+Models: simple linear, null, elastic, knn, random forest, boosted tree
 
-Recipes: Kitchen sink recipe (kitchen_sink_recipe), Kitchen sink recipe with one hot (kitchen_sink_recipe_trees), Recipe 2 with interaction terms (allies_recipe2)Z
+Recipes: Kitchen sink recipe (kitchen_sink_recipe), Kitchen sink recipe with one hot (kitchen_sink_recipe_trees), Recipe 2 with interaction terms (allies_recipe2)
 
 
 ## Two Model Types
@@ -80,14 +81,15 @@ Recipes: Kitchen sink recipe (kitchen_sink_recipe), Kitchen sink recipe with one
 ```{r}
 #| echo: false
 
-bind_rows(fit_lm_recipe2 |> 
-            collect_metrics() |>  
-            mutate(model = "lm")) |> 
-  filter(.metric == "rsq") |>  # Filter rows where the metric is "rsq"
-  select(.metric, mean, std_err, model) |> 
+
+lm_fit_recipe3 |> 
+  collect_metrics() |> 
+  mutate(model = "lm") |> 
+  bind_rows(null_fit_recipe1 |> 
+              collect_metrics() |>  
+              mutate(model = "null")) |> 
+  select(-.config) |> 
   knitr::kable()
-
-
 ```
 
 

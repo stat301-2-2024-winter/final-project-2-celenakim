@@ -2606,8 +2606,8 @@ Github Repo Link
 <h2 class="anchored" data-anchor-id="analysis-plan">Analysis Plan</h2>
 <p>Data splitting: I will use a proportion of 0.75 to split the data and use stratified sampling.</p>
 <p>Resampling: I will also apply V-fold cross validation to the training dataset using 10 folds and 5 repeats</p>
-<p>Models: simple linear and null (in this memo)</p>
-<p>Recipes: Kitchen sink recipe (kitchen_sink_recipe), Kitchen sink recipe with one hot (kitchen_sink_recipe_trees), Recipe 2 with interaction terms (allies_recipe2)Z</p>
+<p>Models: simple linear, null, elastic, knn, random forest, boosted tree</p>
+<p>Recipes: Kitchen sink recipe (kitchen_sink_recipe), Kitchen sink recipe with one hot (kitchen_sink_recipe_trees), Recipe 2 with interaction terms (allies_recipe2)</p>
 </section>
 <section id="two-model-types" class="level2">
 <h2 class="anchored" data-anchor-id="two-model-types">Two Model Types</h2>
@@ -2624,17 +2624,45 @@ Github Repo Link
 <thead>
 <tr class="header">
 <th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
 <th style="text-align: right;">mean</th>
+<th style="text-align: right;">n</th>
 <th style="text-align: right;">std_err</th>
 <th style="text-align: left;">model</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">rsq</td>
-<td style="text-align: right;">0.7939556</td>
-<td style="text-align: right;">0.013721</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.4817822</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0.0007790</td>
 <td style="text-align: left;">lm</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.1133975</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0.0026347</td>
+<td style="text-align: left;">lm</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.5114105</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0.0005332</td>
+<td style="text-align: left;">null</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">NaN</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: left;">null</td>
 </tr>
 </tbody>
 </table>

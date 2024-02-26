@@ -14,13 +14,16 @@ tidymodels_prefer()
 load(here("results/allies_split.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("results/kitchen_sink_recipe.rda"))
-load(here("results/kitchen_sink_recipe_trees.rda"))
-load(here("results/allies_recipe2.rda"))
+load(here("results/recipe1_kitchen_sink.rda"))
+load(here("results/recipe2_kitchen_sink_trees.rda"))
+load(here("results/recipe3_interactions.rda"))
+load(here("results/recipe4_trasnformed_trees.rda"))
 
 # set up parallel processing
 num_cores <- parallel::detectCores(logical = TRUE)
 registerDoMC(cores = num_cores)
+
+
 
 # model specifications ----
 lm_spec <- 
@@ -32,19 +35,17 @@ lm_spec <-
 lm_wflow <-
   workflow() |> 
   add_model(lm_spec) |> 
-  add_recipe(allies_recipe2)
+  add_recipe(recipe3_interactions)
 
 # fit workflows/models ----
-fit_lm_recipe2 <- fit_resamples(lm_wflow, 
+lm_fit_recipe3 <- fit_resamples(lm_wflow, 
                         resamples = allies_folds,
                         control = control_resamples(
                           save_workflow = TRUE,
                           parallel_over = "everything"
                         ))
 
-tidy(fit_lm_recipe2)
-
 # write out results (fitted/trained workflows) ----
-save(fit_lm_recipe2, file = here("results/fit_lm_recipe2.rda"))
+save(lm_fit_recipe3, file = here("results/lm_fit_recipe3.rda"))
 
 

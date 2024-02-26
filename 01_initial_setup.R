@@ -11,7 +11,7 @@ library(MASS)
 tidymodels_prefer()
 
 set.seed(301)
-load(here("data/allies.csv"))
+allies <- read_csv("data/allies.csv")
 
 # Github link ----
 # https://github.com/stat301-2-2024-winter/final-project-2-celenakim
@@ -63,73 +63,6 @@ plot_numeric_distribution <- function(data) {
 }
 plot_numeric_distribution(allies)
 
-ggplot(allies, aes(x = log10(likes))) +
-  geom_density()
-
-library(car)
-
-# Add a small positive constant to the data
-allies[allies == 0] <- 0.0001  # Adjust the constant as needed
-
-# Apply Box-Cox transformation
-allies_transformed <- predict(powerTransform(~., allies))$allies
-
-
-
-
-
-
-# Plot the density of the transformed data
-ggplot(data.frame(transformed_likes), aes(x = transformed_likes)) +
-  geom_density()
-
-
-# SQUARE ROOT TRANSFORM-- NO
-plot_numeric_distribution <- function(data) {
-  numeric_vars <- select(data, where(is.numeric))
-  
-  numeric_vars <- sqrt(numeric_vars)
-  
-  for (var in colnames(numeric_vars)) {
-    ggplot(data.frame(x = numeric_vars[[var]]), aes(x = x)) +
-      geom_density() +
-      labs(title = paste("Distribution of", var))
-    print(last_plot())
-  }
-}
-plot_numeric_distribution(allies)
-
-
-# SQUARE TRANSFORM--- NO 
-plot_numeric_distribution <- function(data) {
-  numeric_vars <- select(data, where(is.numeric))
-  
-  numeric_vars <- (numeric_vars)^2
-  
-  for (var in colnames(numeric_vars)) {
-    ggplot(data.frame(x = numeric_vars[[var]]), aes(x = x)) +
-      geom_density() +
-      labs(title = paste("Distribution of", var))
-    print(last_plot())
-  }
-}
-plot_numeric_distribution(allies)
-
-# CUBIC ROOT TRANSFORM
-plot_numeric_distribution <- function(data) {
-  numeric_vars <- select(data, where(is.numeric))
-  
-  numeric_vars <- (numeric_vars)^(1/3)
-  
-  for (var in colnames(numeric_vars)) {
-    ggplot(data.frame(x = numeric_vars[[var]]), aes(x = x)) +
-      geom_density() +
-      labs(title = paste("Distribution of", var))
-    print(last_plot())
-  }
-}
-plot_numeric_distribution(allies)
-
 
 
 
@@ -145,7 +78,19 @@ allies_split <- allies |>
   initial_split(prop = 0.75, 
                 strata = likes)
 
-allies_train <- training(allies_split) 
+allies_train <- training(allies_split)
+
+# Transforming likes with yeo johnson
+likes_transformed <- recipe(likes ~ informal,
+                            data = allies_train) |>
+  step_YeoJohnson(likes) |> 
+  prep() |> 
+  bake(new_data = NULL) |> 
+  transmute(likes_yj = likes)
+
+allies_train <- allies_train |> 
+  bind_cols(likes_transformed)
+
 allies_test <- testing(allies_split)
 
 allies_folds <- vfold_cv(allies_train, v = 10, repeats = 5,

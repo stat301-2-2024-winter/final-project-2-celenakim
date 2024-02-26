@@ -14,9 +14,10 @@ tidymodels_prefer()
 load(here("results/allies_split.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("results/kitchen_sink_recipe.rda"))
-load(here("results/kitchen_sink_recipe_trees.rda"))
-load(here("results/allies_recipe2.rda"))
+load(here("results/recipe1_kitchen_sink.rda"))
+load(here("results/recipe2_kitchen_sink_trees.rda"))
+load(here("results/recipe3_interactions.rda"))
+load(here("results/recipe4_trasnformed_trees.rda"))
 
 # set up parallel processing
 num_cores <- parallel::detectCores(logical = TRUE)
@@ -32,17 +33,17 @@ null_spec <- null_model() |>
 # define workflows ----
 null_workflow <- workflow() |>  
   add_model(null_spec) |> 
-  add_recipe(kitchen_sink_recipe)
+  add_recipe(recipe1_kitchen_sink)
 
 # fit workflows/models ----
-null_fit_kitchen_sink <- null_workflow |> 
+null_fit_recipe1 <- null_workflow |> 
   fit_resamples(
     resamples = allies_folds, 
     control = control_resamples(save_workflow = TRUE)
   )
 
 # write out results (fitted/trained workflows) ----
-save(null_fit_kitchen_sink, file = here("results/null_fit_kitchen_sink.rda"))
+save(null_fit_recipe1, file = here("results/null_fit_recipe1.rda"))
 
 
 
