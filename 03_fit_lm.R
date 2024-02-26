@@ -32,10 +32,10 @@ lm_spec <-
 lm_wflow <-
   workflow() |> 
   add_model(lm_spec) |> 
-  add_recipe(kitchen_sink_recipe)
+  add_recipe(allies_recipe2)
 
 # fit workflows/models ----
-fit_lm <- fit_resamples(lm_wflow, 
+fit_lm_recipe2 <- fit_resamples(lm_wflow, 
                         resamples = allies_folds,
                         control = control_resamples(
                           save_workflow = TRUE,
@@ -43,6 +43,6 @@ fit_lm <- fit_resamples(lm_wflow,
                         ))
 
 # write out results (fitted/trained workflows) ----
-save(fit_lm, file = here("results/lm_fit_kitchen_sink_rec.rda"))
+save(fit_lm_recipe2, file = here("results/fit_lm_recipe2.rda"))
 
 

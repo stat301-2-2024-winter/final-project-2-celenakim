@@ -29,8 +29,25 @@ citation-location: margin
 ```{r}
 #| echo: false
 
+# load packages ----
 library(tidyverse)
-allies <- read_csv(here::here("data/allies.csv"))
+library(tidymodels)
+library(here)
+library(doMC)
+
+# handle common conflicts
+tidymodels_prefer()
+
+# load training data/fits
+load(here("results/allies_split.rda"))
+load(here("results/fit_lm_recipe2.rda"))
+
+# load pre-processing/feature engineering/recipe
+load(here("results/kitchen_sink_recipe.rda"))
+load(here("results/kitchen_sink_recipe_trees.rda"))
+load(here("results/allies_recipe2.rda"))
+
+set.seed(301)
 ```
 
 ## Data Cleaning
@@ -41,23 +58,43 @@ The data that I chose for my project, `allies`, was derived from gathering data 
 ## Assessment Metric
 My predictive research question is: What psychological factors lead to a comment receiving more likes on the Jubilee video, "Are We Allies? Black Americans vs Asian Americans | Middle Ground"?
 
-This is a regression problem as I would like to predict a numerical outcome: `likes`, the like count of a comment. The assessment metric I will be using to evaluate the performance of my model will be the **Root Mean Squared Error (RMSE)**. This metric will help me understand the average magnitude of the errors in my predictions, allowing me to assess how accurate my model is in predicting the number of likes a comment on the video receives.
+This is a regression problem as I would like to predict a numerical outcome: `likes`, the like count of a comment. The assessment metric I will be using to evaluate the performance of my model will be the $R^2$. This metric will help me understand how well the variance in the dependent variable (the number of likes) is explained by the independent variables in the model.
 
 
 ## Analysis Plan
-data splitting, resampling (cross-validation, bootstrap, etc), which model types, how many recipes etc. Note that students should have this mapped out in their GitHub repo. That is, there should be place holder R scripts created. You don't have to have everything coded, but the overall structure should be evident.   
+Data splitting: I will use a proportion of 0.75 to split the data and use stratified sampling.
+
+Resampling: I will also apply V-fold cross validation to the training dataset using 10 folds and 5 repeats 
+
+Models: simple linear and null (in this memo)
+
+Recipes: 
+-Kitchen sink recipe: kitchen_sink_recipe
+
+-Kitchen sink recipe with one hot: kitchen_sink_recipe_trees
+
+-Recipe 2 with interaction terms: allies_recipe2
 
 
 ## Two Model Types
-have two model types defined and fitted to the resamples: null/baseline model and one other model type (likely standard linear or logistic model):
-The recipe can be very basic since we just want to see if you can get things running
-
+1. lm model with allies_recipe2
+2. null/baseline model with allies_recipe2
 
 
 
 ## Fit Success
-demonstrate their fits are successful by displaying a table that contains each model's assessment metric value.
+```{r}
+#| echo: false
+
+bind_rows(fit_lm_recipe2 |> 
+            collect_metrics() |>  
+            mutate(model = "lm")) |> 
+  filter(.metric == "rsq") |>  # Filter rows where the metric is "rsq"
+  select(.metric, mean, std_err, model) |> 
+  knitr::kable()
+```
+
 
 
 ## Summarize Progress & Next Steps
-summarize their progress, where they are at, and what their next steps will be. Identifying and potential issues or concerns would be a good idea too.
+Now that I have some recipes and fits going, I want to start creating other model types and tuning such models. I would also like to play around with different folds/repeats combinations and potentially tweak my current recipes. 
