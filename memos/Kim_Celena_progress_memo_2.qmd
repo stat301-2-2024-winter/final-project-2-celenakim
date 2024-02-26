@@ -68,18 +68,12 @@ Resampling: I will also apply V-fold cross validation to the training dataset us
 
 Models: simple linear and null (in this memo)
 
-Recipes: 
--Kitchen sink recipe: kitchen_sink_recipe
-
--Kitchen sink recipe with one hot: kitchen_sink_recipe_trees
-
--Recipe 2 with interaction terms: allies_recipe2
+Recipes: Kitchen sink recipe (kitchen_sink_recipe), Kitchen sink recipe with one hot (kitchen_sink_recipe_trees), Recipe 2 with interaction terms (allies_recipe2)Z
 
 
 ## Two Model Types
 1. lm model with allies_recipe2
-2. null/baseline model with allies_recipe2
-
+2. null model with allies_recipe2
 
 
 ## Fit Success
@@ -92,6 +86,8 @@ bind_rows(fit_lm_recipe2 |>
   filter(.metric == "rsq") |>  # Filter rows where the metric is "rsq"
   select(.metric, mean, std_err, model) |> 
   knitr::kable()
+
+
 ```
 
 

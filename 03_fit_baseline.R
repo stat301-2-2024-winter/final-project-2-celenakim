@@ -22,6 +22,8 @@ load(here("results/allies_recipe2.rda"))
 num_cores <- parallel::detectCores(logical = TRUE)
 registerDoMC(cores = num_cores)
 
+
+# NULL MODEL
 # model specifications ----
 null_spec <- null_model() |> 
   set_engine("parsnip") |> 

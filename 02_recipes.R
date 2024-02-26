@@ -19,6 +19,7 @@ load(here("results/allies_split.rda"))
 kitchen_sink_recipe <- recipe(likes ~ .,
                           data = allies_train) |> 
   step_rm(comment_id, parent_comment_id, username, comment) |> 
+  step_YeoJohnson(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors()) |> 
   step_zv(all_predictors()) |> 
   step_normalize(all_predictors()) 
@@ -49,6 +50,7 @@ save(kitchen_sink_recipe_trees, file = here("results/kitchen_sink_recipe_trees.r
 allies_recipe2 <- recipe(likes ~ .,
                               data = allies_train) |> 
   step_rm(comment_id, parent_comment_id, username, comment) |> 
+  step_YeoJohnson(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors()) |> 
   step_zv(all_predictors()) |> 
   step_normalize(all_predictors()) |> 
