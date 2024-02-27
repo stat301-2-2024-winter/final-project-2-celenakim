@@ -7,13 +7,6 @@ likes,the number of likes that the comment received
 replies,the number of replies that the comment received
 word_count,the word count of the comment
 comment_length,"a categorization of the comment's length: short, medium, or long"
-analytic,"the degree to which the comment suggests formal, logical, and hierarchical thinking"
-clout,"the relative social status, confidence, or leadership that the comment displays"
-authentic,the degree to which the comment is more spontaneous and not self-regulated/filtered
-tone,a single summary variable of both positive and negative tone dimensions (higher number = more positive tone
-words_per_sentence,the average number of words in the comment's sentences
-six_letters,the proportion of words in the comment that are longer than 6 letters
-dic,the proportion of the comment's words captured as dictionary words
 i,the proportion of the pronoun i in the comment
 we,the proportion of the pronoun we in the comment
 you,the proportion of the pronoun you in the comment

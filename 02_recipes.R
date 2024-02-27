@@ -70,7 +70,6 @@ prep_allies_recipe2 <- prep(recipe3_interactions) |>
 view(prep_allies_recipe2)
 save(recipe3_interactions, file = here("results/recipe3_interactions.rda"))
 
-
 likes_transformed <- recipe(likes ~ informal,
        data = allies_train) |>
   step_YeoJohnson(likes) |> 

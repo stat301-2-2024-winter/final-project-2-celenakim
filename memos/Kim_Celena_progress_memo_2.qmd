@@ -89,7 +89,7 @@ lm_fit_recipe3 |>
               collect_metrics() |>  
               mutate(model = "null")) |> 
   select(-.config) |> 
-  knitr::kable()
+  knitr::kable(digits = c(NA, NA, 3, 0, 5, NA))
 ```
 
 
