@@ -46,8 +46,8 @@ load(here("results/null_fit_recipe1.rda"))
 # load pre-processing/feature engineering/recipe
 load(here("results/recipe1_kitchen_sink.rda"))
 load(here("results/recipe2_kitchen_sink_trees.rda"))
-load(here("results/recipe3_interactions.rda"))
-load(here("results/recipe4_trasnformed_trees.rda"))
+load(here("results/recipe3_transformed_interactions.rda"))
+load(here("results/recipe4_transformed_trees.rda"))
 set.seed(301)
 ```
 
@@ -62,6 +62,7 @@ My predictive research question is: **What psychological factors lead to a comme
 This is a regression problem as I would like to predict a numerical outcome: `likes`, the like count of a comment. The assessment metric I will be using to evaluate the performance of my model will be the **RMSE**. This metric measures the average magnitude of the errors between predicted and actual values and will allow me to understand the accuracy of my models.
 
 ## Analysis Plan
+
 Outcome variable transformation: I have performed a Yeo-Johnson transformation on my outcome variable, `likes`, as the distribution is heavily skewed right due to extreme outliers of like counts. This transformation from `likes` to `likes_yj` was carried out in its own recipe, which I then binded to the allies_train data.
 
 EDA: After exploring numerous relationships between the predictors, I have found some positive relationships between certain psychological components that I would like to use for interaction terms in my recipes. For example, categorizations such as negative emotion with sadness, negative emotion with anger, positive emotion with achievement, informal language with swear words, and cognitive processes with displays of insight may provide valuable insights into the combined effects of different psychological components on the target variable of likes.
@@ -80,7 +81,7 @@ Recipes:
 
 -   Recipe 3- Recipe with Yeo-Johnson transformations and interaction terms (allies_recipe2)
 
-
+-   Recipe 4- Recipe with Yeo-Johnson transformations and one hot (
 
 ## Two Model Types
 

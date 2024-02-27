@@ -17,7 +17,7 @@ load(here("results/allies_split.rda"))
 
 
 
-# KITCHEN SINK RECIPE ----------------------------------------------------------------------
+# RECIPE 1: BASIC KITCHEN SINK ----------------------------------------------------------------------
 recipe1_kitchen_sink <- recipe(likes_yj ~ .,
                           data = allies_train) |> 
   step_rm(likes, comment_id, parent_comment_id, username, comment) |> 
@@ -26,15 +26,14 @@ recipe1_kitchen_sink <- recipe(likes_yj ~ .,
   step_zv(all_predictors()) |> 
   step_normalize(all_predictors()) 
 
-prep_kitchen_sink_rec <- prep(recipe1_kitchen_sink) |> 
+prep_recipe1_kitchen_sink <- prep(recipe1_kitchen_sink) |> 
   bake(new_data = NULL)
 
-view(prep_kitchen_sink_rec)
+view(prep_recipe1_kitchen_sink)
 save(recipe1_kitchen_sink, file = here("results/recipe1_kitchen_sink.rda"))
 
 
-
-# KITCHEN SINK RECIPE 2-- TREES ----------------------------------------------------------------------
+# RECIPE 2: BASIC KITCHEN SINK WITH ONE HOT --------------------------------------------------------------------
 recipe2_kitchen_sink_trees <- recipe(likes_yj ~ .,
                               data = allies_train) |> 
   step_rm(likes, comment_id, parent_comment_id, username, comment) |> 
@@ -43,15 +42,15 @@ recipe2_kitchen_sink_trees <- recipe(likes_yj ~ .,
   step_zv(all_predictors()) |> 
   step_normalize(all_predictors()) 
 
-prep_kitchen_sink_rec_trees <- prep(recipe2_kitchen_sink_trees) |> 
+prep_recipe2_kitchen_sink_trees <- prep(recipe2_kitchen_sink_trees) |> 
   bake(new_data = NULL)
 
-view(prep_kitchen_sink_rec_trees)
+view(prep_recipe2_kitchen_sink_trees)
 save(recipe2_kitchen_sink_trees, file = here("results/recipe2_kitchen_sink_trees.rda"))
 
 
-# RECIPE 3-- INTERACTION TERMS ----------------------------------------------------------------------
-recipe3_interactions <- recipe(likes_yj ~ .,
+# RECIPE 3: RECIPE WITH YEO JOHNSON TRANSFORMATIONS AND INTERACTION TERMS ----------------------------------------------------------------------
+recipe3_transformed_interactions <- recipe(likes_yj ~ .,
                               data = allies_train) |> 
   step_rm(likes, comment_id, parent_comment_id, username, comment) |> 
   step_YeoJohnson(all_numeric_predictors()) |> 
@@ -64,11 +63,11 @@ recipe3_interactions <- recipe(likes_yj ~ .,
   step_interact(terms = ~informal:swear) |> 
   step_interact(terms = ~cog_proc:insight)
 
-prep_allies_recipe2 <- prep(recipe3_interactions) |> 
+prep_recipe3_transformed_interactions <- prep(recipe3_transformed_interactions) |> 
   bake(new_data = NULL)
 
-view(prep_allies_recipe2)
-save(recipe3_interactions, file = here("results/recipe3_interactions.rda"))
+view(prep_recipe3_transformed_interactions)
+save(recipe3_transformed_interactions, file = here("results/recipe3_transformed_interactions.rda"))
 
 likes_transformed <- recipe(likes ~ informal,
        data = allies_train) |>
@@ -78,9 +77,8 @@ likes_transformed <- recipe(likes ~ informal,
   select(likes)
 
 
-
-# RECIPE 4-- TRANSFORMATIONS/ TREES
-recipe4_trasnformed_trees <- recipe(likes_yj ~ .,
+# RECIPE 4: RECIPE WITH YEO JOHNSON TRANSFORMATIONS AND ONE HOT -------------------------------------------------------
+recipe4_transformed_trees <- recipe(likes_yj ~ .,
                               data = allies_train) |> 
   step_rm(likes, comment_id, parent_comment_id, username, comment) |> 
   step_YeoJohnson(all_numeric_predictors()) |> 
@@ -89,11 +87,11 @@ recipe4_trasnformed_trees <- recipe(likes_yj ~ .,
   step_zv(all_predictors()) |> 
   step_normalize(all_predictors()) 
 
-prep_kitchen_sink_rec <- prep(recipe4_trasnformed_trees) |> 
+prep_recipe4_transformed_trees <- prep(recipe4_transformed_trees) |> 
   bake(new_data = NULL)
 
-view(prep_kitchen_sink_rec)
-save(recipe4_trasnformed_trees, file = here("results/recipe4_trasnformed_trees.rda"))
+view(prep_recipe4_transformed_trees)
+save(recipe4_transformed_trees, file = here("results/recipe4_transformed_trees.rda"))
 
 
 

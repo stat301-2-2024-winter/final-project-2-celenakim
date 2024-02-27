@@ -16,8 +16,8 @@ load(here("results/allies_split.rda"))
 # load pre-processing/feature engineering/recipe
 load(here("results/recipe1_kitchen_sink.rda"))
 load(here("results/recipe2_kitchen_sink_trees.rda"))
-load(here("results/recipe3_interactions.rda"))
-load(here("results/recipe4_trasnformed_trees.rda"))
+load(here("results/recipe3_transformed_interactions.rda"))
+load(here("results/recipe4_transformed_trees.rda"))
 
 # set up parallel processing
 num_cores <- parallel::detectCores(logical = TRUE)
@@ -35,7 +35,7 @@ lm_spec <-
 lm_wflow <-
   workflow() |> 
   add_model(lm_spec) |> 
-  add_recipe(recipe3_interactions)
+  add_recipe(recipe3_transformed_interactions)
 
 # fit workflows/models ----
 lm_fit_recipe3 <- fit_resamples(lm_wflow, 
