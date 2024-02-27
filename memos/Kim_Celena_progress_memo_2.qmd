@@ -53,34 +53,44 @@ set.seed(301)
 
 ## Data Cleaning
 
-The data that I chose for my project, `allies`, was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans | Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). After a quick skim of my data set in progress memo 1, I realized that some cleaning needed to be carried out: renaming columns A-P to the correct variable names as they did not get copied over from the original spreadsheet when creating the data set, renaming the LIWC variable names such as "Sixltr" and "posemo" to make more sense to the audience, deleting variables irrelevant to my analysis/variables with missingness, mutating a categorical predictor variable called "comment_length" which categorizes a comment as short, medium, or long, and arranging variable order to be more organized. After these changes were made, my data was then ready for analyses to be performed.
-
+The data that I chose for my project, `allies`, was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans \| Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). After a quick skim of my data set in progress memo 1, I realized that some cleaning needed to be carried out: renaming columns A-P to the correct variable names as they did not get copied over from the original spreadsheet when creating the data set, renaming the LIWC variable names such as "Sixltr" and "posemo" to make more sense to the audience, deleting variables irrelevant to my analysis/variables with missingness, mutating a categorical predictor variable called "comment_length" which categorizes a comment as short, medium, or long, and arranging variable order to be more organized. After these changes were made, I ended up with a data set of 15,397 observations and 57 variables. I was then ready for analyses to be performed.
 
 ## Assessment Metric
-My predictive research question is: What psychological factors lead to a comment receiving more likes on the Jubilee video, "Are We Allies? Black Americans vs Asian Americans | Middle Ground"?
 
-This is a regression problem as I would like to predict a numerical outcome: `likes`, the like count of a comment. The assessment metric I will be using to evaluate the performance of my model will be the **RMSE**. This metric will help me understand how well the models are at predicting......
+My predictive research question is: **What psychological factors lead to a comment receiving more likes on the Jubilee video, "Are We Allies? Black Americans vs Asian Americans \| Middle Ground"?**
 
+This is a regression problem as I would like to predict a numerical outcome: `likes`, the like count of a comment. The assessment metric I will be using to evaluate the performance of my model will be the **RMSE**. This metric measures the average magnitude of the errors between predicted and actual values and will allow me to understand the accuracy of my models.
 
 ## Analysis Plan
-Data splitting: I will use a proportion of 0.75 to split the data and use stratified sampling.
+Outcome variable transformation: I have performed a Yeo-Johnson transformation on my outcome variable, `likes`, as the distribution is heavily skewed right due to extreme outliers of like counts. This transformation from `likes` to `likes_yj` was carried out in its own recipe, which I then binded to the allies_train data.
 
-Resampling: I will also apply V-fold cross validation to the training dataset using 10 folds and 5 repeats 
+EDA: After exploring numerous relationships between the predictors, I have found some positive relationships between certain psychological components that I would like to use for interaction terms in my recipes. For example, categorizations such as negative emotion with sadness, negative emotion with anger, positive emotion with achievement, informal language with swear words, and cognitive processes with displays of insight may provide valuable insights into the combined effects of different psychological components on the target variable of likes.
+
+Data splitting: I have used a proportion of 0.75 to split the data, and used stratified sampling.
+
+Resampling: I have also applied V-fold cross validation to the training dataset using 10 folds and 5 repeats
 
 Models: simple linear, null, elastic, knn, random forest, boosted tree
 
-Recipes: Kitchen sink recipe (kitchen_sink_recipe), Kitchen sink recipe with one hot (kitchen_sink_recipe_trees), Recipe 2 with interaction terms (allies_recipe2)
+Recipes:
+
+-   Recipe 1- Basic kitchen sink recipe (recipe1_kitchen_sink)
+
+-   Recipe 2- Basic kitchen sink recipe with one hot (recipe2_kitchen_sink_trees)
+
+-   Recipe 3- Recipe with Yeo-Johnson transformations and interaction terms (allies_recipe2)
+
 
 
 ## Two Model Types
-1. lm model with allies_recipe2
-2. null model with allies_recipe2
 
+1.  lm model with recipe3_interactions
+2.  null model with recipe1_kitchen_sink
 
 ## Fit Success
+
 ```{r}
 #| echo: false
-
 
 lm_fit_recipe3 |> 
   collect_metrics() |> 
@@ -92,7 +102,6 @@ lm_fit_recipe3 |>
   knitr::kable(digits = c(NA, NA, 3, 0, 5, NA))
 ```
 
-
-
 ## Summarize Progress & Next Steps
-Now that I have some recipes and fits going, I want to start creating other model types and tuning such models. I would also like to play around with different folds/repeats combinations and potentially tweak my current recipes. 
+
+Now that I have some recipes and fits going and have verified that they work, I want to finish out the other model types and then begin to tune such models. I would like to play around with different folds/repeats combinations and potentially tweak my current recipes. Additionally, since I have used a Yeo-Johnson transformation on my outcome variable, I need to make sure to reverse that transformation once I get to my testing data, which I need to do more research on.

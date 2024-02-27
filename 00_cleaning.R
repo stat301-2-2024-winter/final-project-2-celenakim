@@ -54,14 +54,7 @@ allies <- allies_data |>
          -like_count,
          -comment_count,
          -video_published_at,
-         -comment_type,
-         -analytic,
-         -clout,
-         -authentic,
-         -tone,
-         -words_per_sentence,
-         -six_ltrs,
-         -dic) |>
+         -comment_type) |>
   # 3. move parent_comment_id to be behind comment_id
   relocate(parent_comment_id, 
            .after = comment_id) |> 

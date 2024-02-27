@@ -60,7 +60,7 @@ recipe3_interactions <- recipe(likes_yj ~ .,
   step_normalize(all_predictors()) |> 
   step_interact(terms = ~neg_emo:sad) |> 
   step_interact(terms = ~neg_emo:anger) |> 
-  step_interact(terms = ~pos_emo:affect) |> 
+  step_interact(terms = ~pos_emo:achieve) |> 
   step_interact(terms = ~informal:swear) |> 
   step_interact(terms = ~cog_proc:insight)
 

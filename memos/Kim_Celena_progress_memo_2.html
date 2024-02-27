@@ -2595,25 +2595,32 @@ Github Repo Link
 </div>
 <section id="data-cleaning" class="level2">
 <h2 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h2>
-<p>The data that I chose for my project, <code>allies</code>, was derived from gathering data on the psychological analysis of comments under the Jubilee video titled <a href="https://www.youtube.com/watch?v=pXo2ub_nZFc">Are We Allies? Black Americans vs Asian Americans | Middle Ground</a> found on <a href="https://www.youtube.com">YouTube</a>. After a quick skim of my data set in progress memo 1, I realized that some cleaning needed to be carried out: renaming columns A-P to the correct variable names as they did not get copied over from the original spreadsheet when creating the data set, renaming the LIWC variable names such as “Sixltr” and “posemo” to make more sense to the audience, deleting variables irrelevant to my analysis/variables with missingness, mutating a categorical predictor variable called “comment_length” which categorizes a comment as short, medium, or long, and arranging variable order to be more organized. After these changes were made, my data was then ready for analyses to be performed.</p>
+<p>The data that I chose for my project, <code>allies</code>, was derived from gathering data on the psychological analysis of comments under the Jubilee video titled <a href="https://www.youtube.com/watch?v=pXo2ub_nZFc">Are We Allies? Black Americans vs Asian Americans | Middle Ground</a> found on <a href="https://www.youtube.com">YouTube</a>. After a quick skim of my data set in progress memo 1, I realized that some cleaning needed to be carried out: renaming columns A-P to the correct variable names as they did not get copied over from the original spreadsheet when creating the data set, renaming the LIWC variable names such as “Sixltr” and “posemo” to make more sense to the audience, deleting variables irrelevant to my analysis/variables with missingness, mutating a categorical predictor variable called “comment_length” which categorizes a comment as short, medium, or long, and arranging variable order to be more organized. After these changes were made, I ended up with a data set of 15,397 observations and 57 variables. I was then ready for analyses to be performed.</p>
 </section>
 <section id="assessment-metric" class="level2">
 <h2 class="anchored" data-anchor-id="assessment-metric">Assessment Metric</h2>
-<p>My predictive research question is: What psychological factors lead to a comment receiving more likes on the Jubilee video, “Are We Allies? Black Americans vs Asian Americans | Middle Ground”?</p>
-<p>This is a regression problem as I would like to predict a numerical outcome: <code>likes</code>, the like count of a comment. The assessment metric I will be using to evaluate the performance of my model will be the <strong>RMSE</strong>. This metric will help me understand how well the models are at predicting……</p>
+<p>My predictive research question is: <strong>What psychological factors lead to a comment receiving more likes on the Jubilee video, “Are We Allies? Black Americans vs Asian Americans | Middle Ground”?</strong></p>
+<p>This is a regression problem as I would like to predict a numerical outcome: <code>likes</code>, the like count of a comment. The assessment metric I will be using to evaluate the performance of my model will be the <strong>RMSE</strong>. This metric measures the average magnitude of the errors between predicted and actual values and will allow me to understand the accuracy of my models.</p>
 </section>
 <section id="analysis-plan" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-plan">Analysis Plan</h2>
-<p>Data splitting: I will use a proportion of 0.75 to split the data and use stratified sampling.</p>
-<p>Resampling: I will also apply V-fold cross validation to the training dataset using 10 folds and 5 repeats</p>
+<p>Outcome variable transformation: I have performed a Yeo-Johnson transformation on my outcome variable, <code>likes</code>, as the distribution is heavily skewed right due to extreme outliers of like counts. This transformation from <code>likes</code> to <code>likes_yj</code> was carried out in its own recipe, which I then binded to the allies_train data.</p>
+<p>EDA: After exploring numerous relationships between the predictors, I have found some positive relationships between certain psychological components that I would like to use for interaction terms in my recipes. For example, categorizations such as negative emotion with sadness, negative emotion with anger, positive emotion with achievement, informal language with swear words, and cognitive processes with displays of insight may provide valuable insights into the combined effects of different psychological components on the target variable of likes.</p>
+<p>Data splitting: I have used a proportion of 0.75 to split the data, and used stratified sampling.</p>
+<p>Resampling: I have also applied V-fold cross validation to the training dataset using 10 folds and 5 repeats</p>
 <p>Models: simple linear, null, elastic, knn, random forest, boosted tree</p>
-<p>Recipes: Kitchen sink recipe (kitchen_sink_recipe), Kitchen sink recipe with one hot (kitchen_sink_recipe_trees), Recipe 2 with interaction terms (allies_recipe2)</p>
+<p>Recipes:</p>
+<ul>
+<li><p>Recipe 1- Basic kitchen sink recipe (recipe1_kitchen_sink)</p></li>
+<li><p>Recipe 2- Basic kitchen sink recipe with one hot (recipe2_kitchen_sink_trees)</p></li>
+<li><p>Recipe 3- Recipe with Yeo-Johnson transformations and interaction terms (allies_recipe2)</p></li>
+</ul>
 </section>
 <section id="two-model-types" class="level2">
 <h2 class="anchored" data-anchor-id="two-model-types">Two Model Types</h2>
 <ol type="1">
-<li>lm model with allies_recipe2</li>
-<li>null model with allies_recipe2</li>
+<li>lm model with recipe3_interactions</li>
+<li>null model with recipe1_kitchen_sink</li>
 </ol>
 </section>
 <section id="fit-success" class="level2">
@@ -2671,7 +2678,7 @@ Github Repo Link
 </section>
 <section id="summarize-progress-next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="summarize-progress-next-steps">Summarize Progress &amp; Next Steps</h2>
-<p>Now that I have some recipes and fits going, I want to start creating other model types and tuning such models. I would also like to play around with different folds/repeats combinations and potentially tweak my current recipes.</p>
+<p>Now that I have some recipes and fits going and have verified that they work, I want to finish out the other model types and then begin to tune such models. I would like to play around with different folds/repeats combinations and potentially tweak my current recipes. Additionally, since I have used a Yeo-Johnson transformation on my outcome variable, I need to make sure to reverse that transformation once I get to my testing data.</p>
 </section>
 
 </main>
