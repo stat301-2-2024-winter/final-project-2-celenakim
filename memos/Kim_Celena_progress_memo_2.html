@@ -2604,23 +2604,23 @@ Github Repo Link
 </section>
 <section id="analysis-plan" class="level2">
 <h2 class="anchored" data-anchor-id="analysis-plan">Analysis Plan</h2>
-<p>Outcome variable transformation: I have performed a Yeo-Johnson transformation on my outcome variable, <code>likes</code>, as the distribution is heavily skewed right due to extreme outliers of like counts. This transformation from <code>likes</code> to <code>likes_yj</code> was carried out in its own recipe, which I then binded to the allies_train data.</p>
+<p>Outcome variable transformation: I have performed a Yeo-Johnson transformation on my outcome variable, <code>likes</code>, as the distribution is heavily skewed right due to extreme outliers of like counts. This transformation from <code>likes</code> to <code>likes_yj</code> was carried out in its own recipe, which I then bound to the allies_train data.</p>
 <p>EDA: After exploring numerous relationships between the predictors, I have found some positive relationships between certain psychological components that I would like to use for interaction terms in my recipes. For example, categorizations such as negative emotion with sadness, negative emotion with anger, positive emotion with achievement, informal language with swear words, and cognitive processes with displays of insight may provide valuable insights into the combined effects of different psychological components on the target variable of likes.</p>
 <p>Data splitting: I have used a proportion of 0.75 to split the data, and used stratified sampling.</p>
-<p>Resampling: I have also applied V-fold cross validation to the training dataset using 10 folds and 5 repeats</p>
+<p>Resampling: I have also applied V-fold cross-validation to the training dataset using 10 folds and 5 repeats</p>
 <p>Models: simple linear, null, elastic, knn, random forest, boosted tree</p>
 <p>Recipes:</p>
 <ul>
 <li><p>Recipe 1- Basic kitchen sink recipe (recipe1_kitchen_sink)</p></li>
 <li><p>Recipe 2- Basic kitchen sink recipe with one hot (recipe2_kitchen_sink_trees)</p></li>
-<li><p>Recipe 3- Recipe with Yeo-Johnson transformations and interaction terms (allies_recipe2)</p></li>
-<li><p>Recipe 4- Recipe with Yeo-Johnson transformations and one hot (</p></li>
+<li><p>Recipe 3- Recipe with Yeo-Johnson transformations and interaction terms (recipe3_transformed_interactions)</p></li>
+<li><p>Recipe 4- Recipe with Yeo-Johnson transformations and one hot (recipe4_transformed_trees)</p></li>
 </ul>
 </section>
 <section id="two-model-types" class="level2">
 <h2 class="anchored" data-anchor-id="two-model-types">Two Model Types</h2>
 <ol type="1">
-<li>lm model with recipe3_interactions</li>
+<li>lm model with recipe3_transformed_interactions</li>
 <li>null model with recipe1_kitchen_sink</li>
 </ol>
 </section>
@@ -2676,7 +2676,7 @@ Github Repo Link
 </table>
 </div>
 </div>
-<p>For my linear model, I obtained a rmse of 0.482, and for the null model, I obtwined a rmse of 0.511. Note that these are on the scale of the Yeo-Johnson transformation.</p>
+<p>For my linear model, I obtained an RMSE of 0.482, and for the null model, I obtained an RMSE of 0.511. Note that these are on the scale of the Yeo-Johnson transformation. Having low RMSE values is a positive sign, suggesting that my models are capturing some of the variation in my allies data and are providing predictions that are closer to the actual values. Also, with the linear model’s RMSE being lower than that of the null model, this indicates that the linear model provides better predictions.</p>
 </section>
 <section id="summarize-progress-next-steps" class="level2">
 <h2 class="anchored" data-anchor-id="summarize-progress-next-steps">Summarize Progress &amp; Next Steps</h2>

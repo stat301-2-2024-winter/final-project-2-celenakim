@@ -63,13 +63,13 @@ This is a regression problem as I would like to predict a numerical outcome: `li
 
 ## Analysis Plan
 
-Outcome variable transformation: I have performed a Yeo-Johnson transformation on my outcome variable, `likes`, as the distribution is heavily skewed right due to extreme outliers of like counts. This transformation from `likes` to `likes_yj` was carried out in its own recipe, which I then binded to the allies_train data.
+Outcome variable transformation: I have performed a Yeo-Johnson transformation on my outcome variable, `likes`, as the distribution is heavily skewed right due to extreme outliers of like counts. This transformation from `likes` to `likes_yj` was carried out in its own recipe, which I then bound to the allies_train data.
 
 EDA: After exploring numerous relationships between the predictors, I have found some positive relationships between certain psychological components that I would like to use for interaction terms in my recipes. For example, categorizations such as negative emotion with sadness, negative emotion with anger, positive emotion with achievement, informal language with swear words, and cognitive processes with displays of insight may provide valuable insights into the combined effects of different psychological components on the target variable of likes.
 
 Data splitting: I have used a proportion of 0.75 to split the data, and used stratified sampling.
 
-Resampling: I have also applied V-fold cross validation to the training dataset using 10 folds and 5 repeats
+Resampling: I have also applied V-fold cross-validation to the training dataset using 10 folds and 5 repeats
 
 Models: simple linear, null, elastic, knn, random forest, boosted tree
 
@@ -79,13 +79,13 @@ Recipes:
 
 -   Recipe 2- Basic kitchen sink recipe with one hot (recipe2_kitchen_sink_trees)
 
--   Recipe 3- Recipe with Yeo-Johnson transformations and interaction terms (allies_recipe2)
+-   Recipe 3- Recipe with Yeo-Johnson transformations and interaction terms (recipe3_transformed_interactions)
 
--   Recipe 4- Recipe with Yeo-Johnson transformations and one hot (
+-   Recipe 4- Recipe with Yeo-Johnson transformations and one hot (recipe4_transformed_trees)
 
 ## Two Model Types
 
-1.  lm model with recipe3_interactions
+1.  lm model with recipe3_transformed_interactions
 2.  null model with recipe1_kitchen_sink
 
 ## Fit Success
@@ -102,8 +102,7 @@ lm_fit_recipe3 |>
   select(-.config) |> 
   knitr::kable(digits = c(NA, NA, 3, 0, 5, NA))
 ```
-For my linear model, I obtained a rmse of 0.482, and for the null model, I obtwined a rmse of 0.511. Note that these are on the scale of the Yeo-Johnson transformation.
-
+For my linear model, I obtained an RMSE of 0.482, and for the null model, I obtained an RMSE of 0.511. Note that these are on the scale of the Yeo-Johnson transformation. Having low RMSE values is a positive sign, suggesting that my models are capturing some of the variation in my allies data and are providing predictions that are closer to the actual values. Also, with the linear model's RMSE being lower than that of the null model, this indicates that the linear model provides better predictions.
 
 ## Summarize Progress & Next Steps
 
