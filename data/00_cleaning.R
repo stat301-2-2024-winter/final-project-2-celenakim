@@ -12,8 +12,6 @@ library(here)
 # load data ----
 allies_data <- read_csv(here::here("data/raw/allies_video_data.csv"))
 
-
-
 allies <- allies_data |> 
   # 1. rename columns A-P to correct variable names, 
   #    rename LIWC variable names to make more sense
@@ -54,7 +52,13 @@ allies <- allies_data |>
          -like_count,
          -comment_count,
          -video_published_at,
-         -comment_type) |>
+         -comment_type,
+         -replies,
+         -dic,
+         -analytic,
+         -clout,
+         -authentic,
+         -tone) |>
   # 3. move parent_comment_id to be behind comment_id
   relocate(parent_comment_id, 
            .after = comment_id) |> 

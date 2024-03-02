@@ -84,7 +84,9 @@ conclusion...
 
 ## References
 
-"Are We Allies? Black Americans vs Asian Americans \| Middle Ground" *YouTube*, uploaded by Jubilee, 17 January 2021, https://www.youtube.com/watch?v=pXo2ub_nZFc.
+"Are We Allies? Black Americans vs Asian Americans \| Middle Ground" *YouTube*, uploaded by Jubilee, 17 January 2021, [https://www.youtube.com/watch?v=pXo2ub_nZFc](https://www.youtube.com/watch?v=pXo2ub_nZFc).
+
+LIWC, [https://www.liwc.app/](https://www.liwc.app/).
 
 ## Appendix: technical info about the data clean-up process
 
