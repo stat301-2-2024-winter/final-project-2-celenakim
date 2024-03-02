@@ -48,7 +48,7 @@ The data set that I created from the steps highlighted in the previous section i
 The biggest issue I see with my data is that the variable names regarding the basic details of the comments ("replies", "like_count", etc.) did not get copied over from the first spreadsheet and were thus replaced with letters A-P, so I will have to go back in and add those variable names once I clean this data set. Additionally, I may have to rename some of the emotion categories, as they may not be clear based on how they are named by LIWC.
 
 ## Prediction Problem
-My predictive research question is: What factors lead to a comment receiving more likes on the Jubilee video, "Are We Allies? Black Americans vs Asian Americans | Middle Ground"?
+My predictive research question is: How many likes does a comment receive on the Jubilee video, "Are We Allies? Black Americans vs Asian Americans | Middle Ground"?
 
 This is a regression problem as I would like to predict a numerical outcome- the number of likes on a comment- and the target variable is the like count of a comment (variable `H` which will later be renamed to `like_count`). The predictors will be the emotional categories from LIWC. I also plan to create a categorical variable called "comment_length" that categories a comment based on a length of "one word", "short" (1-3 sentences), or "long" (4+ sentences) to be used as a predictor.
 

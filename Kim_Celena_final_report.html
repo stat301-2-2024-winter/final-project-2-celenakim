@@ -9,7 +9,7 @@
 <meta name="author" content="Celena Kim">
 <meta name="dcterms.date" content="2024-03-02">
 
-<title>Final Project 2</title>
+<title>Predicting Comment Likes on the Jubilee Middle Ground video ‘Are We Allies? Black Americans vs Asian Americans’</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -2532,13 +2532,27 @@ vertical-align: -.125em;
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-  
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data-overview" id="toc-data-overview" class="nav-link" data-scroll-target="#data-overview">Data Overview</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#model-building-selection" id="toc-model-building-selection" class="nav-link" data-scroll-target="#model-building-selection">Model Building &amp; Selection</a></li>
+  <li><a href="#final-model-analysis" id="toc-final-model-analysis" class="nav-link" data-scroll-target="#final-model-analysis">Final Model Analysis</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#appendix-technical-info-about-the-data-clean-up-process" id="toc-appendix-technical-info-about-the-data-clean-up-process" class="nav-link" data-scroll-target="#appendix-technical-info-about-the-data-clean-up-process">Appendix: technical info about the data clean-up process</a></li>
+  <li><a href="#appendix-eda" id="toc-appendix-eda" class="nav-link" data-scroll-target="#appendix-eda">Appendix: EDA</a></li>
+  </ul>
+</nav>
 </div>
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Final Project 2</h1>
+<h1 class="title">Predicting Comment Likes on the Jubilee Middle Ground video ‘Are We Allies? Black Americans vs Asian Americans’</h1>
 <p class="subtitle lead"></p><p>Final Project<br>
 Data Science 2 with R (STAT 301-2)</p><p></p>
 </div>
@@ -2566,6 +2580,9 @@ Data Science 2 with R (STAT 301-2)</p><p></p>
 
 </header>
 
+<div class="cell">
+
+</div>
 <div class="callout-tip callout callout-style-default no-icon callout-captioned">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2579,6 +2596,45 @@ Github Repo Link
 <p><a href="https://github.com/stat301-2-2024-winter/final-project-2-celenakim">Celena Kim Repo Link</a></p>
 </div>
 </div>
+<section id="introduction" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<div class="page-columns page-full"><p>The data that I chose for my project was derived from gathering data on the psychological analysis of comments under the Jubilee video titled <a href="https://www.youtube.com/watch?v=pXo2ub_nZFc">Are We Allies? Black Americans vs Asian Americans | Middle Ground</a> found on <a href="https://www.youtube.com">YouTube</a>. This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psych with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video by utilizing the software LIWC<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, a text analysis program that can categorize text by the overall emotion they convey. Each comment under the video was analyzed and given a score of how much they communicate each of 49 various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc.</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup> an explanation of how this software works can be found <a href="https://www.liwc.app/help/howitworks">here</a></p></li></div></div>
+<p>My predictive research question is: <strong>How many likes does a comment on the Jubilee video “Are We Allies? Black Americans vs Asian Americans | Middle Ground” receive?</strong></p>
+<p>This is a regression problem with the target variable being the like count of a comment. The predictors are the LIWC emotional categories, as well as a categorical variable of the length of a comment (short, medium, or long).</p>
+<p>This prediction model is useful because it could provide insights into the factors of emotional content and comment length that influence the engagement of comments on the Jubilee video. For content creators such as Jubilee, this prediction could inform their strategies for knowing what types of comments resonate with their audience in order to optimize their engagement.</p>
+</section>
+<section id="data-overview" class="level2">
+<h2 class="anchored" data-anchor-id="data-overview">Data Overview</h2>
+<p>data overview…</p>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p>methods…</p>
+</section>
+<section id="model-building-selection" class="level2">
+<h2 class="anchored" data-anchor-id="model-building-selection">Model Building &amp; Selection</h2>
+<p>model building &amp; selection…</p>
+</section>
+<section id="final-model-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="final-model-analysis">Final Model Analysis</h2>
+<p>final model analysis…</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>conclusion…</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>“Are We Allies? Black Americans vs Asian Americans | Middle Ground” <em>YouTube</em>, uploaded by Jubilee, 17 January 2021, https://www.youtube.com/watch?v=pXo2ub_nZFc.</p>
+</section>
+<section id="appendix-technical-info-about-the-data-clean-up-process" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-technical-info-about-the-data-clean-up-process">Appendix: technical info about the data clean-up process</h2>
+</section>
+<section id="appendix-eda" class="level2">
+<h2 class="anchored" data-anchor-id="appendix-eda">Appendix: EDA</h2>
+<p>target var &amp; predictors graphs function</p>
+</section>
+
 
 </main>
 <!-- /main column -->

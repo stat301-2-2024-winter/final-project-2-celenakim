@@ -1,5 +1,5 @@
 ---
-title: "Final Project 2"
+title: "Predicting Comment Likes on the Jubilee Middle Ground video 'Are We Allies? Black Americans vs Asian Americans'"
 subtitle: |
   | Final Project 
   | Data Science 2 with R (STAT 301-2)
@@ -12,7 +12,7 @@ format:
     embed-resources: true
     
 execute:
-  echo: true
+  echo: false
   warning: false
 
 from: markdown+emoji 
@@ -20,8 +20,75 @@ reference-location: margin
 citation-location: margin
 ---
 
+```{r}
+#| label: basic-setup
+
+# load packages ----
+library(tidyverse)
+library(tidymodels)
+library(here)
+library(doMC)
+
+# handle common conflicts
+tidymodels_prefer()
+
+# load training data/fits
+load(here("data_splits/allies_split.rda"))
+load(here("results/lm_fit_recipe3.rda"))
+load(here("results/null_fit_recipe1.rda"))
+
+# load pre-processing/feature engineering/recipe
+load(here("recipes/recipe1_kitchen_sink.rda"))
+load(here("recipes/recipe2_kitchen_sink_trees.rda"))
+load(here("recipes/recipe3_transformed_interactions.rda"))
+load(here("recipes/recipe4_transformed_trees.rda"))
+```
+
 ::: {.callout-tip icon="false"}
 ## Github Repo Link
 
 [Celena Kim Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-celenakim)
 :::
+
+## Introduction
+
+The data that I chose for my project was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans \| Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psych with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video by utilizing the software LIWC[^1], a text analysis program that can categorize text by the overall emotion they convey. Each comment under the video was analyzed and given a score of how much they communicate each of 49 various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc.
+
+My predictive research question is: **How many likes does a comment on the Jubilee video "Are We Allies? Black Americans vs Asian Americans \| Middle Ground" receive?**
+
+This is a regression problem with the target variable being the like count of a comment. The predictors are the LIWC emotional categories, as well as a categorical variable of the length of a comment (short, medium, or long).
+
+This prediction model is useful because it could provide insights into the factors of emotional content and comment length that influence the engagement of comments on the Jubilee video. For content creators such as Jubilee, this prediction could inform their strategies for knowing what types of comments resonate with their audience in order to optimize their engagement. 
+
+[^1]: an explanation of how this software works can be found [here](https://www.liwc.app/help/howitworks)
+
+## Data Overview
+
+data overview...
+
+## Methods
+
+methods...
+
+## Model Building & Selection
+
+model building & selection...
+
+## Final Model Analysis
+
+final model analysis...
+
+## Conclusion
+
+conclusion...
+
+## References
+
+"Are We Allies? Black Americans vs Asian Americans \| Middle Ground" *YouTube*, uploaded by Jubilee, 17 January 2021, https://www.youtube.com/watch?v=pXo2ub_nZFc.
+
+## Appendix: technical info about the data clean-up process
+
+
+## Appendix: EDA
+
+target var & predictors graphs function
