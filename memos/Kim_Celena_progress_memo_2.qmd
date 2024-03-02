@@ -57,7 +57,7 @@ The data that I chose for my project, `allies`, was derived from gathering data 
 
 ## Assessment Metric
 
-My predictive research question is: **What psychological factors lead to a comment receiving more likes on the Jubilee video, "Are We Allies? Black Americans vs Asian Americans \| Middle Ground"?**
+My predictive research question is: **How many likes will a comment on the Jubilee video, "Are We Allies? Black Americans vs Asian Americans \| Middle Ground" receive?**
 
 This is a regression problem as I would like to predict a numerical outcome: `likes`, the like count of a comment. The assessment metric I will be using to evaluate the performance of my model will be the **RMSE**. This metric measures the average magnitude of the errors between predicted and actual values and will allow me to understand the accuracy of my models.
 
