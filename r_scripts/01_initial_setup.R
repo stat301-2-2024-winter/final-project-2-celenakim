@@ -89,7 +89,7 @@ allies_test <- testing(allies_split)
 allies_folds <- vfold_cv(allies_train, v = 10, repeats = 5,
                            strata = likes)
 
-save(allies_split, allies_train, allies_test, allies_folds, file = here("results/allies_split.rda"))
+save(allies_split, allies_train, allies_test, allies_folds, file = here("data_splits/allies_split.rda"))
 
 
 

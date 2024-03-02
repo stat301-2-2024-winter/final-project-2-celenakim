@@ -10,7 +10,7 @@ library(here)
 tidymodels_prefer()
 
 set.seed(301)
-load(here("results/allies_split.rda"))
+load(here("data_splits/allies_split.rda"))
 
 # Github link ----
 # https://github.com/stat301-2-2024-winter/final-project-2-celenakim
@@ -30,7 +30,7 @@ prep_recipe1_kitchen_sink <- prep(recipe1_kitchen_sink) |>
   bake(new_data = NULL)
 
 view(prep_recipe1_kitchen_sink)
-save(recipe1_kitchen_sink, file = here("results/recipe1_kitchen_sink.rda"))
+save(recipe1_kitchen_sink, file = here("recipes/recipe1_kitchen_sink.rda"))
 
 
 # RECIPE 2: BASIC KITCHEN SINK WITH ONE HOT --------------------------------------------------------------------
@@ -46,7 +46,7 @@ prep_recipe2_kitchen_sink_trees <- prep(recipe2_kitchen_sink_trees) |>
   bake(new_data = NULL)
 
 view(prep_recipe2_kitchen_sink_trees)
-save(recipe2_kitchen_sink_trees, file = here("results/recipe2_kitchen_sink_trees.rda"))
+save(recipe2_kitchen_sink_trees, file = here("recipes/recipe2_kitchen_sink_trees.rda"))
 
 
 # RECIPE 3: RECIPE WITH YEO JOHNSON TRANSFORMATIONS AND INTERACTION TERMS ----------------------------------------------------------------------
@@ -67,7 +67,7 @@ prep_recipe3_transformed_interactions <- prep(recipe3_transformed_interactions) 
   bake(new_data = NULL)
 
 view(prep_recipe3_transformed_interactions)
-save(recipe3_transformed_interactions, file = here("results/recipe3_transformed_interactions.rda"))
+save(recipe3_transformed_interactions, file = here("recipes/recipe3_transformed_interactions.rda"))
 
 likes_transformed <- recipe(likes ~ informal,
        data = allies_train) |>
@@ -91,7 +91,7 @@ prep_recipe4_transformed_trees <- prep(recipe4_transformed_trees) |>
   bake(new_data = NULL)
 
 view(prep_recipe4_transformed_trees)
-save(recipe4_transformed_trees, file = here("results/recipe4_transformed_trees.rda"))
+save(recipe4_transformed_trees, file = here("recipes/recipe4_transformed_trees.rda"))
 
 
 

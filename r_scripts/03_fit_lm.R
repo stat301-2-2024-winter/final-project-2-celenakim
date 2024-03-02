@@ -11,13 +11,13 @@ library(doMC)
 tidymodels_prefer()
 
 # load training data
-load(here("results/allies_split.rda"))
+load(here("data_splits/allies_split.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("results/recipe1_kitchen_sink.rda"))
-load(here("results/recipe2_kitchen_sink_trees.rda"))
-load(here("results/recipe3_transformed_interactions.rda"))
-load(here("results/recipe4_transformed_trees.rda"))
+load(here("recipes/recipe1_kitchen_sink.rda"))
+load(here("recipes/recipe2_kitchen_sink_trees.rda"))
+load(here("recipes/recipe3_transformed_interactions.rda"))
+load(here("recipes/recipe4_transformed_trees.rda"))
 
 # set up parallel processing
 num_cores <- parallel::detectCores(logical = TRUE)
