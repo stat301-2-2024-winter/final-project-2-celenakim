@@ -65,12 +65,12 @@ allies <- allies_data |>
   # 4. mutate the "comment_length" categorical variable
   mutate(
     comment_length = case_when(
-      word_count <= 15 ~ "Short",
-      word_count <= 25 ~ "Medium",
-      TRUE ~ "Long"),
+      word_count <= 15 ~ "short",
+      word_count <= 25 ~ "medium",
+      TRUE ~ "long"),
     comment_length = as.factor(comment_length)) |> 
   # 5. move comment_length to be behind comment
   relocate(comment_length, 
            .after = word_count) 
 
-write_csv(allies, "data/allies.csv")
+write_rds(allies, "data/allies.rds")

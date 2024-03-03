@@ -60,8 +60,8 @@ recipe3_transformed_interactions <- recipe(likes_yj ~ .,
   step_interact(terms = ~neg_emo:sad) |> 
   step_interact(terms = ~neg_emo:anger) |> 
   step_interact(terms = ~pos_emo:achieve) |> 
-  step_interact(terms = ~informal:swear) |> 
-  step_interact(terms = ~cog_proc:insight)
+  step_interact(terms = ~cog_proc:insight) |> 
+  step_interact(terms = ~affiliation:drives)
 
 prep_recipe3_transformed_interactions <- prep(recipe3_transformed_interactions) |> 
   bake(new_data = NULL)
