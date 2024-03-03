@@ -13,16 +13,16 @@ library(doMC)
 tidymodels_prefer()
 
 # load training data/fits
-load(here("results/allies_split.rda"))
+load(here("data_splits/allies_split.rda"))
 load(here("results/lm_fit_recipe3.rda"))
 load(here("results/null_fit_recipe1.rda"))
 
 
 # load pre-processing/feature engineering/recipe
-load(here("results/recipe1_kitchen_sink.rda"))
-load(here("results/recipe2_kitchen_sink_trees.rda"))
-load(here("results/recipe3_transformed_interactions.rda"))
-load(here("results/recipe4_transformed_trees.rda"))
+load(here("recipes/recipe1_kitchen_sink.rda"))
+load(here("recipes/recipe2_kitchen_sink_trees.rda"))
+load(here("recipes/recipe3_transformed_interactions.rda"))
+load(here("recipes/recipe4_transformed_trees.rda"))
 set.seed(301)
 
 

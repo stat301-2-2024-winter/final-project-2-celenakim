@@ -239,8 +239,26 @@ allies_train_portion |>
 In order to determine possible relationships between the numerical variables, I created scatterplots of several pairs of predictor variables and examined their correlations. @fig-cor-1 - @fig-cor-5 show the variable pairs that seem to have the strongest positive correlations: negative emotion & sadness, negative emotion & anger, positive emotion & achievement, cognitive processes & insight, and affiliation & drives. Identifying these relationships is useful for adding interaction terms to my models as they will be able to capture the joint effect of two variables on the outcome variable of comment likes.
 
 ## Methods
+I implemented an 80-20 training-test split using stratified sampling (stratified by target variable with 4 strata). The resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (10 folds, 5 repeats) with stratification on the target variable with 4 strata.
 
-methods...
+The following model types were specified with a plan for tuning hyperparameters using a regular grid:
+
+-   Null model (on Yeo Johnson scale)
+-   Linear model (`lm` engine, on Yeo Johnson scale)
+-   Elastic net model (`glmnet` engine)
+    -   Mixture was explored over $[0,1]$ range with 11 levels
+    -   Penalty was explored over $[-3,0]$ range with 11 levels (on log-10 scale)
+-   K-nearest neighbors model (`kknn` engine)
+    -   Neighbors was explored over $[1,25]$ with 7 levels
+-   Random forest (`ranger` engine)
+    -   Number of trees set to 1,000
+    -   Number of randomly selected predictors to split on was explored over $[1,6]$ with 6 levels
+    -   Minimum number of data points in a node for splitting was explored over $[2,40]$ with 5 levels
+-   Boosted tree (`xgboost` engine)
+    -   Number of trees was explored over $[100, 1000]$ with 4 levels
+    -   Number of randomly selected predictors to split on was explored over $[1,6]$ with 6 levels
+    -   Minimum number of data points in a node for splitting was explored over $[2,40]$ with 4 levels
+    -   Learning rate was explored over $[-5,-0.2]$ with 4 levels (on log-10 scale)
 
 ## Model Building & Selection
 
