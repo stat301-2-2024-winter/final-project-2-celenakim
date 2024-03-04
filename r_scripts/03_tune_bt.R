@@ -53,8 +53,8 @@ tuned_bt <- tune_grid(bt_wflow,
 save(tuned_bt, file = here("results/tuned_bt.rda"))
 
 
-## -------------------------------------------------------------------
-# hyperparameter tuning values ----
+### hyperparameter tuning values --------------------------------------------------------
+
 
 # check ranges for hyperparameters
 hardhat::extract_parameter_set_dials(bt_model)
@@ -74,10 +74,10 @@ autoplot(tuned_bt, metric = "rmse")
 # SELECTING BEST RMSE
 select_best(tuned_bt, "rmse")
 
-model_results <- as_workflow_set(
+bt_model_result <- as_workflow_set(
   bt = tuned_bt)
 
-tbl_result <- model_results |> 
+tbl_result <- bt_model_result |> 
   collect_metrics() |> 
   filter(.metric == "rmse") |> 
   slice_min(mean, by = wflow_id) |> 

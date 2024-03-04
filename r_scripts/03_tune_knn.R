@@ -32,7 +32,7 @@ knn_spec <-
 knn_wflow <-
   workflow() |> 
   add_model(knn_spec) |> 
-  add_recipe(carseats_recipe)
+  add_recipe(recipe2_kitchen_sink_trees)
 
 # hyperparameter tuning values ----
 
@@ -50,9 +50,46 @@ knn_grid <- grid_regular(knn_params, levels = 5)
 
 # fit workflows/models ----
 tuned_knn <- tune_grid(knn_wflow,
-                       carseats_folds,
+                       allies_folds,
                        grid = knn_grid,
                        control = control_grid(save_workflow = TRUE))
 
 # write out results (fitted/trained workflows) ----
 save(tuned_knn, file = here("results/tuned_knn.rda"))
+
+### hyperparameter tuning values --------------------------------------------------------
+
+
+# check ranges for hyperparameters
+hardhat::extract_parameter_set_dials(knn_spec)
+
+# change hyperparameter ranges
+knn_params <- extract_parameter_set_dials(knn_spec) |> 
+  update(mtry = mtry(range = c(1, 14)),
+         learn_rate = learn_rate(range = c(-5, -0.2)))
+
+# build tuning grid
+knn_grid <- grid_regular(knn_params, levels = 5)
+
+
+# VISUAL INSPECTION OF TUNING RESULTS
+autoplot(tuned_knn, metric = "rmse")
+
+# SELECTING BEST RMSE
+select_best(tuned_knn, "rmse")
+
+knn_model_result <- as_workflow_set(
+  knn = tuned_knn)
+
+knn_tbl_result <- knn_model_result |> 
+  collect_metrics() |> 
+  filter(.metric == "rmse") |> 
+  slice_min(mean, by = wflow_id) |> 
+  arrange(mean) |> 
+  select(`Model Type` = wflow_id, 
+         `RMSE` = mean, 
+         `Std Error` = std_err, 
+         `Num Models` = n) |> 
+  knitr::kable(digits = c(NA, 3, 4, 0))
+
+knn_tbl_result
