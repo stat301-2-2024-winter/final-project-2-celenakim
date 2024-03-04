@@ -1,4 +1,4 @@
-# Define and fit rf
+# Define and fit rf with kitchen sink recipe
 
 # load packages ----
 library(tidyverse)
