@@ -51,7 +51,7 @@ tuned_bt_a <- tune_grid(bt_a_wflow,
 
 # write out results (fitted/trained workflows) ----
 save(tuned_bt_a, file = here("results/tuned_bt_a.rda"))
-
+load(here("results/tuned_bt_a.rda"))
 
 
 # VISUAL INSPECTION OF TUNING RESULTS
