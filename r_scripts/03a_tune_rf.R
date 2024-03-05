@@ -36,7 +36,7 @@ rf_a_wflow <-
 
 # hyperparameter tuning values ----
 rf_a_params <- extract_parameter_set_dials(rf_a_model) |> 
-  update(mtry = mtry(range = c(1, 38)))
+  update(mtry = mtry(range = c(1, 37)))
 
 rf_a_grid <- grid_regular(rf_a_params, levels = 5)
 
@@ -56,7 +56,7 @@ hardhat::extract_parameter_set_dials(rf_a_model)
 
 # change hyperparameter ranges
 rf_a_params <- extract_parameter_set_dials(rf_a_model) |> 
-  update(mtry = mtry(range = c(1, 38)),
+  update(mtry = mtry(range = c(1, 37)),
          learn_rate = learn_rate(range = c(-5, -0.2)))
 
 # build tuning grid
