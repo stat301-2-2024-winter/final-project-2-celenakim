@@ -1,4 +1,4 @@
-# Define and fit bt with complex tree recipe
+# Define and fit bt b with complex tree recipe
 
 # load packages ----
 library(tidyverse)

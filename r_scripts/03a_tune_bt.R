@@ -1,4 +1,4 @@
-# Define and fit bt with kitchen sink tree recipe
+# Define and fit bt a with kitchen sink tree recipe
 
 # load packages ----
 library(tidyverse)
@@ -38,7 +38,7 @@ bt_a_wflow <-
 
 # hyperparameter tuning values ----
 bt_a_params <- extract_parameter_set_dials(bt_a_model) |> 
-  update(mtry = mtry(range = c(1, 37)),
+  update(mtry = mtry(range = c(1, 30)),
          learn_rate = learn_rate(range = c(-5, -0.2)))
 
 bt_a_grid <- grid_regular(bt_a_params, levels = 5)

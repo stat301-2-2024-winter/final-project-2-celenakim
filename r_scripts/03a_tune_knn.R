@@ -1,4 +1,5 @@
-# Define and fit knn with kitchen sink recipe
+# Final Project 2 ----
+# Define and fit knn a with kitchen sink recipe 1
 
 # load packages ----
 library(tidyverse)
@@ -13,7 +14,7 @@ tidymodels_prefer()
 load(here("data_splits/allies_split.rda"))
 
 # load pre-processing/feature engineering/recipe
-load(here("recipes/recipe2_kitchen_sink_trees.rda"))
+load(here("recipes/recipe1_kitchen_sink.rda"))
 
 
 # set up parallel processing
@@ -31,7 +32,7 @@ knn_a_spec <-
 knn_a_wflow <-
   workflow() |> 
   add_model(knn_a_spec) |> 
-  add_recipe(recipe2_kitchen_sink_trees)
+  add_recipe(recipe1_kitchen_sink)
 
 # hyperparameter tuning values ----
 
@@ -42,7 +43,7 @@ hardhat::extract_parameter_set_dials(knn_a_spec)
 knn_a_params <- extract_parameter_set_dials(knn_a_spec) |> 
   # N:= maximum number of random predictor columns we want to try 
   # should be less than the number of available columns
-  update(neighbors = neighbors(c(1, 10))) 
+  update(neighbors = neighbors(c(1, 30))) 
 
 # build tuning grid
 knn_a_grid <- grid_regular(knn_a_params, levels = 5)
@@ -58,15 +59,6 @@ save(tuned_knn_a, file = here("results/tuned_knn_a.rda"))
 
 ### hyperparameter tuning values --------------------------------------------------------
 
-
-# check ranges for hyperparameters
-hardhat::extract_parameter_set_dials(knn_a_spec)
-
-# change hyperparameter ranges
-knn_a_params <- extract_parameter_set_dials(knn_a_spec) |> 
-  update(mtry = mtry(range = c(1, 14)),
-         learn_rate = learn_rate(range = c(-5, -0.2)))
-
 # build tuning grid
 knn_a_grid <- grid_regular(knn_a_params, levels = 5)
 
@@ -78,9 +70,9 @@ autoplot(tuned_knn_a, metric = "rmse")
 select_best(tuned_knn_a, "rmse")
 
 knn_a_model_result <- as_workflow_set(
-  knn = tuned_a_knn)
+  knn = tuned_knn_a)
 
-knn_a_tbl_result <- knn_a_model_result |> 
+best_knn_a <- knn_a_model_result |> 
   collect_metrics() |> 
   filter(.metric == "rmse") |> 
   slice_min(mean, by = wflow_id) |> 
@@ -91,4 +83,5 @@ knn_a_tbl_result <- knn_a_model_result |>
          `Num Models` = n) |> 
   knitr::kable(digits = c(NA, 3, 4, 0))
 
-knn_a_tbl_result
+best_knn_a
+save(knn_a_params, knn_a_grid, knn_a_model_result, best_knn_a, file = here("results/best_knn_a.rda"))
