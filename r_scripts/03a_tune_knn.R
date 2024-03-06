@@ -43,7 +43,7 @@ hardhat::extract_parameter_set_dials(knn_a_spec)
 knn_a_params <- extract_parameter_set_dials(knn_a_spec) |> 
   # N:= maximum number of random predictor columns we want to try 
   # should be less than the number of available columns
-  update(neighbors = neighbors(c(1, 30))) 
+  update(neighbors = neighbors(c(1, 10))) 
 
 # build tuning grid
 knn_a_grid <- grid_regular(knn_a_params, levels = 5)
@@ -56,6 +56,7 @@ tuned_knn_a <- tune_grid(knn_a_wflow,
 
 # write out results (fitted/trained workflows) ----
 save(tuned_knn_a, file = here("results/tuned_knn_a.rda"))
+load(here("results/tuned_knn_a.rda"))
 
 ### hyperparameter tuning values --------------------------------------------------------
 
@@ -85,3 +86,7 @@ best_knn_a <- knn_a_model_result |>
 
 best_knn_a
 save(knn_a_params, knn_a_grid, knn_a_model_result, best_knn_a, file = here("results/best_knn_a.rda"))
+
+
+load(here("results/best_knn_a.rda"))
+

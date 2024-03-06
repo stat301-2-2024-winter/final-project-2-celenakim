@@ -41,7 +41,13 @@ null_fit_a <- null_workflow_a |>
 
 # write out results (fitted/trained workflows) ----
 save(null_fit_a, file = here("results/null_fit_a.rda"))
+load(here("results/null_fit_a.rda"))
 
+bind_rows(null_fit_a |> 
+            collect_metrics() |>  
+            mutate(model = "lm") |> 
+            filter(.metric == "rmse")) |> 
+  knitr::kable(digits = c(NA, NA, 3, 0, 5, NA))
 
 
 

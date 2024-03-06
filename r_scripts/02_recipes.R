@@ -50,9 +50,8 @@ save(recipe2_kitchen_sink_trees, file = here("recipes/recipe2_kitchen_sink_trees
 
 
 # RECIPE 3: RECIPE WITH YEO JOHNSON TRANSFORMATIONS AND INTERACTION TERMS ----------------------------------------------------------------------
-recipe3_transformed_interactions <- recipe(likes_yj ~ .,
+recipe3_transformed_interactions <- recipe(likes_yj ~ neg_emo + pos_emo + cog_proc + affiliation + sad + anger + achieve + insight + drives,
                               data = allies_train) |> 
-  step_rm(likes, comment_id, parent_comment_id, username, comment) |> 
   step_YeoJohnson(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors()) |> 
   step_zv(all_predictors()) |> 
@@ -78,9 +77,8 @@ likes_transformed <- recipe(likes ~ informal,
 
 
 # RECIPE 4: RECIPE WITH YEO JOHNSON TRANSFORMATIONS AND ONE HOT -------------------------------------------------------
-recipe4_transformed_trees <- recipe(likes_yj ~ .,
+recipe4_transformed_trees <- recipe(likes_yj ~ neg_emo + pos_emo + cog_proc + affiliation + sad + anger + achieve + insight + drives,
                               data = allies_train) |> 
-  step_rm(likes, comment_id, parent_comment_id, username, comment) |> 
   step_YeoJohnson(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors(),
              one_hot = TRUE) |> 
