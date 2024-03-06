@@ -59,6 +59,9 @@ rf_a_params <- extract_parameter_set_dials(rf_a_model) |>
   update(mtry = mtry(range = c(1, 37)),
          learn_rate = learn_rate(range = c(-5, -0.2)))
 
+
+
+load(here("results/tuned_rf_a.rda"))
 # build tuning grid
 rf_a_grid <- grid_regular(rf_a_params, levels = 5)
 
