@@ -16,7 +16,6 @@ load(here("data_splits/allies_split.rda"))
 # load pre-processing/feature engineering/recipe
 load(here("recipes/recipe1_kitchen_sink.rda"))
 
-
 # set up parallel processing
 num_cores <- parallel::detectCores(logical = TRUE)
 registerDoMC(cores = num_cores)
