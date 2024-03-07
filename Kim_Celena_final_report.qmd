@@ -37,7 +37,7 @@ tidymodels_prefer()
 allies <- read_rds("data/allies.rds")
 
 # load training data/fits
-
+load(here("data_splits/allies_split.rda"))
 
 # load pre-processing/feature engineering/recipe
 
@@ -180,6 +180,8 @@ corr <- allies_train_portion |>
 allies_cor <- ggcorrplot::ggcorrplot(corr) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4),
         axis.text.y = element_text(size = 4))
+
+allies_cor
 ```
 
 In order to determine possible relationships between the numerical variables, I created a correlation plot. @fig-cor-plot shows that the variable pairs with the strongest positive correlations seem to be: focus present & verb, affiliation & drives, pos emo & affect, negative emotion & anger, negative emotion & sadness, cognitive processes & certaint, and achieve & social. Identifying these relationships is useful for adding interaction terms to my models as they will be able to capture the joint effect of two variables on the outcome variable of comment likes.

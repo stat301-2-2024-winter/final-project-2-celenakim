@@ -50,17 +50,19 @@ save(recipe2_kitchen_sink_trees, file = here("recipes/recipe2_kitchen_sink_trees
 
 
 # RECIPE 3: RECIPE WITH YEO JOHNSON TRANSFORMATIONS AND INTERACTION TERMS ----------------------------------------------------------------------
-recipe3_transformed_interactions <- recipe(likes_yj ~ neg_emo + pos_emo + cog_proc + affiliation + sad + anger + affect + insight + drives,
+recipe3_transformed_interactions <- recipe(likes_yj ~ focus_present + verb + affiliation + drives + pos_emo + affect + neg_emo + anger + sad + cog_proc + certain + achieve + social,
                               data = allies_train) |> 
   step_YeoJohnson(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors()) |> 
   step_zv(all_predictors()) |> 
   step_normalize(all_predictors()) |> 
-  step_interact(terms = ~neg_emo:sad) |> 
-  step_interact(terms = ~neg_emo:anger) |> 
+  step_interact(terms = ~focus_present:verb) |> 
+  step_interact(terms = ~affiliation:drives) |> 
   step_interact(terms = ~pos_emo:affect) |> 
-  step_interact(terms = ~cog_proc:insight) |> 
-  step_interact(terms = ~affiliation:drives)
+  step_interact(terms = ~neg_emo:anger) |> 
+  step_interact(terms = ~neg_emo:sad) |> 
+  step_interact(terms = ~cog_proc:certain) |> 
+  step_interact(terms = ~achieve:social)
 
 prep_recipe3_transformed_interactions <- prep(recipe3_transformed_interactions) |> 
   bake(new_data = NULL)
@@ -77,7 +79,7 @@ likes_transformed <- recipe(likes ~ informal,
 
 
 # RECIPE 4: RECIPE WITH YEO JOHNSON TRANSFORMATIONS AND ONE HOT -------------------------------------------------------
-recipe4_transformed_trees <- recipe(likes_yj ~ neg_emo + pos_emo + cog_proc + affiliation + sad + anger + achieve + insight + drives,
+recipe4_transformed_trees <- recipe(likes_yj ~ focus_present + verb + affiliation + drives + pos_emo + affect + neg_emo + anger + sad + cog_proc + certain + achieve + social,
                               data = allies_train) |> 
   step_YeoJohnson(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors(),
