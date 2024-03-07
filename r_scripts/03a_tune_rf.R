@@ -1,4 +1,4 @@
-# Define and fit rf with kitchen sink recipe
+# Define and fit rf a with kitchen sink trees recipe 2
 
 # load packages ----
 library(tidyverse)
@@ -48,7 +48,7 @@ tuned_rf_a <- tune_grid(rf_a_wflow,
                       control = control_grid(save_workflow = TRUE))
 
 # write out results (fitted/trained workflows) ----
-save(tuned_rf_a, file = here("results/tuned_rf_a.rda"))
+save(rf_a_params, rf_a_grid, tuned_rf_a, file = here("results/tuned_rf_a.rda"))
 load(here("results/tuned_rf_a.rda"))
 
 # build tuning grid
@@ -76,4 +76,5 @@ best_rf_a <- rf_a_model_result |>
   knitr::kable(digits = c(NA, 3, 4, 0))
 
 best_rf_a
-save(rf_a_params, rf_a_grid, rf_a_model_result, best_rf_a, file = here("results/best_rf_a.rda"))
+save(rf_a_model_result, best_rf_a, file = here("results/best_rf_a.rda"))
+load(here("results/best_rf_a.rda"))

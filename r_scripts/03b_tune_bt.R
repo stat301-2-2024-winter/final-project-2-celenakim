@@ -1,4 +1,4 @@
-# Define and fit bt b with complex tree recipe
+# Define and fit bt b with complex trees recipe 4
 
 # load packages ----
 library(tidyverse)
@@ -37,7 +37,7 @@ bt_b_wflow <-
 
 # hyperparameter tuning values ----
 bt_b_params <- extract_parameter_set_dials(bt_b_model) |> 
-  update(mtry = mtry(range = c(1, 20)),
+  update(mtry = mtry(range = c(1, 30)),
          learn_rate = learn_rate(range = c(-5, -0.2)))
 
 bt_b_grid <- grid_regular(bt_b_params, levels = 5)
@@ -49,22 +49,7 @@ tuned_bt_b <- tune_grid(bt_b_wflow,
                         control = control_grid(save_workflow = TRUE))
 
 # write out results (fitted/trained workflows) ----
-save(tuned_bt_b, file = here("results/tuned_bt_b.rda"))
-
-
-### hyperparameter tuning values --------------------------------------------------------
-
-
-# check ranges for hyperparameters
-hardhat::extract_parameter_set_dials(bt_b_model)
-
-# change hyperparameter ranges
-bt_b_params <- extract_parameter_set_dials(bt_b_model) |> 
-  update(mtry = mtry(range = c(1, 14)),
-         learn_rate = learn_rate(range = c(-5, -0.2)))
-
-# build tuning grid
-bt_b_grid <- grid_regular(bt_b_params, levels = 5)
+save(bt_b_params, bt_b_grid, tuned_bt_b, file = here("results/tuned_bt_b.rda"))
 
 
 # VISUAL INSPECTION OF TUNING RESULTS
@@ -74,7 +59,7 @@ autoplot(tuned_bt_b, metric = "rmse")
 select_best(tuned_bt_b, "rmse")
 
 bt_b_model_result <- as_workflow_set(
-  bt = tuned_bt_b)
+  bt_b = tuned_bt_b)
 
 best_bt_b <- bt_b_model_result |> 
   collect_metrics() |> 
@@ -88,3 +73,7 @@ best_bt_b <- bt_b_model_result |>
   knitr::kable(digits = c(NA, 3, 4, 0))
 
 best_bt_b
+
+save(bt_b_model_result, best_bt_b, file = here("results/best_bt_b.rda"))
+
+load(here("results/best_bt_b.rda"))

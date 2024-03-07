@@ -1,4 +1,4 @@
-# Define and fit bt a with kitchen sink tree recipe
+# Define and fit bt a with kitchen sink tree recipe 1
 
 # load packages ----
 library(tidyverse)
@@ -50,7 +50,7 @@ tuned_bt_a <- tune_grid(bt_a_wflow,
                       control = control_grid(save_workflow = TRUE))
 
 # write out results (fitted/trained workflows) ----
-save(tuned_bt_a, file = here("results/tuned_bt_a.rda"))
+save(bt_a_params, bt_a_grid, tuned_bt_a, file = here("results/tuned_bt_a.rda"))
 load(here("results/tuned_bt_a.rda"))
 
 
@@ -61,7 +61,7 @@ autoplot(tuned_bt_a, metric = "rmse")
 select_best(tuned_bt_a, "rmse")
 
 bt_a_model_result <- as_workflow_set(
-  bt = tuned_bt_a)
+  bt_a = tuned_bt_a)
 
 best_bt_a <- bt_a_model_result |> 
   collect_metrics() |> 
@@ -75,6 +75,6 @@ best_bt_a <- bt_a_model_result |>
   knitr::kable(digits = c(NA, 3, 4, 0))
 
 best_bt_a
-save(bt_a_params, bt_a_grid, bt_a_model_result, best_bt_a, file = here("results/best_bt_a.rda"))
+save(bt_a_model_result, best_bt_a, file = here("results/best_bt_a.rda"))
 
 load(here("results/best_bt_a.rda"))
