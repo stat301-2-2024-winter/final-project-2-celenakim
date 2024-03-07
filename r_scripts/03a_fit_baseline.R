@@ -20,8 +20,7 @@ load(here("recipes/recipe1_kitchen_sink.rda"))
 num_cores <- parallel::detectCores(logical = TRUE)
 registerDoMC(cores = num_cores)
 
-
-# NULL MODEL
+set.seed(301)
 # model specifications ----
 null_spec_a <- null_model() |> 
   set_engine("parsnip") |> 

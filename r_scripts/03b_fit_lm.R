@@ -20,7 +20,7 @@ load(here("recipes/recipe3_transformed_interactions.rda"))
 num_cores <- parallel::detectCores(logical = TRUE)
 registerDoMC(cores = num_cores)
 
-
+set.seed(301)
 # model specifications ----
 lm_spec_b <- 
   linear_reg() |> 
@@ -43,10 +43,3 @@ lm_fit_b <- fit_resamples(lm_wflow_b,
 
 # write out results (fitted/trained workflows) ----
 save(lm_fit_b, file = here("results/lm_fit_b.rda"))
-load(here("results/lm_fit_b.rda"))
-
-bind_rows(lm_fit_b |> 
-            collect_metrics() |>  
-            mutate(model = "lm") |> 
-            filter(.metric == "rmse")) |> 
-  knitr::kable(digits = c(NA, NA, 3, 0, 5, NA))

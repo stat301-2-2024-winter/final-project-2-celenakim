@@ -38,8 +38,8 @@ rf_b_wflow <-
 rf_b_params <- extract_parameter_set_dials(rf_b_model) |> 
   update(mtry = mtry(range = c(1, 30)))
 
+# build tuning grid ----
 rf_b_grid <- grid_regular(rf_b_params, levels = 5)
-
 
 # fit workflows/models ----
 tuned_rf_b <- tune_grid(rf_b_wflow,
@@ -49,29 +49,3 @@ tuned_rf_b <- tune_grid(rf_b_wflow,
 
 # write out results (fitted/trained workflows) ----
 save(rf_b_params, rf_b_grid, tuned_rf_b, file = here("results/tuned_rf_b.rda"))
-load(here("results/tuned_rf_b.rda"))
-
-
-# VISUAL INSPECTION OF TUNING RESULTS
-autoplot(tuned_rf_b, metric = "rmse")
-
-# SELECTING BEST RMSE
-select_best(tuned_rf_b, "rmse")
-
-rf_b_model_result <- as_workflow_set(
-  rf_b = tuned_rf_b)
-
-best_rf_b <- rf_b_model_result |> 
-  collect_metrics() |> 
-  filter(.metric == "rmse") |> 
-  slice_min(mean, by = wflow_id) |> 
-  arrange(mean) |> 
-  select(`Model Type` = wflow_id, 
-         `RMSE` = mean, 
-         `Std Error` = std_err, 
-         `Num Models` = n) |> 
-  knitr::kable(digits = c(NA, 3, 4, 0))
-
-best_rf_b
-save(rf_b_model_result, best_rf_b, file = here("results/best_rf_b.rda"))
-load(here("results/best_rf_b.rda"))
