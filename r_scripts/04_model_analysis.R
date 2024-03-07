@@ -80,3 +80,6 @@ tbl_result
 
 
 
+
+pred_range <- bind_cols(allies_test, predict(best_rf_a, allies_test)) |> 
+  mutate(.pred = VGAM::yeo.johnson(.pred, inverse = TRUE))

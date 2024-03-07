@@ -43,7 +43,7 @@ hardhat::extract_parameter_set_dials(knn_a_spec)
 knn_a_params <- extract_parameter_set_dials(knn_a_spec) |> 
   # N:= maximum number of random predictor columns we want to try 
   # should be less than the number of available columns
-  update(neighbors = neighbors(c(1, 10))) 
+  update(neighbors = neighbors(c(1, 30))) 
 
 # build tuning grid
 knn_a_grid <- grid_regular(knn_a_params, levels = 5)
