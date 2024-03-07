@@ -73,6 +73,7 @@ tbl_result <- model_results |>
   collect_metrics() |> 
   filter(.metric == "rmse") |> 
   slice_min(mean, by = wflow_id) |> 
+  distinct(wflow_id, .keep_all = TRUE) |> 
   arrange(mean) |> 
   select(`Model Type` = wflow_id, 
          `RMSE` = mean, 

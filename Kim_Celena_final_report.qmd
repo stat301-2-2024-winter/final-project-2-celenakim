@@ -37,15 +37,10 @@ tidymodels_prefer()
 allies <- read_rds("data/allies.rds")
 
 # load training data/fits
-load(here("data_splits/allies_split.rda"))
-load(here("results/lm_fit_recipe3.rda"))
-load(here("results/null_fit_recipe1.rda"))
+
 
 # load pre-processing/feature engineering/recipe
-load(here("recipes/recipe1_kitchen_sink.rda"))
-load(here("recipes/recipe2_kitchen_sink_trees.rda"))
-load(here("recipes/recipe3_transformed_interactions.rda"))
-load(here("recipes/recipe4_transformed_trees.rda"))
+
 ```
 
 ::: {.callout-tip icon="false"}
@@ -64,10 +59,12 @@ My predictive research question is: **How many likes does a comment on the Jubil
 
 This is a regression problem with the target variable being the like count of a comment. The predictors are the LIWC emotional categories, as well as a categorical variable of the length of a comment (short, medium, or long).
 
-This prediction model is useful because it could provide insights into the factors of emotional content and comment length that influence the engagement of comments on the Jubilee video. For content creators such as Jubilee, this prediction could inform their strategies for knowing what types of comments resonate with their audience in order to optimize their engagement. 
+This prediction model is useful because it could provide insights into the factors of emotional content and comment length that influence the engagement of comments on the Jubilee video. For content creators such as Jubilee, this prediction could inform their strategies for knowing what types of comments resonate with their audience in order to optimize their engagement.
 
 ## Data Overview
+
 ### Response variable analysis:
+
 ```{r}
 #| label: fig-likes-exploration
 #| fig-cap: An exploration of the response variable, the like count of a comment.
@@ -80,6 +77,7 @@ ggplot(allies, aes(x = likes)) +
        y = "Density") +
   theme_minimal()
 ```
+
 As seen in @fig-likes-exploration, the distribution of comment likes is heavily skewed to the right as there seems to be extreme high outliers. Thus, a transformation may be necessary to help normalize the distribution.
 
 ```{r}
@@ -94,7 +92,8 @@ ggplot(allies, aes(x = log10(likes))) +
        y = "Density") +
   theme_minimal()
 ```
-@fig-likes-transformed shows that a log transformation did seem to help to slightly normalize the likes distribution, but as there are numerous values of 0 within the observations, those values were removed. Therefore, I will instead transform the comment likes using a Yeo-Johnson transformation within my recipes. 
+
+@fig-likes-transformed shows that a log transformation did seem to help to slightly normalize the likes distribution, but as there are numerous values of 0 within the observations, those values were removed. Therefore, I will instead transform the comment likes using a Yeo-Johnson transformation within my recipes.
 
 ```{r}
 #| label: fig-likes-yj
@@ -108,9 +107,11 @@ ggplot(allies_train, aes(x = likes_yj)) +
        y = "Density") +
   theme_minimal()
 ```
+
 As can be seen in @fig-likes-yj, while the distribution of the number of likes on a comment is not perfectly normalized after undergoing a Yeo-Johnson transformation, it is still much less skewed than before.
 
 ### Data inspection:
+
 ```{r}
 #| label: fig-allies-inspection
 #| fig-cap: An inspection of the allies data set for missingness.
@@ -122,9 +123,11 @@ missing_counts_df <- data.frame(Missing_Count = missing_counts)
 kable(missing_counts_df)
 
 ```
+
 After inspecting the allies data set for missingness, @fig-allies-inspection shows that there only seems to be missingness in the ID of a comment's parent comment. However, this does not seem to pose a significant issue, as this variable is not going to be important for my analysis.
 
 ### Categorical variable inspection:
+
 ```{r}
 #| label: fig-cat-inspection
 #| fig-cap: An inspection of the distribution of comment lengths.
@@ -140,9 +143,11 @@ ggplot(allies, aes(x = factor(comment_length,
        subtitle = "There are significantly more short comments than long or medium.") +
   theme_minimal()
 ```
+
 As visualized by @fig-cat-inspection, there seems to be a class imbalance within the categorical variable of comment length, as there are significantly more short comments than long or medium. Thus, it may be necessary to use stratified sampling, as this is effective in keeping the outcome distributions similar between the training and testing data sets.
 
 ### Predictor Variables Exploration
+
 ```{r}
 #| label: fig-rest-raw-inspection
 #| fig-cap: An inspection of the distributions of the numerical predictor variables.
@@ -158,88 +163,30 @@ ggplot(allies_train_portion, aes(x = anger)) +
        y = "Density") +
   theme_minimal()
 ```
-Just as the target variable of comment likes was heavily skewed right, the numerical predictor variables are all skewed in the same fashion, similarly to the emotional category of anger shown in @fig-rest-raw-inspection. Thus, these variables will also undergo a Yeo-Johnson transformation with a recipe step. 
 
+Just as the target variable of comment likes was heavily skewed right, the numerical predictor variables are all skewed in the same fashion, similarly to the emotional category of anger shown in @fig-rest-raw-inspection. Thus, these variables will also undergo a Yeo-Johnson transformation with a recipe step.
 
 ### Predictor Variable Relationships:
-```{r}
-#| label: fig-cor-1
-#| fig-cap: A visualization of the relationship between negative emotion and sadness.
-
-allies_train_portion |>
-  ggplot(aes(x = neg_emo,
-             y = sad)) +
-  geom_point() +
-  labs(x = "Negative Emotion",
-       y = "Sadness",
-       title = "Sadness vs. Negative Emotion",
-       subtitle = "There is a positive correlation.") +
-  theme_minimal()
-```
 
 ```{r}
-#| label: fig-cor-2
-#| fig-cap: A visualization of the relationship between negative emotion and anger
+#| label: fig-cor-plot
+#| fig-cap: A visualization of the correlations that exist between the predictor variables
 
-allies_train_portion |>
-  ggplot(aes(x = neg_emo,
-             y = anger)) +
-  geom_point() +
-  labs(x = "Negative Emotion",
-       y = "Anger",
-       title = "Anger vs. Negative Emotion",
-       subtitle = "There is a positive correlation.") +
-  theme_minimal()
+
+corr <- allies_train_portion |> 
+  select(where(is.numeric)) |> 
+  cor()
+
+allies_cor <- ggcorrplot::ggcorrplot(corr) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4),
+        axis.text.y = element_text(size = 4))
 ```
 
-```{r}
-#| label: fig-cor-3
-#| fig-cap: A visualization of the relationship between positive emotion and words that express achievement.
-
-allies_train_portion |>
-  ggplot(aes(x = pos_emo,
-             y = achieve)) +
-  geom_point() +
-  labs(x = "Positive Emotion",
-       y = "Achievement",
-       title = "Achievement vs. Positive Emotion",
-       subtitle = "There is a positive correlation.") +
-  theme_minimal()
-```
-
-```{r}
-#| label: fig-cor-4
-#| fig-cap: A visualization of the relationship between displays of cognitive processes and displays of insight.
-
-allies_train_portion |>
-  ggplot(aes(x = cog_proc,
-             y = insight)) +
-  geom_point() +
-  labs(x = "Cognitive Processes",
-       y = "Insight",
-       title = "Insight vs. Cognitive Processes",
-       subtitle = "There is a positive correlation.") +
-  theme_minimal()
-```
-
-```{r}
-#| label: fig-cor-5
-#| fig-cap: A visualization of the relationship between displays of affiliation and drives.
-
-allies_train_portion |>
-  ggplot(aes(x = affiliation,
-             y = drives)) +
-  geom_point() +
-  labs(x = "Affiliation",
-       y = "Drives",
-       title = "Drives vs. Affiliation",
-       subtitle = "There is a positive correlation.") +
-  theme_minimal()
-```
-In order to determine possible relationships between the numerical variables, I created scatterplots of several pairs of predictor variables and examined their correlations. @fig-cor-1 - @fig-cor-5 show the variable pairs that seem to have the strongest positive correlations: negative emotion & sadness, negative emotion & anger, positive emotion & achievement, cognitive processes & insight, and affiliation & drives. Identifying these relationships is useful for adding interaction terms to my models as they will be able to capture the joint effect of two variables on the outcome variable of comment likes.
+In order to determine possible relationships between the numerical variables, I created a correlation plot. @fig-cor-plot shows that the variable pairs with the strongest positive correlations seem to be: focus present & verb, affiliation & drives, pos emo & affect, negative emotion & anger, negative emotion & sadness, cognitive processes & certaint, and achieve & social. Identifying these relationships is useful for adding interaction terms to my models as they will be able to capture the joint effect of two variables on the outcome variable of comment likes.
 
 ## Methods
-I implemented an 80-20 training-test split using stratified sampling (stratified by target variable with 4 strata). The resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (10 folds, 5 repeats) with stratification on the target variable with 4 strata.
+
+I implemented an 80-20 training-test split using stratified sampling (stratified by target variable, comment likes, with 4 strata). The resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (10 folds, 5 repeats) with stratification on the target variable with 4 strata.
 
 The following model types were specified with a plan for tuning hyperparameters using a regular grid:
 
@@ -274,12 +221,10 @@ conclusion...
 
 ## References
 
-"Are We Allies? Black Americans vs Asian Americans \| Middle Ground" *YouTube*, uploaded by Jubilee, 17 January 2021, [https://www.youtube.com/watch?v=pXo2ub_nZFc](https://www.youtube.com/watch?v=pXo2ub_nZFc).
+"Are We Allies? Black Americans vs Asian Americans \| Middle Ground" *YouTube*, uploaded by Jubilee, 17 January 2021, <https://www.youtube.com/watch?v=pXo2ub_nZFc>.
 
-LIWC, [https://www.liwc.app/](https://www.liwc.app/).
+LIWC, <https://www.liwc.app/>.
 
 ## Appendix: technical info about the data clean-up process
 
-
 ## Appendix: EDA
-

@@ -136,7 +136,19 @@ plot_lognumeric_distribution <- function(data) {
 plot_lognumeric_distribution(allies_train_portion)
 
 
-# RELATIONSHIPS
+
+# CORRELATION PLOT
+corr <- allies_train_portion |> 
+  select(where(is.numeric)) |> 
+  cor()
+
+allies_cor <- ggcorrplot::ggcorrplot(corr) +
+  labs(title = "Correlations Among Predictor Variables") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4),
+        axis.text.y = element_text(size = 4))
+
+
+# RELATIONSHIPS-- SCATTERPLOTS
 allies_train_portion |>
   ggplot(aes(x = neg_emo,
              y = sad)) +
@@ -167,28 +179,11 @@ allies_train_portion |>
   geom_point()
 # positive relationship
 
-# Assuming allies_train_portion is your dataset
-# Select only numerical variables
-numeric_vars <- select_if(allies_train_portion, is.numeric)
-
-# Calculate correlations between numerical variables
-correlation_matrix <- cor(numeric_vars)
-
-# Find pairs of variables with high correlations (absolute value greater than a threshold, e.g., 0.7)
-high_correlation_pairs <- which(abs(correlation_matrix) > 0.7 & correlation_matrix != 1, arr.ind = TRUE)
-
-# Print the pairs of variables with high correlations
-print(high_correlation_pairs)
-
-
-
-
 allies_train_portion |>
   ggplot(aes(x = netspeak,
              y = informal)) +
   geom_point()
 # positive relationship
-
 
 allies_train_portion |>
   ggplot(aes(x = netspeak,
@@ -225,10 +220,3 @@ allies_train_portion |>
              y = nonflu)) +
   geom_point()
 # weak correlation
-
-
-
-
-
-
-
