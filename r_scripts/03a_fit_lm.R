@@ -44,12 +44,3 @@ lm_fit_a <- fit_resamples(lm_wflow,
 
 # write out results (fitted/trained workflows) ----
 save(lm_fit_a, file = here("results/lm_fit_a.rda"))
-load(here("results/lm_fit_a.rda"))
-
-bind_rows(lm_fit_a |> 
-            collect_metrics() |>  
-            mutate(model = "lm") |> 
-            filter(.metric == "rmse")) |> 
-  knitr::kable(digits = c(NA, NA, 3, 0, 5, NA))
-     
-
