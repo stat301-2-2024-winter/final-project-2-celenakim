@@ -38,6 +38,17 @@ allies <- read_rds("data/allies.rds")
 
 # load training data/fits
 load(here("data_splits/allies_split.rda"))
+load(here("results/null_fit_a.rda"))
+load(here("results/lm_fit_a.rda"))
+load(here("results/lm_fit_b.rda"))
+load(here("results/tuned_en_a.rda"))
+load(here("results/tuned_en_b.rda"))
+load(here("results/tuned_knn_a.rda"))
+load(here("results/tuned_knn_b.rda"))
+load(here("results/tuned_rf_a.rda"))
+load(here("results/tuned_rf_b.rda"))
+load(here("results/tuned_bt_a.rda"))
+load(here("results/tuned_bt_b.rda"))
 ```
 
 ::: {.callout-tip icon="false"}
@@ -187,6 +198,7 @@ In order to determine possible relationships between the numerical variables, I 
 
 I implemented an 80-20 training-test split using stratified sampling (stratified by target variable, comment likes, with 4 strata). The resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (10 folds, 5 repeats) with stratification on the target variable with 4 strata. The prediction problem is regression.
 
+### Models
 The following model types were specified with a plan for tuning hyperparameters using a regular grid, all on a Yeo Johnson scale for the target and predictor variables:
 
 -   Null model
@@ -205,29 +217,69 @@ The following model types were specified with a plan for tuning hyperparameters 
     -   Number of randomly selected predictors to split on was explored over $[1,6]$ with 6 levels
     -   Minimum number of data points in a node for splitting was explored over $[1,30]$ with 5 levels
     -   Learning rate was explored over $[-5,-0.2]$ with 4 levels
+    
+Visualizations of the tuning of these models can be found in "Appendix: technical info".
 
-The preprocessing/feature engineering for these models can be observed in the `02_recipes.R` script. 4 different recipes were created:
+## Recipes
+4 different recipes were created:
 
--   `recipe1_kitcken_sink`: This is my basic recipe, with appropriate variables removed (the original variable of likes, the id of a comment, the id of a parent comment, the commenter's username, the comment itself, and any variables with zero variance), numerical predictors transformed with a Yeo Johnson transformation, factor variables dummy coded, and predictors centered/normalized.
+-   **recipe 1: kitchen sink**: This is my basic recipe, with appropriate variables removed (the original variable of likes, the id of a comment, the id of a parent comment, the commenter's username, the comment itself, and any variables with zero variance), numerical predictors transformed with a Yeo Johnson transformation, factor variables dummy coded, and predictors centered/normalized.
 
--   `recipe2_kitchen_sink_trees`: This is the trees version of my basic recipe, with appropriate variables removed (the original variable of likes, the id of a comment, the id of a parent comment, the commenter's username, the comment itself, and any variables with zero variance), factor variables one-hot encoded, and predictors centered/normalized.
+-   **recipe 2: kitchen sink (trees)**: This is the trees version of my basic recipe, with appropriate variables removed (the original variable of likes, the id of a comment, the id of a parent comment, the commenter's username, the comment itself, and any variables with zero variance), factor variables one-hot encoded, and predictors centered/normalized.
 
-```{=html}
-<!-- -->
-```
--   `recipe3_transformed_interactions`: This is my complex recipe, with numerical predictors transformed with a Yeo Johnson transformation, factor variables dummy coded, predictors centered/normalized, and interactions included.
+-   **recipe 3: transformed & interactions**: This is my complex recipe, with numerical predictors transformed with a Yeo Johnson transformation, factor variables dummy coded, predictors centered/normalized, and interactions included.
 
--   `recipe4_transformed_trees`: This is the trees version of my complex recipe, only utilizing the variables included in recipe 3. Numerical predictors transformed were with a Yeo Johnson transformation, factor variables were dummy coded, and predictors were centered/normalized.
+-   **recipe 3: transformed & interactions (trees)**: This is the trees version of my complex recipe, only utilizing the variables included in recipe 3. Numerical predictors transformed were with a Yeo Johnson transformation, factor variables were dummy coded, and predictors were centered/normalized.
 
 The null, linear, elastic net, and k nearest neighbors models used the preprocessing stored in `recipe1_kitcken_sink` and `recipe3_transformed_interactions`.
 
 The k-nearest neighbors, random forest, and boosted tree models used the preprocessing stored in `recipe2_kitchen_sink_trees` and `recipe4_transformed_trees`.
 
+## Assessment Metric
 Before any training of models occurs, I decided the RMSE would be the metric by which I would compare models.
 
 ## Model Building & Selection
+Again, the RMSE was the metric used to compare models and determine which would be the final/winning model.
+```{r}
+#| label: fig-model-results
+#| fig-cap: A table of my models and their RMSEs.
 
-model building & selection...
+model_results <- as_workflow_set(
+  null = null_fit_a,
+  lm_a = lm_fit_a,
+  lm_b = lm_fit_b,
+  en_a = tuned_en_a,
+  en_b = tuned_en_b,
+  knn_a = tuned_knn_a,
+  knn_b = tuned_knn_b,
+  rf_a = tuned_rf_a,
+  rf_b = tuned_rf_b,
+  bt_a = tuned_bt_a,
+  bt_b = tuned_bt_b)
+
+tbl_result <- model_results |> 
+  collect_metrics() |> 
+  filter(.metric == "rmse") |> 
+  slice_min(mean, by = wflow_id) |> 
+  distinct(wflow_id, .keep_all = TRUE) |> 
+  arrange(mean) |> 
+  select(`Model Type` = wflow_id, 
+         `RMSE` = mean, 
+         `Std Error` = std_err, 
+         `Num Models` = n) |> 
+  knitr::kable(digits = c(NA, 3, 4, 0))
+
+tbl_result
+```
+As can be seen in @fig-model-results, the model with the lowest RMSE is my random forest model a with the basic kitchen sink recipe. 
+
+## Tuning Parameters
+I utilized tuning for my elastic net, k nearest neighbors, boosted tree, and random forest models. 
+
+## Comparison of model type/recipe performance
+
+## Winning Model
+My winning model was my random forest model a, with the basic kitchen sink recipe, and the RMSE was 0.454 (on a Yeo Johnson scale). It was surprising that the model with the kitchen sink recipe won, as I had predicted that a model with one of my complex recipes would win as those recipes included interaction terms with highly correlated variables. However, it could be that those additional interaction steps overcomplicated the model, thus rendering the basic kitchen sink recipe to perform more efficiently. 
 
 ## Final Model Analysis
 
