@@ -188,26 +188,37 @@ In order to determine possible relationships between the numerical variables, I 
 
 ## Methods
 
-I implemented an 80-20 training-test split using stratified sampling (stratified by target variable, comment likes, with 4 strata). The resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (10 folds, 5 repeats) with stratification on the target variable with 4 strata.
+I implemented an 80-20 training-test split using stratified sampling (stratified by target variable, comment likes, with 4 strata). The resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (10 folds, 5 repeats) with stratification on the target variable with 4 strata. The prediction problem is regression.
 
-The following model types were specified with a plan for tuning hyperparameters using a regular grid:
+The following model types were specified with a plan for tuning hyperparameters using a regular grid, all on a Yeo Johnson scale for the target and predictor variables:
 
--   Null model (on Yeo Johnson scale)
--   Linear model (`lm` engine, on Yeo Johnson scale)
+-   Null model 
+-   Linear model (`lm` engine)
 -   Elastic net model (`glmnet` engine)
-    -   Mixture was explored over $[0,1]$ range with 11 levels
-    -   Penalty was explored over $[-3,0]$ range with 11 levels (on log-10 scale)
+    -   Mixture was explored over $[0,1]$ range with 5 levels
+    -   Penalty was explored over $[-10,0]$ range with 5 levels
 -   K-nearest neighbors model (`kknn` engine)
-    -   Neighbors was explored over $[1,25]$ with 7 levels
+    -   Neighbors was explored over $[1,45]$ with 5 levels
 -   Random forest (`ranger` engine)
     -   Number of trees set to 1,000
-    -   Number of randomly selected predictors to split on was explored over $[1,6]$ with 6 levels
+    -   Number of randomly selected predictors to split on was explored over $[1, 30]$ with 5 levels
     -   Minimum number of data points in a node for splitting was explored over $[2,40]$ with 5 levels
 -   Boosted tree (`xgboost` engine)
     -   Number of trees was explored over $[100, 1000]$ with 4 levels
     -   Number of randomly selected predictors to split on was explored over $[1,6]$ with 6 levels
-    -   Minimum number of data points in a node for splitting was explored over $[2,40]$ with 4 levels
-    -   Learning rate was explored over $[-5,-0.2]$ with 4 levels (on log-10 scale)
+    -   Minimum number of data points in a node for splitting was explored over $[1,30]$ with 4 levels
+    -   Learning rate was explored over $[-5,-0.2]$ with 4 levels 
+
+
+The preprocessing/feature engineering for these models can be observed in the `2_recipes_ex1.R` script. Reviewing will help to fully understand the preprocessing steps used.
+
+The null, linear, elastic net, and k nearest neighbors models used the preprocessing stored in `recipe1_kitcken_sink` and `recipe3_transformed_interactions`. We take care to remove appropriate variables (`rings` and variables with zero variance), dummy code any factor variables, add complexity by including some interactions, and standardize all numerical variables.
+
+The k-nearest neighbors, random forest, and boosted tree models used the preprocessing stored in `abalone_recipe_tree`. We take care to remove appropriate variables (`rings` and any variables with zero variance), one-hot encode factor variables, and standardize all numerical variables.
+
+Before any training of models occurs we decided the RMSE would be the metric by which we would compare models.
+
+
 
 ## Model Building & Selection
 
