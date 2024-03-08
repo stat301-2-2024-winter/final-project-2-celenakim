@@ -25,11 +25,6 @@ load(here("results/tuned_bt_a.rda"))
 load(here("results/tuned_bt_b.rda"))
 
 
-# load pre-processing/feature engineering/recipe
-load(here("recipes/recipe1_kitchen_sink.rda"))
-load(here("recipes/recipe2_kitchen_sink_trees.rda"))
-load(here("recipes/recipe3_transformed_interactions.rda"))
-load(here("recipes/recipe4_transformed_trees.rda"))
 set.seed(301)
 
 
