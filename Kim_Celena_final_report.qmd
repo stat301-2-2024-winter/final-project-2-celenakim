@@ -38,9 +38,6 @@ allies <- read_rds("data/allies.rds")
 
 # load training data/fits
 load(here("data_splits/allies_split.rda"))
-
-# load pre-processing/feature engineering/recipe
-
 ```
 
 ::: {.callout-tip icon="false"}
@@ -192,7 +189,7 @@ I implemented an 80-20 training-test split using stratified sampling (stratified
 
 The following model types were specified with a plan for tuning hyperparameters using a regular grid, all on a Yeo Johnson scale for the target and predictor variables:
 
--   Null model 
+-   Null model
 -   Linear model (`lm` engine)
 -   Elastic net model (`glmnet` engine)
     -   Mixture was explored over $[0,1]$ range with 5 levels
@@ -202,23 +199,31 @@ The following model types were specified with a plan for tuning hyperparameters 
 -   Random forest (`ranger` engine)
     -   Number of trees set to 1,000
     -   Number of randomly selected predictors to split on was explored over $[1, 30]$ with 5 levels
-    -   Minimum number of data points in a node for splitting was explored over $[2,40]$ with 5 levels
+    -   Minimum number of data points in a node for splitting was explored over $[1,30]$ with 5 levels
 -   Boosted tree (`xgboost` engine)
     -   Number of trees was explored over $[100, 1000]$ with 4 levels
     -   Number of randomly selected predictors to split on was explored over $[1,6]$ with 6 levels
-    -   Minimum number of data points in a node for splitting was explored over $[1,30]$ with 4 levels
-    -   Learning rate was explored over $[-5,-0.2]$ with 4 levels 
+    -   Minimum number of data points in a node for splitting was explored over $[1,30]$ with 5 levels
+    -   Learning rate was explored over $[-5,-0.2]$ with 4 levels
 
+The preprocessing/feature engineering for these models can be observed in the `02_recipes.R` script. 4 different recipes were created:
 
-The preprocessing/feature engineering for these models can be observed in the `2_recipes_ex1.R` script. Reviewing will help to fully understand the preprocessing steps used.
+-   `recipe1_kitcken_sink`: This is my basic recipe, with appropriate variables removed (the original variable of likes, the id of a comment, the id of a parent comment, the commenter's username, the comment itself, and any variables with zero variance), numerical predictors transformed with a Yeo Johnson transformation, factor variables dummy coded, and predictors centered/normalized.
 
-The null, linear, elastic net, and k nearest neighbors models used the preprocessing stored in `recipe1_kitcken_sink` and `recipe3_transformed_interactions`. We take care to remove appropriate variables (`rings` and variables with zero variance), dummy code any factor variables, add complexity by including some interactions, and standardize all numerical variables.
+-   `recipe2_kitchen_sink_trees`: This is the trees version of my basic recipe, with appropriate variables removed (the original variable of likes, the id of a comment, the id of a parent comment, the commenter's username, the comment itself, and any variables with zero variance), factor variables one-hot encoded, and predictors centered/normalized.
 
-The k-nearest neighbors, random forest, and boosted tree models used the preprocessing stored in `abalone_recipe_tree`. We take care to remove appropriate variables (`rings` and any variables with zero variance), one-hot encode factor variables, and standardize all numerical variables.
+```{=html}
+<!-- -->
+```
+-   `recipe3_transformed_interactions`: This is my complex recipe, with numerical predictors transformed with a Yeo Johnson transformation, factor variables dummy coded, predictors centered/normalized, and interactions included.
 
-Before any training of models occurs we decided the RMSE would be the metric by which we would compare models.
+-   `recipe4_transformed_trees`: This is the trees version of my complex recipe, only utilizing the variables included in recipe 3. Numerical predictors transformed were with a Yeo Johnson transformation, factor variables were dummy coded, and predictors were centered/normalized.
 
+The null, linear, elastic net, and k nearest neighbors models used the preprocessing stored in `recipe1_kitcken_sink` and `recipe3_transformed_interactions`.
 
+The k-nearest neighbors, random forest, and boosted tree models used the preprocessing stored in `recipe2_kitchen_sink_trees` and `recipe4_transformed_trees`.
+
+Before any training of models occurs, I decided the RMSE would be the metric by which I would compare models.
 
 ## Model Building & Selection
 

@@ -90,6 +90,12 @@ likes_transformed <- recipe(likes ~ i,
   bake(new_data = NULL) |> 
   transmute(likes_yj = likes)
 
+lambda <- recipe(likes ~ i,
+                            data = allies_train) |>
+  step_YeoJohnson(likes) |> 
+  prep() |> 
+  tidy(1)
+
 allies_train <- allies_train |> 
   bind_cols(likes_transformed)
 
