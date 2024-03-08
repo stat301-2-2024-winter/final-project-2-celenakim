@@ -352,109 +352,27 @@ display: none;
 </div>
 
 
-<div id="psychological-analysis-of-comments-under-jubilee-video-are-we-allies-black-americans-vs-asian-americans" class="section level2">
-<h2>Psychological Analysis of Comments Under Jubilee Video “Are We
-Allies? Black Americans vs Asian Americans”</h2>
-<p>This repository contains a regression analysis is to predict the
-number of likes on a comment under the Jubilee Video ’Are We Allies?
-Black Americans vs. Asian Americans”.</p>
-</div>
-<div id="what-you-can-find-in-this-repo" class="section level1">
-<h1>What you can find in this repo:</h1>
-<div id="folders" class="section level2">
-<h2>Folders</h2>
+<div id="the-allies-dataset" class="section level2">
+<h2>The “allies” dataset</h2>
+<p>The data that I chose for my project was derived from gathering data
+on the psychological analysis of comments under the Jubilee video titled
+<a href="https://www.youtube.com/watch?v=pXo2ub_nZFc">Are We Allies?
+Black Americans vs Asian Americans | Middle Ground</a> found on <a href="https://www.youtube.com">YouTube</a>. This video features a
+poignant discussion between East Asian Americans and Black Americans,
+highlighting the conflict and tension present between these groups.</p>
 <ul>
-<li><p><code>data/</code>: Here you can find the data set I will be
-working with throughout this EDA: “allies”. You can also find the R
-scripts that contain the process for reading in and cleaning the raw
-data set, as well as the codebook.</p>
-<ul>
-<li><p><code>00_cleaning.R</code>: Here, the process of cleaning the raw
-allies_data data set is shown.</p></li>
-<li><p><code>codebook_creation.R</code>: In this R file, I create the
-codebook for my variables.</p>
-<ul>
-<li>Inside the <code>raw/</code> folder, you can find the original
-allies data set in its raw form.</li>
-</ul></li>
-</ul></li>
-<li><p><code>data_splits/</code>: can find the allies testing, training,
-and folds</p></li>
-<li><p><code>memos/</code>: contains Progress Memos 1 &amp; 2</p>
-<ul>
-<li><p><code>Kim_Celena_progress_memo_1.qmd</code>: This memo is the
-first step in my project, in which I identified my data set and
-anticipated potential issues/next steps.</p></li>
-<li><p><code>Kim_Celena_progress_memo_2_qmd</code>: This next memo
-demonstrates a start on my model fits.</p></li>
-</ul></li>
-<li><p><code>r_scripts/</code>: contains the r scripts outlining the
-processes of EDAs, data splitting, recipes creations, fitting, tuning,
-and training the final model.</p>
-<ul>
-<li><p><code>1_initial_setup.R</code>: Initial data checks, data
-splitting, &amp; data folding</p></li>
-<li><p><code>02_recipes.R</code>: Setup pre-processing/recipes:
-recipe1_kitchen_sink, recipe2_kitchen_sink_trees,
-recipe3_transformed_interactions, and recipe4_transformed_trees</p></li>
-<li><p><code>03a_fit_baseline.R</code>: Define and fit null/baseline
-model a, with kitchen sink recipe 1</p></li>
-<li><p><code>03a_fit_lm.R</code>: Define and fit ordinary linear
-regression a, with kitchen sink recipe 1</p></li>
-<li><p><code>03b_fit_lm.R</code>: Define and fit ordinary linear
-regression b, with complex recipe 3</p></li>
-<li><p><code>03a_tune_en.R</code>: Define and fit elastic net a, with
-kitchen sink recipe 1</p></li>
-<li><p><code>03b_tune_en.R</code>: Define and fit elastic net b, with
-complex recipe 3</p></li>
-<li><p><code>03a_tune_knn.R</code>: Define and fit knn a, with kitchen
-sink recipe 1</p></li>
-<li><p><code>03b_tune_knn.R</code>: Define and fit knn b, with complex
-recipe 3</p></li>
-<li><p><code>03a_tune_bt.R</code>: Define and fit bt a, with kitchen
-sink tree recipe 2</p></li>
-<li><p><code>03b_tune_bt.R</code>: Define and fit bt b, with complex
-trees recipe 4</p></li>
-<li><p><code>03a_tune_rf.R</code>: Define and fit rf a, with kitchen
-sink trees recipe 2</p></li>
-<li><p><code>03b_tune_rf.R</code>: Define and fit rf b, with complex
-trees recipe 4</p></li>
-<li><p><code>04_model_analysis.R</code>: Analysis of tuned and trained
-models (comparisons)</p></li>
-<li><p><code>05_train_final_model.R</code>: Train final model</p></li>
-<li><p><code>06_assess_final_model.R</code>: Assess final model</p></li>
-</ul></li>
-<li><p><code>recipes/</code>: contains the 4 recipes used in my model
-fits.</p>
-<ul>
-<li><p><code>recipe1_kitchen_sink.rda</code>: my basic kitchen sink
-recipe</p></li>
-<li><p><code>recipe2_kitchen_sink_trees.rda</code>: my basic kitchen
-sink recipe with one hot</p></li>
-<li><p><code>recipe3_transformed_interactions.rda</code>: my complex
-recipe with yeo johnson transformations and interactions terms</p></li>
-<li><p><code>recipe4_transformed_trees.rda</code>: my complex recipe
-with yeo johnson transformations and one hot</p></li>
-</ul></li>
-<li><p><code>results/</code>: contains my model fits and final winning
-model fit</p>
-<ul>
-<li><code>final_fit.rda</code>: the final fit of winning model
-tuned_rf_a</li>
-<li><code>lm_fit_a.rda</code>: fit for linear model a</li>
-<li><code>lm_fit_b.rda</code>: fit for linear model b</li>
-<li><code>null_fit_a.rda</code>: fit for null/baseline model a</li>
-<li><code>tuned_bt_a.rda</code>: fit for bt model a</li>
-<li><code>tuned_bt_b.rda</code>: fit for bt model b</li>
-<li><code>tuned_en_a.rda</code>: fit for en model a</li>
-<li><code>tuned_en_b.rda</code>: fit for en model b</li>
-<li><code>tuned_knn_a.rda</code>: fit for knn model a</li>
-<li><code>tuned_knn_b.rda</code>: fit for knn model b</li>
-<li><code>tuned_rf_a.rda</code>: fit for rf model a</li>
-<li><code>tuned_rf_b.rda</code>: fit for rf model b</li>
-</ul></li>
+<li><code>allies.csv</code></li>
+<li><code>allies.rds</code></li>
+<li><code>allies_codebook.csv</code><br />
+</li>
+<li><code>00.cleaning.R</code></li>
+<li><code>codebook_creation.R</code></li>
 </ul>
-</div>
+<p>The original <code>allies_data</code> data set consisted of 66
+variables, but I carried out a cleaning process of removing irrelevant
+variables/variables with missingness, mutating a categorical variable of
+the length of a comment, and renaming variable names to ultimately end
+up with 15,397 observations and 51 variables.</p>
 </div>
 
 
