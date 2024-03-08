@@ -48,4 +48,4 @@ tuned_rf_b <- tune_grid(rf_b_wflow,
                         control = control_grid(save_workflow = TRUE))
 
 # write out results (fitted/trained workflows) ----
-save(rf_b_params, rf_b_grid, tuned_rf_b, file = here("results/tuned_rf_b.rda"))
+save(tuned_rf_b, file = here("results/tuned_rf_b.rda"))
