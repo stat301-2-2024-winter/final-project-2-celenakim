@@ -48,16 +48,33 @@ ggplot(pred_rf, aes(x = likes_trans[[1]], y = .pred)) +
   labs(y = "Predicted Likes", x = "Likes") +
   coord_obs_pred() 
 
+pred_rf <- pred_rf |> 
+  mutate(.pred_orig = ((.pred*-0.656) + 1)^(1/-0.656) -1,
+         likes_yj = ((likes + 1)^-0.656 - 1)/-0.656)
 
+pred_rf |> 
+  allies_metrics(likes, .pred_orig)
+pred_rf |> 
+  allies_metrics(likes_yj, .pred)
 
+ggplot(pred_rf, aes(x = likes, y = .pred_orig)) + 
+  geom_abline(lty = 2) + 
+  geom_point(alpha = 0.5) + 
+  labs(y = "Predicted Likes", x = "Likes") +
+  coord_obs_pred()
 
+ggplot(pred_rf, aes(x = likes_yj, y = .pred)) + 
+  geom_abline(lty = 2) + 
+  geom_point(alpha = 0.5) + 
+  labs(y = "Predicted Likes (yeo johnson scale)", x = "Likes (yeo johnson scale") +
+  coord_obs_pred()
 
 
 
 
 # TRANFORMING PREDICTIONS BACK TO NORMAL SCALE
 transformed_preds <- VGAM::yeo.johnson(pred_rf$.pred, lambda = -0.656, inverse = TRUE)
-preds_reg <- transforming_preds[[1]]
+preds_reg <- transformed_preds[[1]]
 
 likes_tib <- tibble(likes = allies_test$likes, preds = transformed_preds) 
 
