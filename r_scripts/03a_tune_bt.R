@@ -21,7 +21,7 @@ registerDoMC(cores = num_cores)
 
 set.seed(301)
 # model specifications ----
-bt_a_model <- boost_tree(mode = "regression", 
+bt_a_model <- boost_tree(mode = "classification", 
                        trees = 1000,
                        min_n = tune(),
                        mtry = tune(), 

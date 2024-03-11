@@ -27,20 +27,18 @@ log_reg_a_spec <-
   set_engine("glm") |> 
   set_mode("classification") 
 
-
 # define workflows ----
 log_reg_a_wflow <-
   workflow() |> 
   add_model(log_reg_a_spec) |> 
   add_recipe(recipe1_kitchen_sink)
 
-
 # fit workflows/models ----
 log_reg_fit_a <- fit_resamples(log_reg_a_wflow, 
-                        resamples = allies_folds,
-                        control = control_resamples(
-                          save_workflow = TRUE,
-                          parallel_over = "everything"))
+                               resamples = allies_folds,
+                               control = control_resamples(
+                                 save_workflow = TRUE,
+                                 parallel_over = "everything"))
 
 # write out results (fitted/trained workflows) ----
 save(log_reg_fit_a, file = here("results/log_reg_fit_a.rda"))

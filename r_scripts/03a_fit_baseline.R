@@ -40,3 +40,5 @@ null_fit_a <- null_workflow_a |>
 
 # write out results (fitted/trained workflows) ----
 save(null_fit_a, file = here("results/null_fit_a.rda"))
+load(here("results/null_fit_a.rda"))
+

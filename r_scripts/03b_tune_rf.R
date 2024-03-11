@@ -22,7 +22,7 @@ registerDoMC(cores = num_cores)
 
 set.seed(301)
 # model specifications ----
-rf_b_model <- rand_forest(mode = "regression",
+rf_b_model <- rand_forest(mode = "classification",
                           trees = 1000,
                           min_n = tune(),  # what is the min num of observations needed in final node
                           mtry = tune()) |> 
