@@ -24,7 +24,7 @@ set.seed(301)
 # model specifications ----
 null_spec_a <- null_model() |> 
   set_engine("parsnip") |> 
-  set_mode("regression") 
+  set_mode("classification") 
 
 # define workflows ----
 null_workflow_a <- workflow() |>  
@@ -40,4 +40,3 @@ null_fit_a <- null_workflow_a |>
 
 # write out results (fitted/trained workflows) ----
 save(null_fit_a, file = here("results/null_fit_a.rda"))
-load(here("results/null_fit_a.rda"))

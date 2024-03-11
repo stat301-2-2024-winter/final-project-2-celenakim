@@ -11,40 +11,20 @@ library(MASS)
 tidymodels_prefer()
 
 set.seed(301)
-allies <- read_csv("data/allies.csv")
+allies <- read_rds("data/allies.rds")
 
 # Github link ----
 # https://github.com/stat301-2-2024-winter/final-project-2-celenakim
 
 
-#### Task 1: TARGET VARIABLE DISTRIBUTION TRANSFORMATIONS -------------------------------------------
-ggplot(allies, aes(x = likes)) +
-  geom_density() +
-  labs(title = "Distribution of Likes",
-       subtitle = "The variable is skewed right, with extreme outliers.",
-       x = "Likes",
-       y = "Density") +
+#### Task 1: TARGET VARIABLE ANALYSIS -------------------------------------------
+ggplot(allies, aes(x = comment_length)) +
+  geom_bar() +
+  labs(x = "Comment Length",
+       y = "Count",
+       title = "Distribution of the Length of Comments") +
   theme_minimal()
-# the distribution of comment likes is heavily skewed to the right as there seems to be extreme high outliers. Thus, a transformation may be necessary to help normalize the distribution.
-
-ggplot(allies, aes(x = log10(likes))) +
-  geom_density() +
-  labs(title = "Distribution of Likes with a Log Transformation",
-       subtitle = "The variable is still skewed right, and many values were removed.",
-       x = "Likes",
-       y = "Density") +
-  theme_minimal()
-# a log transformation did seem to help to slightly normalize the likes distribution, but as there are numerous values of 0 within the observations, those values were removed
-
-ggplot(allies, aes(x = sqrt(likes))) +
-  geom_density() +
-  labs(title = "Distribution of Likes with a Square Root Transformation",
-       subtitle = "The variable is still skewed right, and many values were removed.",
-       x = "Likes",
-       y = "Density") +
-  theme_minimal()
-# sqrt transformation helped less than log
-
+# almost balanced, but not terribly inbalanced to where it will cause problems
 
 #### Task 2: DATA INSPECTION -------------------------------------------
 colSums(is.na(allies))
@@ -62,47 +42,27 @@ kable(missing_counts_df)
 # there only seems to be missingness in the ID of a comment’s parent comment. However, this does not seem to pose a significant issue, as this variable is not going to be important for my analysis.
 
 #### Task 3: CATEGORICAL VAR INSPECTION -------------------------------------------
-ggplot(allies, aes(x = factor(comment_length, 
-                              levels = c("short", 
-                                         "medium", "
-                                         long")))) +
+ggplot(allies, aes(x = pos_emo)) +
   geom_bar() +
-  labs(x = "Comment Length",
+  labs(x = "Presence of Positive Emotion or Not",
        y = "Count",
-       title = "Distribution of Comment Length",
-       subtitle = "There are significantly more short comments than long or medium.") +
+       title = "Distribution of the Presence of Positive Emotion Within Comments") +
   theme_minimal()
-# class imbalance, as there are significantly more short comments than long or medium
+# balanced
 
 # DATA SPLITTING ------------------------------------------------------------------------------------------
 
 allies_split <- allies |> 
   initial_split(prop = 0.80, 
-                strata = likes)
+                strata = comment_length,
+                breaks = 4)
 
 allies_train <- training(allies_split)
-
-# Transforming likes with yeo johnson
-likes_transformed <- recipe(likes ~ i,
-                            data = allies_train) |>
-  step_YeoJohnson(likes) |> 
-  prep() |> 
-  bake(new_data = NULL) |> 
-  transmute(likes_yj = likes)
-
-lambda <- recipe(likes ~ i,
-                            data = allies_train) |>
-  step_YeoJohnson(likes) |> 
-  prep() |> 
-  tidy(1)
-
-allies_train <- allies_train |> 
-  bind_cols(likes_transformed)
 
 allies_test <- testing(allies_split)
 
 allies_folds <- vfold_cv(allies_train, v = 10, repeats = 5,
-                           strata = likes)
+                           strata = comment_length)
 
 save(allies_split, allies_train, allies_test, allies_folds, file = here("data_splits/allies_split.rda"))
 
@@ -168,12 +128,6 @@ allies_train_portion |>
 # positive relationship
 
 allies_train_portion |>
-  ggplot(aes(x = pos_emo,
-             y = achieve)) +
-  geom_point()
-# positive relationship
-
-allies_train_portion |>
   ggplot(aes(x = cog_proc,
              y = insight)) +
   geom_point()
@@ -198,12 +152,6 @@ allies_train_portion |>
 # positive relationship
 
 allies_train_portion |>
-  ggplot(aes(x = pos_emo,
-             y = focus_future)) +
-  geom_point()
-# weak correlation
-
-allies_train_portion |>
   ggplot(aes(x = family,
              y = affiliation)) +
   geom_point()
@@ -211,12 +159,6 @@ allies_train_portion |>
 
 allies_train_portion |>
   ggplot(aes(x = friend,
-             y = affiliation)) +
-  geom_point()
-# weak correlation
-
-allies_train_portion |>
-  ggplot(aes(x = pos_emo,
              y = affiliation)) +
   geom_point()
 # weak correlation

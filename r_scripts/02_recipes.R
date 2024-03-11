@@ -18,10 +18,10 @@ load(here("data_splits/allies_split.rda"))
 
 
 # RECIPE 1: BASIC KITCHEN SINK ----------------------------------------------------------------------
-recipe1_kitchen_sink <- recipe(likes_yj ~ .,
+recipe1_kitchen_sink <- recipe(comment_length ~ .,
                           data = allies_train) |> 
-  step_rm(likes, comment_id, parent_comment_id, username, comment) |> 
-  step_YeoJohnson(all_numeric_predictors()) |> 
+  step_rm(comment_id, parent_comment_id, username, comment) |> 
+  step_BoxCox(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors()) |> 
   step_zv(all_predictors()) |> 
   step_normalize(all_predictors()) 
@@ -34,9 +34,9 @@ save(recipe1_kitchen_sink, file = here("recipes/recipe1_kitchen_sink.rda"))
 
 
 # RECIPE 2: BASIC KITCHEN SINK WITH ONE HOT --------------------------------------------------------------------
-recipe2_kitchen_sink_trees <- recipe(likes_yj ~ .,
+recipe2_kitchen_sink_trees <- recipe(comment_length ~ .,
                               data = allies_train) |> 
-  step_rm(likes, comment_id, parent_comment_id, username, comment) |> 
+  step_rm(comment_id, parent_comment_id, username, comment) |> 
   step_dummy(all_nominal_predictors(),
              one_hot = TRUE) |> 
   step_zv(all_predictors()) |> 
@@ -49,17 +49,15 @@ view(prep_recipe2_kitchen_sink_trees)
 save(recipe2_kitchen_sink_trees, file = here("recipes/recipe2_kitchen_sink_trees.rda"))
 
 
-# RECIPE 3: RECIPE WITH YEO JOHNSON TRANSFORMATIONS AND INTERACTION TERMS ----------------------------------------------------------------------
-recipe3_transformed_interactions <- recipe(likes_yj ~ focus_present + verb + affiliation + drives + pos_emo + affect + neg_emo + anger + sad + cog_proc + certain + achieve + social,
+# RECIPE 3: RECIPE WITH BOX COX TRANSFORMATIONS AND INTERACTION TERMS ----------------------------------------------------------------------
+recipe3_transformed_interactions <- recipe(comment_length ~ focus_present + verb + affiliation + drives + neg_emo + sad + cog_proc + certain + achieve + social,
                               data = allies_train) |> 
-  step_YeoJohnson(all_numeric_predictors()) |> 
+  step_BoxCox(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors()) |> 
   step_zv(all_predictors()) |> 
   step_normalize(all_predictors()) |> 
   step_interact(terms = ~focus_present:verb) |> 
   step_interact(terms = ~affiliation:drives) |> 
-  step_interact(terms = ~pos_emo:affect) |> 
-  step_interact(terms = ~neg_emo:anger) |> 
   step_interact(terms = ~neg_emo:sad) |> 
   step_interact(terms = ~cog_proc:certain) |> 
   step_interact(terms = ~achieve:social)
@@ -70,18 +68,10 @@ prep_recipe3_transformed_interactions <- prep(recipe3_transformed_interactions) 
 view(prep_recipe3_transformed_interactions)
 save(recipe3_transformed_interactions, file = here("recipes/recipe3_transformed_interactions.rda"))
 
-likes_transformed <- recipe(likes ~ informal,
-       data = allies_train) |>
-  step_YeoJohnson(likes) |> 
-  prep() |> 
-  bake(new_data = NULL) |> 
-  select(likes)
-
-
-# RECIPE 4: RECIPE WITH YEO JOHNSON TRANSFORMATIONS AND ONE HOT -------------------------------------------------------
-recipe4_transformed_trees <- recipe(likes_yj ~ focus_present + verb + affiliation + drives + pos_emo + affect + neg_emo + anger + sad + cog_proc + certain + achieve + social,
+# RECIPE 4: RECIPE WITH BOX COX TRANSFORMATIONS AND ONE HOT -------------------------------------------------------
+recipe4_transformed_trees <- recipe(comment_length ~ focus_present + verb + affiliation + drives + neg_emo + sad + cog_proc + certain + achieve + social,
                               data = allies_train) |> 
-  step_YeoJohnson(all_numeric_predictors()) |> 
+  step_BoxCox(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors(),
              one_hot = TRUE) |> 
   step_zv(all_predictors()) |> 
@@ -92,11 +82,3 @@ prep_recipe4_transformed_trees <- prep(recipe4_transformed_trees) |>
 
 view(prep_recipe4_transformed_trees)
 save(recipe4_transformed_trees, file = here("recipes/recipe4_transformed_trees.rda"))
-
-
-
-
-
-
-mutate(likes_cat = if_else(likes =< 200, "low", "high")) |> 
-  factor()
