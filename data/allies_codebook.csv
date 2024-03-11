@@ -5,7 +5,7 @@ username,the username of the commenter
 comment,the user's comment under the video
 likes,the number of likes that the comment received
 word_count,the word count of the comment
-comment_length,"a categorization of the comment's length: short, medium, or long"
+comment_length,a categorization of the comment's length: short or long
 words_per_sentence,the average number of words in the comment's sentences
 six_ltrs,the proportion of words in the comment that are longer than 6 letters
 i,the proportion of the pronoun i in the comment

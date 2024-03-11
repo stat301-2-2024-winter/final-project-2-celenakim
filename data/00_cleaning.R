@@ -53,6 +53,7 @@ allies <- allies_data |>
          -comment_count,
          -video_published_at,
          -comment_type,
+         -likes,
          -replies,
          -dic,
          -analytic,
@@ -63,12 +64,12 @@ allies <- allies_data |>
   relocate(parent_comment_id, 
            .after = comment_id) |> 
   # 4. mutate the "comment_length" categorical variable
-  mutate(
-    comment_length = case_when(
-      word_count <= 15 ~ "short",
-      word_count <= 25 ~ "medium",
-      TRUE ~ "long"),
-    comment_length = as.factor(comment_length)) |> 
+  mutate(comment_length = if_else(word_count <= 15, "short", "long"),
+         comment_length = as.factor(comment_length)) |> 
+  mutate(pos_emo = if_else(pos_emo <= 0.37, "none", "positive"),
+         pos_emo = as.factor(pos_emo)) |> 
+  mutate(neg_emo = if_else(neg_emo <= 0.26, "none", "negative"),
+         neg_emo = as.factor(neg_emo)) |> 
   # 5. move comment_length to be behind comment
   relocate(comment_length, 
            .after = word_count) 

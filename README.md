@@ -12,9 +12,8 @@ This repository contains a regression analysis is to predict the number of likes
     -   `allies.rds`
     -   `allies_codebook.csv`
 
-    ```{=html}
     <!-- -->
-    ```
+
     -   `00_cleaning.R`: Here, the process of cleaning the raw allies_data data set is shown.
 
     -   `codebook_creation.R`: In this R file, I create the codebook for my variables.

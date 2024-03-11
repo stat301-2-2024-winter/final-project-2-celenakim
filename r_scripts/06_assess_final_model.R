@@ -22,17 +22,6 @@ set.seed(301)
 
 allies_metrics <- metric_set(rmse)
 
-library(car)
-
-# we have a yeo johnson on the 
-# Apply Yeo-Johnson inverse transformation
-
-
-
-
-
-
-
 # TRANFORMING LIKES TO YEO JOHNSON SCALE
 pred_rf <- bind_cols(allies_test, predict(final_fit, allies_test)) |> 
   select(.pred, likes) 
@@ -66,7 +55,7 @@ ggplot(pred_rf, aes(x = likes, y = .pred_orig)) +
 ggplot(pred_rf, aes(x = likes_yj, y = .pred)) + 
   geom_abline(lty = 2) + 
   geom_point(alpha = 0.5) + 
-  labs(y = "Predicted Likes (yeo johnson scale)", x = "Likes (yeo johnson scale") +
+  labs(y = "Predicted Likes (yeo johnson scale)", x = "Likes (yeo johnson scale)") +
   coord_obs_pred()
 
 

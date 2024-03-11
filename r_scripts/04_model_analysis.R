@@ -77,3 +77,30 @@ tbl_result <- model_results |>
   knitr::kable(digits = c(NA, 3, 4, 0))
 
 tbl_result
+
+model_results <- as_workflow_set(
+  null = null_fit_a,
+  lm_a = lm_fit_a,
+  lm_b = lm_fit_b,
+  en_a = tuned_en_a,
+  en_b = tuned_en_b,
+  knn_a = tuned_knn_a,
+  knn_b = tuned_knn_b,
+  rf_a = tuned_rf_a,
+  rf_b = tuned_rf_b,
+  bt_a = tuned_bt_a,
+  bt_b = tuned_bt_b)
+
+tbl_result <- model_results |> 
+  collect_metrics() |> 
+  filter(.metric == "r") |> 
+  slice_min(mean, by = wflow_id) |> 
+  distinct(wflow_id, .keep_all = TRUE) |> 
+  arrange(mean) |> 
+  select(`Model Type` = wflow_id, 
+         `RMSE` = mean, 
+         `Std Error` = std_err, 
+         `Num Models` = n) |> 
+  knitr::kable(digits = c(NA, 3, 4, 0))
+
+tbl_result

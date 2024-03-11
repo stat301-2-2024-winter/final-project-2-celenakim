@@ -62,7 +62,7 @@ allies_codebook_tibble <- tibble(
               "the user's comment under the video",
               "the number of likes that the comment received",
               "the word count of the comment",
-              "a categorization of the comment's length: short, medium, or long",
+              "a categorization of the comment's length: short or long",
               "the average number of words in the comment's sentences",
               "the proportion of words in the comment that are longer than 6 letters",
               "the proportion of the pronoun i in the comment",
