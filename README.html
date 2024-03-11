@@ -369,10 +369,13 @@ working with throughout this EDA: “allies”. You can also find the R
 scripts that contain the process for reading in and cleaning the raw
 data set, as well as the codebook.</p>
 <ul>
-<li><p><code>00_cleaning.R</code>: Here, the process of cleaning the raw
-allies_data data set is shown.</p></li>
-<li><p><code>codebook_creation.R</code>: In this R file, I create the
-codebook for my variables.</p>
+<li><code>allies.csv</code></li>
+<li><code>allies.rds</code></li>
+<li><code>allies_codebook.csv</code></li>
+<li><code>00_cleaning.R</code>: Here, the process of cleaning the raw
+allies_data data set is shown.</li>
+<li><code>codebook_creation.R</code>: In this R file, I create the
+codebook for my variables.
 <ul>
 <li>Inside the <code>raw/</code> folder, you can find the original
 allies data set in its raw form.</li>
@@ -388,6 +391,77 @@ anticipated potential issues/next steps.</p></li>
 <li><p><code>Kim_Celena_progress_memo_2_qmd</code>: This next memo
 demonstrates a start on my model fits.</p></li>
 </ul></li>
+<li><p><code>r_scripts/</code>: contains the r scripts outlining the
+processes of EDAs, data splitting, recipes creations, fitting, tuning,
+and training the final model.</p>
+<ul>
+<li><p><code>1_initial_setup.R</code>: Initial data checks, data
+splitting, &amp; data folding</p></li>
+<li><p><code>02_recipes.R</code>: Setup pre-processing/recipes:
+recipe1_kitchen_sink, recipe2_kitchen_sink_trees,
+recipe3_transformed_interactions, and recipe4_transformed_trees</p></li>
+<li><p><code>03a_fit_baseline.R</code>: Define and fit null/baseline
+model a, with kitchen sink recipe 1</p></li>
+<li><p><code>03a_fit_log_reg.R</code>: Define and fit logistic
+regression a, with kitchen sink recipe 1</p></li>
+<li><p><code>03b_fit_log_reg.R</code>: Define and fit logistic
+regression b, with complex recipe 3</p></li>
+<li><p><code>03a_tune_en.R</code>: Define and fit elastic net a, with
+kitchen sink recipe 1</p></li>
+<li><p><code>03b_tune_en.R</code>: Define and fit elastic net b, with
+complex recipe 3</p></li>
+<li><p><code>03a_tune_knn.R</code>: Define and fit knn a, with kitchen
+sink recipe 1</p></li>
+<li><p><code>03b_tune_knn.R</code>: Define and fit knn b, with complex
+recipe 3</p></li>
+<li><p><code>03a_tune_bt.R</code>: Define and fit bt a, with kitchen
+sink tree recipe 2</p></li>
+<li><p><code>03b_tune_bt.R</code>: Define and fit bt b, with complex
+trees recipe 4</p></li>
+<li><p><code>03a_tune_rf.R</code>: Define and fit rf a, with kitchen
+sink trees recipe 2</p></li>
+<li><p><code>03b_tune_rf.R</code>: Define and fit rf b, with complex
+trees recipe 4</p></li>
+<li><p><code>04_model_analysis.R</code>: Analysis of tuned and trained
+models (comparisons)</p></li>
+<li><p><code>05_train_final_model.R</code>: Train final model</p></li>
+<li><p><code>06_assess_final_model.R</code>: Assess final model</p></li>
+</ul></li>
+<li><p><code>recipes/</code>: contains the 4 recipes used in my model
+fits.</p>
+<ul>
+<li><p><code>recipe1_kitchen_sink.rda</code>: my basic kitchen sink
+recipe</p></li>
+<li><p><code>recipe2_kitchen_sink_trees.rda</code>: my basic kitchen
+sink recipe with one hot</p></li>
+<li><p><code>recipe3_transformed_interactions.rda</code>: my complex
+recipe with BoxCox transformations and interactions terms</p></li>
+<li><p><code>recipe4_transformed_trees.rda</code>: my complex recipe
+with BoxCox transformations and one hot</p></li>
+</ul></li>
+<li><p><code>results/</code>: contains my model fits and final winning
+model fit</p>
+<ul>
+<li><p><code>final_fit.rda</code>: the final fit of winning model
+tuned_rf_a</p></li>
+<li><p><code>log_reg_fit_a.rda</code>: fit for logistic regression model
+a</p></li>
+<li><p><code>log_reg_fit_b.rda</code>: fit for logistic regression model
+b</p></li>
+<li><p><code>null_fit_a.rda</code>: fit for null/baseline model
+a</p></li>
+<li><p><code>tuned_bt_a.rda</code>: fit for bt model a</p></li>
+<li><p><code>tuned_bt_b.rda</code>: fit for bt model b</p></li>
+<li><p><code>tuned_en_a.rda</code>: fit for en model a</p></li>
+<li><p><code>tuned_en_b.rda</code>: fit for en model b</p></li>
+<li><p><code>tuned_knn_a.rda</code>: fit for knn model a</p></li>
+<li><p><code>tuned_knn_b.rda</code>: fit for knn model b</p></li>
+<li><p><code>tuned_rf_a.rda</code>: fit for rf model a</p></li>
+<li><p><code>tuned_rf_b.rda</code>: fit for rf model b</p></li>
+</ul></li>
+<li><p><code>regression_attempt/</code>: contains my previous final
+project of carrying out a regression problem</p>
+<ul>
 <li><p><code>r_scripts/</code>: contains the r scripts outlining the
 processes of EDAs, data splitting, recipes creations, fitting, tuning,
 and training the final model.</p>
@@ -452,6 +526,11 @@ tuned_rf_a</li>
 <li><code>tuned_knn_b.rda</code>: fit for knn model b</li>
 <li><code>tuned_rf_a.rda</code>: fit for rf model a</li>
 <li><code>tuned_rf_b.rda</code>: fit for rf model b</li>
+</ul></li>
+<li><p><code>Kim_Celena_final_report.qmd/</code>: contains my previous
+final report for the regression problem</p></li>
+<li><p><code>00_cleaning/</code>: contains the data cleaning steps for
+the previous version of my data set</p></li>
 </ul></li>
 </ul>
 </div>

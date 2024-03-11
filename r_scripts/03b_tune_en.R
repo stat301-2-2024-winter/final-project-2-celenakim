@@ -22,9 +22,10 @@ registerDoMC(cores = num_cores)
 
 set.seed(301)
 # model specifications ----
-en_b_model <- linear_reg(penalty = tune(), 
+en_b_model <- logistic_reg(penalty = tune(), 
                          mixture = tune()) |>
-  set_engine("glmnet")
+  set_engine("glmnet") |> 
+  set_mode("classification") 
 
 # hyperparameter tuning values ----
 # update the parameters

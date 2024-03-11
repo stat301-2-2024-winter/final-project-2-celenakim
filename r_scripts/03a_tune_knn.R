@@ -23,9 +23,10 @@ registerDoMC(cores = num_cores)
 set.seed(301)
 # model specifications ----
 knn_a_spec <- 
-  nearest_neighbor(mode = "regression",
+  nearest_neighbor(mode = "classification",
                    neighbors = tune()) |> 
-  set_engine("kknn")
+  set_engine("kknn") |> 
+  set_mode("classification") 
 
 # define workflows ----
 knn_a_wflow <-
@@ -54,3 +55,4 @@ tuned_knn_a <- tune_grid(knn_a_wflow,
 
 # write out results (fitted/trained workflows) ----
 save(tuned_knn_a, file = here("results/tuned_knn_a.rda"))
+load(here("results/tuned_knn_a.rda"))

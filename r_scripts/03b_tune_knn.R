@@ -23,9 +23,10 @@ registerDoMC(cores = num_cores)
 set.seed(301)
 # model specifications ----
 knn_b_spec <- 
-  nearest_neighbor(mode = "regression",
+  nearest_neighbor(mode = "classification",
                    neighbors = tune()) |> 
-  set_engine("kknn")
+  set_engine("kknn") |> 
+  set_mode("classification") 
 
 # define workflows ----
 knn_b_wflow <-

@@ -1,0 +1,300 @@
+---
+title: "Predicting Comment Likes on the Jubilee Middle Ground video 'Are We Allies? Black Americans vs Asian Americans'"
+subtitle: |
+  | Final Project 
+  | Data Science 2 with R (STAT 301-2)
+author: "Celena Kim"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+reference-location: margin
+citation-location: margin
+---
+
+```{r}
+#| label: basic-setup
+
+# load packages ----
+library(tidyverse)
+library(tidymodels)
+library(here)
+library(doMC)
+library(knitr)
+
+# handle common conflicts
+tidymodels_prefer()
+
+# load data
+allies <- read_rds("data/allies.rds")
+
+# load training data/fits
+load(here("data_splits/allies_split.rda"))
+load(here("results/null_fit_a.rda"))
+load(here("results/lm_fit_a.rda"))
+load(here("results/lm_fit_b.rda"))
+load(here("results/tuned_en_a.rda"))
+load(here("results/tuned_en_b.rda"))
+load(here("results/tuned_knn_a.rda"))
+load(here("results/tuned_knn_b.rda"))
+load(here("results/tuned_rf_a.rda"))
+load(here("results/tuned_rf_b.rda"))
+load(here("results/tuned_bt_a.rda"))
+load(here("results/tuned_bt_b.rda"))
+```
+
+::: {.callout-tip icon="false"}
+## Github Repo Link
+
+[Celena Kim Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-celenakim)
+:::
+
+## Introduction
+
+The data that I chose for my project was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans \| Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psych with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video by utilizing the software LIWC[^1], a text analysis program that can categorize text by the overall emotion they convey. Each comment under the video was analyzed and given a score of how much they communicate each various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc. After creating this data set, I ended up with 15,397 observations of comments and 51 variables, 46 of which are my predictor variables.
+
+[^1]: an explanation of how this software works can be found [here](https://www.liwc.app/help/howitworks)
+
+My predictive research question is: **How many likes does a comment on the Jubilee video "Are We Allies? Black Americans vs Asian Americans \| Middle Ground" receive?**
+
+This is a regression problem with the target variable being the like count of a comment. The predictors are the LIWC emotional categories, as well as a categorical variable of the length of a comment (short, medium, or long).
+
+This prediction model is useful because it could provide insights into the factors of emotional content and comment length that influence the engagement of comments on the Jubilee video. For content creators such as Jubilee, this prediction could inform their strategies for knowing what types of comments resonate with their audience in order to optimize their engagement.
+
+## Data Overview
+
+### Response variable analysis:
+
+```{r}
+#| label: fig-likes-exploration
+#| fig-cap: An exploration of the response variable, the like count of a comment.
+
+ggplot(allies, aes(x = likes)) +
+  geom_density() +
+  labs(title = "Distribution of Likes",
+       subtitle = "The variable is skewed right, with extreme outliers.",
+       x = "Likes",
+       y = "Density") +
+  theme_minimal()
+```
+
+As seen in @fig-likes-exploration, the distribution of comment likes is heavily skewed to the right as there seems to be extreme high outliers. Thus, a transformation may be necessary to help normalize the distribution.
+
+```{r}
+#| label: fig-likes-transformed
+#| fig-cap: An exploration of likes with a log transformation.
+
+ggplot(allies, aes(x = log10(likes))) +
+  geom_density() +
+  labs(title = "Distribution of Likes with a Log Transformation",
+       subtitle = "The variable is still skewed right, and many values were removed.",
+       x = "Likes",
+       y = "Density") +
+  theme_minimal()
+```
+
+@fig-likes-transformed shows that a log transformation did seem to help to slightly normalize the likes distribution, but as there are numerous values of 0 within the observations, those values were removed. Therefore, I will instead transform the comment likes using a Yeo-Johnson transformation within my recipes.
+
+```{r}
+#| label: fig-likes-yj
+#| fig-cap: An exploration of likes with a log transformation.
+
+ggplot(allies_train, aes(x = likes_yj)) +
+  geom_density() +
+  labs(title = "Distribution of Likes with a Yeo-Johnson Transformation",
+       subtitle = "The variable is more normalized than before.",
+       x = "Likes",
+       y = "Density") +
+  theme_minimal()
+```
+
+As can be seen in @fig-likes-yj, while the distribution of the number of likes on a comment is not perfectly normalized after undergoing a Yeo-Johnson transformation, it is still much less skewed than before.
+
+### Data inspection:
+
+```{r}
+#| label: fig-allies-inspection
+#| fig-cap: An inspection of the allies data set for missingness.
+
+missing_counts <- colSums(is.na(allies))
+
+missing_counts_df <- data.frame(Missing_Count = missing_counts)
+
+kable(missing_counts_df)
+
+```
+
+After inspecting the allies data set for missingness, @fig-allies-inspection shows that there only seems to be missingness in the ID of a comment's parent comment. However, this does not seem to pose a significant issue, as this variable is not going to be important for my analysis.
+
+### Categorical variable inspection:
+
+```{r}
+#| label: fig-cat-inspection
+#| fig-cap: An inspection of the distribution of comment lengths.
+
+ggplot(allies, aes(x = factor(comment_length, 
+                              levels = c("short", 
+                                         "medium", "
+                                         long")))) +
+  geom_bar() +
+  labs(x = "Comment Length",
+       y = "Count",
+       title = "Distribution of Comment Length",
+       subtitle = "There are significantly more short comments than long or medium.") +
+  theme_minimal()
+```
+
+As visualized by @fig-cat-inspection, there seems to be a class imbalance within the categorical variable of comment length, as there are significantly more short comments than long or medium. Thus, it may be necessary to use stratified sampling, as this is effective in keeping the outcome distributions similar between the training and testing data sets.
+
+### Predictor Variables Exploration
+
+```{r}
+#| label: fig-rest-raw-inspection
+#| fig-cap: An inspection of the distributions of the numerical predictor variables.
+
+allies_train_portion <- allies_train |> 
+  slice_sample(prop = 0.8)
+
+ggplot(allies_train_portion, aes(x = anger)) +
+  geom_density() +
+  labs(title = "Distribution of Anger",
+       subtitle = "The variable is heavily skewed right",
+       x = "Anger",
+       y = "Density") +
+  theme_minimal()
+```
+
+Just as the target variable of comment likes was heavily skewed right, the numerical predictor variables are all skewed in the same fashion, similarly to the emotional category of anger shown in @fig-rest-raw-inspection. Thus, these variables will also undergo a Yeo-Johnson transformation with a recipe step.
+
+### Predictor Variable Relationships:
+
+```{r}
+#| label: fig-cor-plot
+#| fig-cap: A visualization of the correlations that exist between the predictor variables
+
+
+corr <- allies_train_portion |> 
+  select(where(is.numeric)) |> 
+  cor()
+
+allies_cor <- ggcorrplot::ggcorrplot(corr) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, size = 4),
+        axis.text.y = element_text(size = 4))
+
+allies_cor
+```
+
+In order to determine possible relationships between the numerical variables, I created a correlation plot. @fig-cor-plot shows that the variable pairs with the strongest positive correlations seem to be: focus present & verb, affiliation & drives, pos emo & affect, negative emotion & anger, negative emotion & sadness, cognitive processes & certaint, and achieve & social. Identifying these relationships is useful for adding interaction terms to my models as they will be able to capture the joint effect of two variables on the outcome variable of comment likes.
+
+## Methods
+
+I implemented an 80-20 training-test split using stratified sampling (stratified by target variable, comment likes, with 4 strata). The resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (10 folds, 5 repeats) with stratification on the target variable with 4 strata. The prediction problem is regression.
+
+### Models
+The following model types were specified with a plan for tuning hyperparameters using a regular grid, all on a Yeo Johnson scale for the target and predictor variables:
+
+-   Null model
+-   Linear model (`lm` engine)
+-   Elastic net model (`glmnet` engine)
+    -   Mixture was explored over $[0,1]$ range with 5 levels
+    -   Penalty was explored over $[-10,0]$ range with 5 levels
+-   K-nearest neighbors model (`kknn` engine)
+    -   Neighbors was explored over $[1,45]$ with 5 levels
+-   Random forest (`ranger` engine)
+    -   Number of trees set to 1,000
+    -   Number of randomly selected predictors to split on was explored over $[1, 30]$ with 5 levels
+    -   Minimum number of data points in a node for splitting was explored over $[1,30]$ with 5 levels
+-   Boosted tree (`xgboost` engine)
+    -   Number of trees was explored over $[100, 1000]$ with 4 levels
+    -   Number of randomly selected predictors to split on was explored over $[1,6]$ with 6 levels
+    -   Minimum number of data points in a node for splitting was explored over $[1,30]$ with 5 levels
+    -   Learning rate was explored over $[-5,-0.2]$ with 4 levels
+    
+Visualizations of the tuning of these models can be found in "Appendix: technical info".
+
+## Recipes
+4 different recipes were created:
+
+-   **recipe 1: kitchen sink**: This is my basic recipe, with appropriate variables removed (the original variable of likes, the id of a comment, the id of a parent comment, the commenter's username, the comment itself, and any variables with zero variance), numerical predictors transformed with a Yeo Johnson transformation, factor variables dummy coded, and predictors centered/normalized.
+
+-   **recipe 2: kitchen sink (trees)**: This is the trees version of my basic recipe, with appropriate variables removed (the original variable of likes, the id of a comment, the id of a parent comment, the commenter's username, the comment itself, and any variables with zero variance), factor variables one-hot encoded, and predictors centered/normalized.
+
+-   **recipe 3: transformed & interactions**: This is my complex recipe, with numerical predictors transformed with a Yeo Johnson transformation, factor variables dummy coded, predictors centered/normalized, and interactions included.
+
+-   **recipe 3: transformed & interactions (trees)**: This is the trees version of my complex recipe, only utilizing the variables included in recipe 3. Numerical predictors transformed were with a Yeo Johnson transformation, factor variables were dummy coded, and predictors were centered/normalized.
+
+The null, linear, elastic net, and k nearest neighbors models used the preprocessing stored in `recipe1_kitcken_sink` and `recipe3_transformed_interactions`.
+
+The k-nearest neighbors, random forest, and boosted tree models used the preprocessing stored in `recipe2_kitchen_sink_trees` and `recipe4_transformed_trees`.
+
+## Assessment Metric
+Before any training of models occurs, I decided the RMSE would be the metric by which I would compare models.
+
+## Model Building & Selection
+Again, the RMSE was the metric used to compare models and determine which would be the final/winning model.
+```{r}
+#| label: fig-model-results
+#| fig-cap: A table of my models and their RMSEs.
+
+model_results <- as_workflow_set(
+  null = null_fit_a,
+  lm_a = lm_fit_a,
+  lm_b = lm_fit_b,
+  en_a = tuned_en_a,
+  en_b = tuned_en_b,
+  knn_a = tuned_knn_a,
+  knn_b = tuned_knn_b,
+  rf_a = tuned_rf_a,
+  rf_b = tuned_rf_b,
+  bt_a = tuned_bt_a,
+  bt_b = tuned_bt_b)
+
+tbl_result <- model_results |> 
+  collect_metrics() |> 
+  filter(.metric == "rmse") |> 
+  slice_min(mean, by = wflow_id) |> 
+  distinct(wflow_id, .keep_all = TRUE) |> 
+  arrange(mean) |> 
+  select(`Model Type` = wflow_id, 
+         `RMSE` = mean, 
+         `Std Error` = std_err, 
+         `Num Models` = n) |> 
+  knitr::kable(digits = c(NA, 3, 4, 0))
+
+tbl_result
+```
+As can be seen in @fig-model-results, the model with the lowest RMSE is my random forest model a with the basic kitchen sink recipe. 
+
+## Tuning Parameters
+I utilized tuning for my elastic net, k nearest neighbors, boosted tree, and random forest models. 
+
+## Comparison of model type/recipe performance
+
+## Winning Model
+My winning model was my random forest model a, with the basic kitchen sink recipe, and the RMSE was 0.454 (on a Yeo Johnson scale). It was surprising that the model with the kitchen sink recipe won, as I had predicted that a model with one of my complex recipes would win as those recipes included interaction terms with highly correlated variables. However, it could be that those additional interaction steps overcomplicated the model, thus rendering the basic kitchen sink recipe to perform more efficiently. 
+
+## Final Model Analysis
+
+final model analysis...
+
+## Conclusion
+
+conclusion...
+
+## References
+
+"Are We Allies? Black Americans vs Asian Americans \| Middle Ground" *YouTube*, uploaded by Jubilee, 17 January 2021, <https://www.youtube.com/watch?v=pXo2ub_nZFc>.
+
+LIWC, <https://www.liwc.app/>.
+
+## Appendix: technical info about the data clean-up process
+
+## Appendix: EDA
