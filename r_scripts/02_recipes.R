@@ -48,7 +48,6 @@ prep_recipe2_kitchen_sink_trees <- prep(recipe2_kitchen_sink_trees) |>
 view(prep_recipe2_kitchen_sink_trees)
 save(recipe2_kitchen_sink_trees, file = here("recipes/recipe2_kitchen_sink_trees.rda"))
 
-
 # RECIPE 3: RECIPE WITH BOX COX TRANSFORMATIONS AND INTERACTION TERMS ----------------------------------------------------------------------
 recipe3_transformed_interactions <- recipe(comment_length ~ focus_present + verb + affiliation + drives + neg_emo + sad + cog_proc + certain + achieve + social,
                               data = allies_train) |> 
