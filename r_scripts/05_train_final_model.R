@@ -21,7 +21,7 @@ set.seed(301)
 # finalize workflow ----
 final_wflow <- tuned_rf_a |> 
   extract_workflow(tuned_rf_a) |>  
-  finalize_workflow(select_best(tuned_rf_a, metric = "rmse"))
+  finalize_workflow(select_best(tuned_rf_a, metric = "accuracy"))
 
 # train final model ----
 # set seed

@@ -64,7 +64,7 @@ model_results <- as_workflow_set(
   bt_a = tuned_bt_a,
   bt_b = tuned_bt_b)
 
-tbl_result <- model_results |> 
+tbl_result_accuracy <- model_results |> 
   collect_metrics() |> 
   filter(.metric == "accuracy") |> 
   slice_min(mean, by = wflow_id) |> 
@@ -76,29 +76,36 @@ tbl_result <- model_results |>
          `Num Models` = n) |> 
   knitr::kable(digits = c(NA, 3, 6, 0))
 
-tbl_result
+tbl_result_accuracy
 
-
-model_results <- as_workflow_set(
-  null = null_fit_a,
-  log_reg_a = log_reg_fit_a,
-  log_reg_b = log_reg_fit_b,
-  en_a = tuned_en_a,
-  en_b = tuned_en_b,
-  knn_a = tuned_knn_a,
-  knn_b = tuned_knn_b,
-  bt_b = tuned_bt_b)
-
-tbl_result <- model_results |> 
+tbl_result_roc_auc <- model_results |> 
   collect_metrics() |> 
-  filter(.metric == "accuracy") |> 
+  filter(.metric == "roc_auc") |> 
   slice_min(mean, by = wflow_id) |> 
   distinct(wflow_id, .keep_all = TRUE) |> 
   arrange(mean) |> 
   select(`Model Type` = wflow_id, 
-         `Accuracy` = mean, 
+         `ROC AUC` = mean, 
          `Std Error` = std_err, 
          `Num Models` = n) |> 
   knitr::kable(digits = c(NA, 3, 6, 0))
 
-tbl_result
+tbl_result_roc_auc
+
+
+
+cor_set <- allies_train %>%
+  select(comment_length, where(is.numeric))
+
+correlation <- cor(cor_set[, -which(names(cor_set) == "comment_length")], as.numeric(cor_set$comment_length), use = "pairwise.complete.obs")
+
+correlation_tbl <- correlation %>%
+  enframe() %>%
+  arrange(desc(value))
+
+predict(log_reg_fit, 
+        titanic_test, 
+        type = "prob")
+
+titanic_predicted_prob_logistic
+

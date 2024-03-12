@@ -20,7 +20,7 @@ load(here("data_splits/allies_split.rda"))
 # RECIPE 1: BASIC KITCHEN SINK ----------------------------------------------------------------------
 recipe1_kitchen_sink <- recipe(comment_length ~ .,
                           data = allies_train) |> 
-  step_rm(comment_id, parent_comment_id, username, comment) |> 
+  step_rm(comment_id, parent_comment_id, username, comment, word_count, words_per_sentence) |> 
   step_BoxCox(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors()) |> 
   step_zv(all_predictors()) |> 
@@ -36,7 +36,7 @@ save(recipe1_kitchen_sink, file = here("recipes/recipe1_kitchen_sink.rda"))
 # RECIPE 2: BASIC KITCHEN SINK WITH ONE HOT --------------------------------------------------------------------
 recipe2_kitchen_sink_trees <- recipe(comment_length ~ .,
                               data = allies_train) |> 
-  step_rm(comment_id, parent_comment_id, username, comment) |> 
+  step_rm(comment_id, parent_comment_id, username, comment, word_count, words_per_sentence) |> 
   step_dummy(all_nominal_predictors(),
              one_hot = TRUE) |> 
   step_zv(all_predictors()) |> 
