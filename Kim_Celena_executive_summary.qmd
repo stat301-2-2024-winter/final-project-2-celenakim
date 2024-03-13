@@ -26,5 +26,30 @@ from: markdown+emoji
 
 
 ### Introduction
-The purpose of this EDA report was to investigate the variables that contribute to the overall success rate of Hollywood movies. This was achieved by defining a movie's success based on the factors of critic and audience ratings, opening weekend revenue, gross (domestic, foreign, and worldwide), budget and budget recovery, Oscar wins, and seasonal release date and exploring what possible patterns and correlations may exist among them to ultimately render a film to be a blockbuster or a flop.
+The purpose of this report was to predict how long a comment on the Jubilee video "Are We Allies? Black Americans vs Asian Americans | Middle Ground" found on YouTube is, between a category of either short or long. This was achieved by carrying out a classification prediction problem, with the length of the comment as the target variable, and the predictor variables being numerical scores of how much each comment communicates various emotions/categories such as anger, sadness, power, assent, insight, and affiliation, as well as a categorical predictor of whether the comment contains positive emotion or not. An 80-20 training-test split using stratified sampling and repeated V-fold cross-validation was conducted on 11 different models of type null, logistic regression, elastic net, k nearest neighbors, boosted tree, and random forest utilizing 4 different recipes. Finally, the assessment metric used to compare models to ultimately determine the winning model was accuracy.
+
+### Model Results
+After building and running my models, I obtained the following results for accuracy:
+![](results/tbl_result_accuracy.png) 
+
+As can be seen in the table, my winning model was my random forest model as this model obtained the highest accuracy out of all my models of 0.949. This accuracy value suggests that the model was able to correctly identify whether a comment was short or long with a 94.9% success rate.
+
+### Analysis of the Final Model
+After fitting the winning random forest model to my testing data set, I assessed its performance using various assessment metrics.
+![](results/winning_accuracy_dt.png)
+
+For the first assessment metric, I obtained a very high accuracy value of 0.993. This suggests that approximately 99.3% of the predictions made by the winning model match the actual lengths of comments in the testing dataset, supporting high performance of the model in predicting the length of comments.
+![](results/conf_mat_rf_dt.png)
+
+Next, I created a confusion matrix, which essentially represents of the performance of a classification model, with True Positives & True Negatives (correct predictions) and False Positives & False Negatives (incorrect predictions). According to the confusion matrix above, the winning model correctly predicted the lengths of 3,057 comments in the testing data, and predicted lengths incorrectly for only 23 comments.
+
+
+Finally, I plotted the winning model's ROC curve, which represents its overall performance. If the curve was close to the diagonal line, then my model’s predictions would be unsuccessful and no better than random guessing. However, since the curve is very close to the top left-hand corner, I can conclude that my model is very successful at various thresholds. The area under the ROC curve was also calculated to be 0.999, which is a very high value and suggests that the random forest a model has very high performance in correctly predicting comment lengths.
+
+
+### Conclusion
+Overall, these four assessment metrics support a high level of prediction performance for my winning random forest model a, thus rendering this model to be successful in  its ability to predict whether a comment under the Jubilee video "Are We Allies? Black Americans vs Asian Americans | Middle Ground" would be short or long. Such a prediction model is advantageous in providing a comprehensive understanding of how certain emotions/perceptions influence the level of conversation and discussion that a viewer may be prompted to engage in after viewing a YouTube video such as Jubilee's, allowing for an in-depth analysis of the dynamics of online discourse. By analyzing the emotional and perceptual triggers that prompt users to engage in discussion, we gain an understanding of the underlying factors driving conversation. Such insights are invaluable for content creators such as Jubilee who seek to foster meaningful dialogue and possibly cultivate inclusive online communities. 
+
+
+
 

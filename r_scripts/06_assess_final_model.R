@@ -34,6 +34,9 @@ winning_accuracy <- accuracy_rf |>
   knitr::kable()
 save(winning_accuracy, file = here("results/winning_accuracy.rda"))
 
+winning_accuracy_dt <- accuracy_rf |> 
+  mutate(.estimate = round(.estimate, 3)) |> 
+  DT::datatable()
 
 ## CONFUSION MATRIX
 conf_mat_rf<- conf_mat(predict_rf, 
@@ -45,6 +48,8 @@ conf_mat_rf_df <- as.data.frame.matrix(conf_mat_rf$table)
 winning_conf_mat <- knitr::kable(conf_mat_rf_df, caption = "Confusion Matrix for Random Forest a Model")
 save(winning_conf_mat, file = here("results/winning_conf_mat.rda"))
 
+conf_mat_rf_dt <- conf_mat_rf_df |> 
+  DT::datatable()
 
 ## ROC CURVE
 allies_predicted_prob_rf <- allies_test |> 

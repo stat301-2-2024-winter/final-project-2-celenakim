@@ -73,11 +73,12 @@ tbl_result_accuracy <- model_results |>
   select(`Model Type` = wflow_id, 
          `Accuracy` = mean, 
          `Std Error` = std_err, 
-         `Num Models` = n) |> 
-  knitr::kable(digits = c(NA, 3, 6, 0))
+         `Num Models` = n) |>
+  mutate(`Accuracy` = round(`Accuracy`, 3), 
+         `Std Error` = round(`Std Error`, 6)) |> 
+  DT::datatable()
 
 tbl_result_accuracy
-
 
 tbl_result_roc_auc <- model_results |> 
   collect_metrics() |> 
@@ -92,6 +93,21 @@ tbl_result_roc_auc <- model_results |>
   knitr::kable(digits = c(NA, 3, 6, 0))
 
 tbl_result_roc_auc
+
+tbl_result_acc2 <- model_results |> 
+  collect_metrics() |> 
+  filter(.metric == "accuracy") |> 
+  slice_min(mean, by = wflow_id) |> 
+  distinct(wflow_id, .keep_all = TRUE) |> 
+  arrange(mean) |> 
+  select(`Model Type` = wflow_id, 
+         `ROC AUC` = mean, 
+         `Std Error` = std_err, 
+         `Num Models` = n) |> 
+  knitr::kable(digits = c(NA, 3, 6, 0))
+
+tbl_result_acc2
+
 
 
 
