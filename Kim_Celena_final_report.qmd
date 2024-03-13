@@ -50,6 +50,7 @@ load(here("results/tuned_rf_b.rda"))
 load(here("results/tuned_bt_a.rda"))
 load(here("results/tuned_bt_b.rda"))
 load(here("results/final_fit.rda"))
+load(here("regression_attempt/results/reg_tbl_result.rda"))
 ```
 
 ::: {.callout-tip icon="false"}
@@ -60,7 +61,7 @@ load(here("results/final_fit.rda"))
 
 ## Introduction
 
-The data that I chose for my project was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans \| Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psych with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video by utilizing the software LIWC[^1], a text analysis program that can categorize text by the overall emotion they convey. Each comment under the video was analyzed and given a score of how much they communicate each various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc. After creating this data set, I ended up with 15,397 observations of comments and 50 variables, 44 of which are my predictor variables.
+The data that I chose for my project was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans \| Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psychology with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video by utilizing the software LIWC[^1], a text analysis program that can categorize text by the overall emotion it conveys. Each comment under the video was analyzed and given a score of how much they communicated various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc. After creating this data set, I ended up with 15,397 observations of comments and 50 variables, 44 of which are my predictor variables.
 
 [^1]: an explanation of how this software works can be found [here](https://www.liwc.app/help/howitworks)
 
@@ -68,14 +69,14 @@ My predictive research question is: **How long is a comment on the Jubilee video
 
 This is a classification problem with the target variable being the length of a comment, either short or long. The predictors are the LIWC emotional categories, as well as a categorical variable of whether a comment contains positive emotion or not.
 
-This prediction model is useful because it could provide insights into the factors of emotional content that influence the level of discussion between the viewers in response to watching the Jubilee video. For content creators such as Jubilee, this prediction could inform their strategies for knowing what types of content resonates with their audience in order to influence heavy engagement and conversation.
+This prediction model is useful because it could provide insights into the factors of emotional content that influence the level of discussion between the viewers in response to watching the Jubilee video. For content creators such as Jubilee, this prediction could inform their strategies for knowing what type of content resonates with their audience in order to influence heavy engagement and conversation.
 
 ## Important Note-- Prediction Problem Type Switch
-Originally, my final project was regression, predicting the likes of a comment with the same LIWC predictors. However, after running my models and obtaining the results for RMSE, I realized that the models were not efficient at predicting. This is most likely a due to the face that the distribution of the comment likes variable is so disproportionately skewed right, with a couple of extreme outliers in the thousands vs. the rest being mostly under 10 likes, that even setting a yeo-johnson transformation could barely help to normalize the distribution. Although I could have decided to just stick with my results and keep the problem type as regression, I wanted to create more efficient models through a classification problem, so I decided to make the change. The results of my regression project can be viewed in the regression attempt folder. From this, I have learned that predicting a variable with such a wide range of values such as likes was not the best idea, as even transforming the variable could not help to create successful models.
+Originally, my final project was regression, predicting the likes of a comment with the same LIWC predictors. However, after running my models and obtaining the results for RMSE, I realized that the models were not efficient at predicting. This is most likely due to the fact that the distribution of the comment likes variable is so disproportionately skewed right, with a couple of extreme outliers in the thousands vs. the rest being mostly under 10 likes, that even setting a yeo-johnson transformation could barely help to normalize the distribution. Although I could have decided to just stick with my results and keep the problem type as regression, I wanted to create more efficient models through a classification problem, so I decided to make the change. The results of my regression project can be viewed in the regression attempt folder, and the resulting RMSEs can be viewed in the section "Appendix: technical info". From this, I have learned that predicting a variable with such a wide range of values such as likes was not the best idea, as even transforming the variable could not help to create successful models.
 
 ## Data Overview
 
-### Response variable analysis:
+### Response Variable Analysis:
 
 ```{r}
 #| label: fig-target-exploration
@@ -92,7 +93,7 @@ ggplot(allies, aes(x = comment_length)) +
 
 As seen in @fig-target-exploration, the distribution of comment length is relatively balanced between the long and short length categories.
 
-### Data inspection:
+### Data Inspection:
 
 ```{r}
 #| label: fig-allies-inspection
@@ -108,11 +109,11 @@ kable(missing_counts_df)
 
 After inspecting the allies data set for missingness, @fig-allies-inspection shows that there only seems to be missingness in the ID of a comment's parent comment. However, this does not seem to pose a significant issue, as this variable is not going to be used for my analysis.
 
-### Categorical variable inspection:
+### Categorical Variable Inspection:
 
 ```{r}
 #| label: fig-cat-inspection
-#| fig-cap: An inspection of the distribution of comment lengths.
+#| fig-cap: An inspection of the distribution of comments with/without positive emotion.
 
 ggplot(allies, aes(x = pos_emo)) +
   geom_bar() +
@@ -129,7 +130,7 @@ As visualized by @fig-cat-inspection, the distribution of comments with positive
 
 ```{r}
 #| label: fig-rest-raw-inspection
-#| fig-cap: An inspection of the distributions of the numerical predictor variables.
+#| fig-cap: An example of the distributions of the numerical predictor variables.
 
 allies_train_portion <- allies_train |> 
   slice_sample(prop = 0.8)
@@ -143,13 +144,13 @@ ggplot(allies_train_portion, aes(x = anger)) +
   theme_minimal()
 ```
 
-As shown in @fig-rest-raw-inspection, all the numerical predictor variables such as the presence of anger within comments are heavily skewed right. Log transformations will not work as these variables contain values of 0, and a square root transformation does not seem to help to normalize their distributions. Thus, these variables will undergo a BoxCox transformation within a recipe step.
+As shown in @fig-rest-raw-inspection, all the numerical predictor variables such as the presence of anger within comments are heavily skewed right. Log transformations will not work as these variables contain values of 0, and a square root transformation does not seem to help normalize their distributions. Thus, these variables will undergo a BoxCox transformation within a recipe step.
 
 ### Predictor Variable Relationships:
 
 ```{r}
 #| label: fig-cor-plot
-#| fig-cap: A visualization of the correlations that exist between the predictor variables
+#| fig-cap: A visualization of the correlations that exist between the predictor variables.
 
 corr <- allies_train_portion |> 
   select(where(is.numeric)) |> 
@@ -162,13 +163,12 @@ allies_cor <- ggcorrplot::ggcorrplot(corr) +
 allies_cor
 ```
 
-In order to determine possible relationships between the numerical variables, I created a correlation plot. @fig-cor-plot shows that some of the variable pairs with the strongest positive correlations seem to be: focus present & verb, affiliation & drives, negative emotion & sadness, cognitive processes & certainty, and achieve & social. Identifying these relationships is useful for adding interaction terms to my recipes as they will be able to capture the joint effect of two variables on the outcome variable of comment likes.
+In order to determine possible relationships between the numerical predictor variables, I created a correlation plot. @fig-cor-plot shows that some of the variable pairs with the strongest positive correlations seem to be: focus present & verb, affiliation & drives, negative emotion & sadness, cognitive processes & certainty, and achieve & social. Identifying these relationships is useful for adding interaction terms to my recipes as they will be able to capture the joint effect of two variables on the outcome variable of comment likes.
 
 ### Highly Correlated Variables with the Target Variable:
-In the initial stages of my project, I was obtaining accuracies very close to/equal to 1, indicating that I may have included variables that were highly correlated with my target variable in my recipe steps. After reviewing correlations of my target variable with my predictor value, I realized that I had included the variables of the word count of a comment and the average number of words per sentence for a comment, which are variables that are directly linked to the length of a comment, and thus would impact my accuracy. After removing those variables, the accuracies were much more reasonable. A table outlining the correlations between my target variable and predictors can be found in the "Appendix: technical info" section of this report.
+In the initial stages of my project, I was obtaining accuracies very close to/equal to 1, indicating that I may have included variables that were highly correlated with my target variable in my recipe steps. After reviewing the correlations of my target variable with my predictor value, I realized that I had included the variables of the word count of a comment and the average number of words per sentence for a comment, which are variables that are directly linked to the length of a comment, and thus would impact my accuracy. After removing those variables, the accuracies were much more reasonable. A table outlining the correlations between my target variable and predictors can be found in the "Appendix: technical info" section of this report.
 
 ## Methods
-
 I implemented an 80-20 training-test split using stratified sampling (stratified by target variable, comment length, with 4 strata). The resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (10 folds, 5 repeats) with stratification on the target variable with 4 strata. The prediction problem is classification.
 
 ### Models
@@ -194,13 +194,13 @@ The following model types were specified with a plan for tuning hyperparameters 
 ### Recipes
 4 different recipes were created:
 
--   **recipe 1: kitchen sink**: This is my basic recipe, with appropriate variables removed (the id of a comment, the id of a parent comment, the commenter's username, the comment itself, the variables of the word count and average words per sentence of a comment, as these variables were highly correlated with the target variable, and any variables with zero variance), numerical predictors transformed with a BoxCox transformation, factor variables dummy coded, and predictors centered/normalized.
+-   **Recipe 1: kitchen sink**: This is my basic recipe, with appropriate variables removed (the ID of a comment, the ID of a parent comment, the commenter's username, the comment itself, the variables of the word count and average words per sentence of a comment, as these variables were highly correlated with the target variable, and any variables with zero variance), numerical predictors transformed with a BoxCox transformation, factor variables dummy coded, and predictors centered/normalized.
 
--   **recipe 2: kitchen sink (trees)**: This is the trees version of my basic recipe, with appropriate variables removed (the id of a comment, the id of a parent comment, the commenter's username, the comment itself, the variables of the word count and average words per sentence of a comment, as these variables were highly correlated with the target variable, and any variables with zero variance), factor variables one-hot encoded, and predictors centered/normalized.
+-   **Recipe 2: kitchen sink (trees)**: This is the trees version of my basic recipe, with appropriate variables removed (the ID of a comment, the ID of a parent comment, the commenter's username, the comment itself, the variables of the word count and average words per sentence of a comment, as these variables were highly correlated with the target variable, and any variables with zero variance), factor variables one-hot encoded, and predictors centered/normalized.
 
--   **recipe 3: transformed & interactions**: This is my complex recipe, with numerical predictors transformed with a BoxCox transformation, factor variables dummy coded, predictors centered/normalized, and interactions included.
+-   **Recipe 3: transformed & interactions between selected variables**: This is my complex recipe, with numerical predictors transformed with a BoxCox transformation, factor variables dummy coded, predictors centered/normalized, and interactions between variables with high correlations between each other: focus present & verb, affiliation & drives, negative emotion & sadness, cognitive processes & certainty, and achieve & social.
 
--   **recipe 4: transformed & interactions (trees)**: This is the trees version of my complex recipe, only utilizing the variables included in recipe 3. Numerical predictors transformed were with a BoxCox transformation, factor variables were dummy coded, and predictors were centered/normalized.
+-   **Recipe 4: transformed & selected variables (trees)**: This is the trees version of my complex recipe, only utilizing the variables included in recipe 3: focus present, verb, affiliation, drives, negative emotion, sadness, cognitive processes, certainty, achieve, and social. Numerical predictors were transformed with a BoxCox transformation, factor variables were dummy coded, and predictors were centered/normalized.
 
 The null, logistic regression, elastic net, and k nearest neighbors models used recipes 1 and 3.
 
@@ -209,11 +209,12 @@ The k-nearest neighbors, random forest, and boosted tree models used recipes 3 a
 ## Model Building & Selection
 
 ## Assessment Metric
-I decided accuracy would be the metric by which I would compare models.
+I decided **accuracy** would be the metric by which I would compare models.
 
+## Best Performing Model Results
 ```{r}
 #| label: fig-model-results
-#| fig-cap: A table of my models and their accuracies
+#| fig-cap: A table of my models and their accuracies.
 
 model_results <- as_workflow_set(
   null = null_fit_a,
@@ -242,85 +243,85 @@ tbl_result_accuracy <- model_results |>
 
 tbl_result_accuracy
 ```
-As can be seen in @fig-model-results, here are the best performing model results in terms of accuracy. 
+@fig-model-results contains a table of the best performing model results, in terms of accuracy. The random forest model a (with the kitchen sink recipe) obtained the highest accuracy of 0.949, while the null model, elastic net model a, and elastic net model b model all obtained the lowest accuracy of 0.513.
 
 ## Tuning Parameters
 Here are the visualizations of the tuning of my elastic net, k nearest neighbors, random forest, and boosted tree models, as well as the selected best values.
 
 ```{r}
 #| label: fig-autoplot-tuned-en-a
-#| fig-cap: A visualization of the best tuning parameters for the elastic net model a
+#| fig-cap: A visualization of the best tuning parameters for the elastic net model a.
 
 autoplot(tuned_en_a)
 ```
 
 ```{r}
 #| label: fig-selectbest-tuned-en-a
-#| fig-cap: The best tuning parameter values for the elastic net model a
+#| fig-cap: The best tuning parameter values for the elastic net model a.
 
 select_best(tuned_en_a, metric = "accuracy") |> 
   knitr::kable()
 ```
-As seen in @fig-autoplot-tuned-en-a and @fig-selectbest-tuned-en-a, the best parameters to obtain the highest accuracy for the elastic net model a is a penalty of 0 and mixture of 0.7625.
+As seen in @fig-autoplot-tuned-en-a and @fig-selectbest-tuned-en-a, the best parameters to obtain the highest accuracy for the elastic net model a is a penalty of 0 and a mixture of 0.7625.
 
 ```{r}
 #| label: fig-autoplot-tuned-en-b
-#| fig-cap: A visualization of the best tuning parameters for the elastic net model b
+#| fig-cap: A visualization of the best tuning parameters for the elastic net model b.
 
 autoplot(tuned_en_b)
 ```
 
 ```{r}
 #| label: fig-selectbest-tuned-en-b
-#| fig-cap: The best tuning parameter values for the elastic net model b
+#| fig-cap: The best tuning parameter values for the elastic net model b.
 
 select_best(tuned_en_b, metric = "accuracy") |> 
   knitr::kable()
 ```
-@fig-autoplot-tuned-en-b and @fig-selectbest-tuned-en-b show that the best parameters to obtain the highest accuracy for the elastic net model b are also a penalty of 0 and mixture of 0.7625.
+@fig-autoplot-tuned-en-b and @fig-selectbest-tuned-en-b show that the best parameters to obtain the highest accuracy for the elastic net model b are also a penalty of 0 and a mixture of 0.7625.
 
 ```{r}
 #| label: fig-autoplot-tuned-knn-a
-#| fig-cap: A visualization of the best tuning parameters for the k nearest neighbors model a
+#| fig-cap: A visualization of the best tuning parameters for the k nearest neighbors model a.
 
 autoplot(tuned_knn_a)
 ```
 
 ```{r}
 #| label: fig-selectbest-tuned-knn-a
-#| fig-cap: The best tuning parameter values for the k nearest neighbors model a
+#| fig-cap: The best tuning parameter values for the k nearest neighbors model a.
 
 select_best(tuned_knn_a, metric = "accuracy") |> 
   knitr::kable()
 ```
-@fig-autoplot-tuned-knn-a and @fig-selectbest-tuned-knn-a show that the best parameters to obtain the highest accuracy for the k nearest neighbors model a is 1 neighbor.
+@fig-autoplot-tuned-knn-a and @fig-selectbest-tuned-knn-a show that the best parameter to obtain the highest accuracy for the k nearest neighbors model a is 1 neighbor.
 
 ```{r}
 #| label: fig-autoplot-tuned-knn-b
-#| fig-cap: A visualization of the best tuning parameters for the k nearest neighbors model b
+#| fig-cap: A visualization of the best tuning parameters for the k nearest neighbors model b.
 
 autoplot(tuned_knn_b)
 ```
 
 ```{r}
 #| label: fig-selectbest-tuned-knn-b
-#| fig-cap: The best tuning parameter values for the k nearest neighbors model b
+#| fig-cap: The best tuning parameter values for the k nearest neighbors model b.
 
 select_best(tuned_knn_b, metric = "accuracy") |> 
   knitr::kable()
 ```
-As seen in @fig-autoplot-tuned-knn-b and @fig-selectbest-tuned-knn-b, the best parameters to obtain the highest accuracy for the k nearest neighbors model b is 34 neighbors.
+As seen in @fig-autoplot-tuned-knn-b and @fig-selectbest-tuned-knn-b, the best parameter to obtain the highest accuracy for the k nearest neighbors model b is 34 neighbors.
 
 ```{r}
 #| label: fig-autoplot-tuned-rf-a
-#| fig-cap: A visualization of the best tuning parameters for the random forest model a
+#| fig-cap: A visualization of the best tuning parameters for the random forest model a.
 
 autoplot(tuned_rf_a)
 ```
 
 ```{r}
 #| label: fig-selectbest-tuned-rf-a
-#| fig-cap: The best tuning parameter values for the random forest model a
+#| fig-cap: The best tuning parameter values for the random forest model a.
 
 select_best(tuned_rf_a, metric = "accuracy") |> 
   knitr::kable()
@@ -329,14 +330,14 @@ select_best(tuned_rf_a, metric = "accuracy") |>
 
 ```{r}
 #| label: fig-autoplot-tuned-rf-b
-#| fig-cap: A visualization of the best tuning parameters for the random forest model b
+#| fig-cap: A visualization of the best tuning parameters for the random forest model b.
 
 autoplot(tuned_rf_b)
 ```
 
 ```{r}
 #| label: fig-selectbest-tuned-rf-b
-#| fig-cap: The best tuning parameter values for the random forest model b
+#| fig-cap: The best tuning parameter values for the random forest model b.
 
 select_best(tuned_rf_b, metric = "accuracy") |> 
   knitr::kable()
@@ -345,48 +346,51 @@ select_best(tuned_rf_b, metric = "accuracy") |>
 
 ```{r}
 #| label: fig-autoplot-tuned-bt-a
-#| fig-cap: A visualization of the best tuning parameters for the boosted tree model a
+#| fig-cap: A visualization of the best tuning parameters for the boosted tree model a.
 
 autoplot(tuned_bt_a)
 ```
 
 ```{r}
 #| label: fig-selectbest-tuned-bt-a
-#| fig-cap: The best tuning parameter values for the boosted tree model a
+#| fig-cap: The best tuning parameter values for the boosted tree model a.
 
 select_best(tuned_bt_a, metric = "accuracy") |> 
   knitr::kable()
 ```
-As seen in @fig-autoplot-tuned-bt-a and @fig-selectbest-tuned-bt-a, the best parameters to obtain the highest accuracy for the boosted tree model a is 1 variable randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered and a learning rate of 0.631.
+As seen in @fig-autoplot-tuned-bt-a and @fig-selectbest-tuned-bt-a, the best parameters to obtain the highest accuracy for the boosted tree model a is 1 variable randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered, and a learning rate of 0.631.
 
 ```{r}
 #| label: fig-autoplot-tuned-bt-b
-#| fig-cap: A visualization of the best tuning parameters for the boosted tree model b 
+#| fig-cap: A visualization of the best tuning parameters for the boosted tree model b.
 
 autoplot(tuned_bt_b)
 ```
 
 ```{r}
 #| label: fig-selectbest-tuned-bt-b
-#| fig-cap: The best tuning parameter values for the boosted tree model b 
+#| fig-cap: The best tuning parameter values for the boosted tree model b.
 
 select_best(tuned_bt_b, metric = "accuracy") |> 
   knitr::kable()
 ```
-Finally, as visualized by in @fig-autoplot-tuned-bt-b and @fig-selectbest-tuned-bt-b, the best parameters to obtain the highest accuracy for the boosted tree model a is 15 variables randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered and a learning rate of 0.631.
+Finally, as visualized by in @fig-autoplot-tuned-bt-b and @fig-selectbest-tuned-bt-b, the best parameters to obtain the highest accuracy for the boosted tree model a is 15 variables randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered, and a learning rate of 0.631.
 
-## Comparison of model type/recipe performance
+## Further Tuning?
+The tuning parameters seemed to produce high performing models, although further tuning could be explored in case there was overfitting that needed to be reduced in future explorations.
+
+## Comparison of Model Type/Recipe Performance
 The elastic net model was the only model type where the accuracy value was the same for both the a and b versions of the model. The elastic net models also obtained the same accuracy value as the null model, showing that the elastic net models were no better than a baseline model. For the k nearest neighbors and logistic regression models, the models with the more "complex" recipe (interaction terms and BoxCox transformations on the predictors) obtained a slightly higher accuracy than the models with the kitchen sink recipe, but these accuracy values were still very similar to each other within the model types: 0.821 vs. 0.825 for k nearest neighbors models a vs. b, and 0.731 vs. 0.741 for logistic regression models a vs. b. Thus, there is not that notable of a difference between the performance of the kitchen sink vs. complex recipes within those model types. On the other hand, for the random forest and boosted tree models, the models with the kitchen sink recipe performed better than the models with the more "complex" recipe to a greater degree (0.903 vs. 0.840 for boosted tree model a vs. b, and 0.949 vs. 0.908 for random forest model a vs. b). It was interesting to see that the tree models performed better with the kitchen sink recipe, while the logistic regression and k nearest neighbors models performed better with the more complex recipe.
 
 ## Winning Model
-My winning model was my **random forest model a**, with the basic kitchen sink recipe, and the accuracy was **0.949**. It was surprising that the model with the kitchen sink recipe won, as I had predicted that a model with one of my complex recipes would win as those recipes included interaction terms with highly correlated variables. However, it could be that those additional interaction steps overcomplicated the model, thus rendering the basic kitchen sink recipe to perform more efficiently. 
+My winning model was my **random forest model a**, with the basic kitchen sink recipe, and the accuracy was **0.949**, or **94.9%**. It was surprising that the model with the kitchen sink recipe won, as I had predicted that a model with one of my complex recipes would win as those recipes included interaction terms with highly correlated variables. However, it could be that those additional interaction steps overcomplicated the model, thus rendering the basic kitchen sink recipe to perform more efficiently. 
 
 ## Final Model Analysis
 
 ### Accuracy
 ```{r}
 #| label: fig-finalfit-accuracy
-#| fig-cap: A table of the correlations between the target variable of comment length with the numerical predictor variables.
+#| fig-cap: The accuracy value for my final winning random forest model a.
 
 predict_rf <- allies_test |> 
   select(comment_length) |> 
@@ -448,13 +452,27 @@ roc_auc(allies_predicted_prob_rf,
 @fig-roc-auc computes the area under the ROC curve shown previously. With a value of 0.999, this suggests that the random forest a model has very high performance in terms of classification accuracy.
 
 ### Did the effort pay off?
-After assessing my final model's performance, it was very successful, and I do think that the effort of building a predictive model paid off. Compared to the baseline model before choosing the final model, the accuracy of the random forest model a was approximately 85.09% higher than the null, indicating a notable improvement in model performance. The recipes used for these models were both the basic kitchen sink recipes, so this model improvement could not have been the result of an improved recipe. Rather, it could be attributed to the fact that the random forest model itself leverages more advanced techniques than the null to carry out these predictions.
+After assessing my final model's performance, it was very successful, and I do think that the effort of building a predictive model paid off. Compared to the baseline model before choosing the final model, the accuracy of the random forest model a was approximately 85.09% higher than the null, indicating a notable improvement in model performance. The recipes used for these models were both basic kitchen sink recipes, so this model improvement was likely not the result of an improved recipe. Rather, it could be attributed to the fact that the random forest model itself leverages more advanced techniques than the null to carry out these predictions, thus resulting in a higher accuracy value.
 
 ## Conclusion
+Overall, I am glad that I decided to switch my project from regression to classification, as I was able to create exponentially more successful models than compared to the regression results. Although I could have just kept my regression problem as my main final report and explained why those models did not perform well, I think that switching over to the classification models taught me how to be resilient in the face of obtaining results that weren't successful and flexible in rerouting to devise another approach. I also have a much clearer understanding of what variables/components would constitute successful model results for both classification and regression problems, in addition to having obtained great practice with both prediction type problems. In the future, I would like to have a second try at tackling a different type of regression problem and obtain more successful results than I had with my original report. For instance, I could possibly predict a certain LIWC emotional category such as level of positive emotion or level of negative emotion based on the other LIWC components present within a comment. Now that I have a better understanding of regression problems, I think this new attempt would result in much greater success.
 
-conclusion...
+## References
+
+"Are We Allies? Black Americans vs Asian Americans \| Middle Ground" *YouTube*, uploaded by Jubilee, 17 January 2021, <https://www.youtube.com/watch?v=pXo2ub_nZFc>.
+
+LIWC, <https://www.liwc.app/>.
 
 ## Appendix: technical info
+### Original regression model results
+```{r}
+#| label: fig-orig-reg-results
+#| fig-cap: The RMSE results from my original project, a regression problem predicting the likes on a comment.
+
+reg_tbl_result
+```
+@fig-orig-reg-results shows the RMSEs (on a Yeo-Johnson scale) obtained from my original project, a regression type problem of predicting the number of likes on a comment. As can be seen from the RMSEs, there is not a notable difference in RMSE performance between the null model and the best model, the random forest a model. Thus, my best model was barely better than the simplest possible model/prediction strategy possible, indicating that it was not that successful. After obtaining such unpromising results, I decided to switch to a classification prediction problem of predicting comment length. 
+
 ###  Highly Correlated Variables with the Target Variable Table
 ```{r}
 #| label: fig-target-var-cors
@@ -475,9 +493,3 @@ correlation_tbl <- correlation |>
 correlation_tbl
 ```
 As seen in @fig-target-var-cors, the predictors of the word count of a comment and the average words per sentence of a comment have the strongest correlations with the target variable of comment length, as those are both factors that directly impact/have a direct relationship with how long a comment would be. Thus, it was necessary to remove those predictors from my recipes.
-
-## References
-
-"Are We Allies? Black Americans vs Asian Americans \| Middle Ground" *YouTube*, uploaded by Jubilee, 17 January 2021, <https://www.youtube.com/watch?v=pXo2ub_nZFc>.
-
-LIWC, <https://www.liwc.app/>.

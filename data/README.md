@@ -8,4 +8,4 @@ The data that I chose for my project was derived from gathering data on the psyc
 - `00.cleaning.R`
 - `codebook_creation.R`
 
-The original `allies_data` data set consisted of 66 variables, but I carried out a cleaning process of removing irrelevant variables/variables with missingness, mutating categorical variables of the presence of negative and positive emotion within comments, and renaming variable names to ultimately end up with 15,397 observations and 50 variables.
+The original `allies_data` data set consisted of 66 variables, but I carried out a cleaning process of removing irrelevant variables/variables with missingness, mutating a categorical variable of the presence of positive emotion within comments, and renaming variable names to ultimately end up with 15,397 observations and 50 variables.

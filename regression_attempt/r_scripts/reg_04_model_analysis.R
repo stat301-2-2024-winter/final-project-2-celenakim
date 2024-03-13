@@ -11,18 +11,18 @@ library(doMC)
 tidymodels_prefer()
 
 # load training data/fits
-load(here("data_splits/allies_split.rda"))
-load(here("results/null_fit_a.rda"))
-load(here("results/lm_fit_a.rda"))
-load(here("results/lm_fit_b.rda"))
-load(here("results/tuned_en_a.rda"))
-load(here("results/tuned_en_b.rda"))
-load(here("results/tuned_knn_a.rda"))
-load(here("results/tuned_knn_b.rda"))
-load(here("results/tuned_rf_a.rda"))
-load(here("results/tuned_rf_b.rda"))
-load(here("results/tuned_bt_a.rda"))
-load(here("results/tuned_bt_b.rda"))
+load(here("regression_attempt/data_splits/reg_allies_split.rda"))
+load(here("regression_attempt/results/reg_null_fit_a.rda"))
+load(here("regression_attempt/results/reg_lm_fit_a.rda"))
+load(here("regression_attempt/results/reg_lm_fit_b.rda"))
+load(here("regression_attempt/results/reg_tuned_en_a.rda"))
+load(here("regression_attempt/results/reg_tuned_en_b.rda"))
+load(here("regression_attempt/results/reg_tuned_knn_a.rda"))
+load(here("regression_attempt/results/reg_tuned_knn_b.rda"))
+load(here("regression_attempt/results/reg_tuned_rf_a.rda"))
+load(here("regression_attempt/results/reg_tuned_rf_b.rda"))
+load(here("regression_attempt/results/reg_tuned_bt_a.rda"))
+load(here("regression_attempt/results/reg_tuned_bt_b.rda"))
 
 
 set.seed(301)
@@ -51,7 +51,7 @@ select_best(tuned_bt_b, metric = "rmse")
 
 
 # FINDING BEST RMSE FOR EACH MODEL ----
-model_results <- as_workflow_set(
+reg_model_results <- as_workflow_set(
   null = null_fit_a,
   lm_a = lm_fit_a,
   lm_b = lm_fit_b,
@@ -64,7 +64,7 @@ model_results <- as_workflow_set(
   bt_a = tuned_bt_a,
   bt_b = tuned_bt_b)
 
-tbl_result <- model_results |> 
+reg_tbl_result <- model_results |> 
   collect_metrics() |> 
   filter(.metric == "rmse") |> 
   slice_min(mean, by = wflow_id) |> 
@@ -76,7 +76,8 @@ tbl_result <- model_results |>
          `Num Models` = n) |> 
   knitr::kable(digits = c(NA, 3, 4, 0))
 
-tbl_result
+reg_tbl_result
+save(reg_tbl_result, file = here("regression_attempt/results/reg_tbl_result.rda"))
 
 model_results <- as_workflow_set(
   null = null_fit_a,
