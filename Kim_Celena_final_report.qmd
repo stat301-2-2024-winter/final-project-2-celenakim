@@ -76,7 +76,7 @@ Originally, my final project was regression, predicting the likes of a comment w
 
 ## Data Overview
 
-### Response Variable Analysis:
+### Response Variable Analysis
 
 ```{r}
 #| label: fig-target-exploration
@@ -93,7 +93,7 @@ ggplot(allies, aes(x = comment_length)) +
 
 As seen in @fig-target-exploration, the distribution of comment length is relatively balanced between the long and short length categories.
 
-### Data Inspection:
+### Data Inspection
 
 ```{r}
 #| label: fig-allies-inspection
@@ -109,7 +109,7 @@ kable(missing_counts_df)
 
 After inspecting the allies data set for missingness, @fig-allies-inspection shows that there only seems to be missingness in the ID of a comment's parent comment. However, this does not seem to pose a significant issue, as this variable is not going to be used for my analysis.
 
-### Categorical Variable Inspection:
+### Categorical Variable Inspection
 
 ```{r}
 #| label: fig-cat-inspection
@@ -146,7 +146,7 @@ ggplot(allies_train_portion, aes(x = anger)) +
 
 As shown in @fig-rest-raw-inspection, all the numerical predictor variables such as the presence of anger within comments are heavily skewed right. Log transformations will not work as these variables contain values of 0, and a square root transformation does not seem to help normalize their distributions. Thus, these variables will undergo a BoxCox transformation within a recipe step.
 
-### Predictor Variable Relationships:
+### Predictor Variable Relationships
 
 ```{r}
 #| label: fig-cor-plot
@@ -165,7 +165,7 @@ allies_cor
 
 In order to determine possible relationships between the numerical predictor variables, I created a correlation plot. @fig-cor-plot shows that some of the variable pairs with the strongest positive correlations seem to be: focus present & verb, affiliation & drives, negative emotion & sadness, cognitive processes & certainty, and achieve & social. Identifying these relationships is useful for adding interaction terms to my recipes as they will be able to capture the joint effect of two variables on the outcome variable of comment likes.
 
-### Highly Correlated Variables with the Target Variable:
+### Highly Correlated Variables with the Target Variable
 In the initial stages of my project, I was obtaining accuracies very close to/equal to 1, indicating that I may have included variables that were highly correlated with my target variable in my recipe steps. After reviewing the correlations of my target variable with my predictor value, I realized that I had included the variables of the word count of a comment and the average number of words per sentence for a comment, which are variables that are directly linked to the length of a comment, and thus would impact my accuracy. After removing those variables, the accuracies were much more reasonable. A table outlining the correlations between my target variable and predictors can be found in the "Appendix: technical info" section of this report.
 
 ## Methods
