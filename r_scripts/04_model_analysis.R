@@ -78,6 +78,7 @@ tbl_result_accuracy <- model_results |>
 
 tbl_result_accuracy
 
+
 tbl_result_roc_auc <- model_results |> 
   collect_metrics() |> 
   filter(.metric == "roc_auc") |> 
