@@ -96,8 +96,8 @@ As seen in @fig-target-exploration, the distribution of comment length is relati
 ### Data Inspection
 
 ```{r}
-#| label: fig-allies-inspection
-#| fig-cap: An inspection of the allies data set for missingness.
+#| label: tbl-allies-inspection
+#| tbl-cap: An inspection of the allies data set for missingness.
 
 missing_counts <- colSums(is.na(allies))
 
@@ -107,7 +107,7 @@ kable(missing_counts_df)
 
 ```
 
-After inspecting the allies data set for missingness, @fig-allies-inspection shows that there only seems to be missingness in the ID of a comment's parent comment. However, this does not seem to pose a significant issue, as this variable is not going to be used for my analysis.
+After inspecting the allies data set for missingness, @tbl-allies-inspection shows that there only seems to be missingness in the ID of a comment's parent comment. However, this does not seem to pose a significant issue, as this variable is not going to be used for my analysis.
 
 ### Categorical Variable Inspection
 
@@ -215,8 +215,8 @@ I decided **accuracy** would be the metric by which I would compare models. Accu
 
 ## Best Performing Model Results
 ```{r}
-#| label: fig-model-results
-#| fig-cap: A table of my models and their accuracies.
+#| label: tbl-model-results
+#| tbl-cap: A table of my models and their accuracies.
 
 model_results <- as_workflow_set(
   null = null_fit_a,
@@ -245,138 +245,83 @@ tbl_result_accuracy <- model_results |>
 
 tbl_result_accuracy
 ```
-@fig-model-results contains a table of the best performing model results, in terms of accuracy. The random forest model a (with the kitchen sink recipe) obtained the highest accuracy of 0.949, while the null model, elastic net model a, and elastic net model b all obtained the lowest accuracy of 0.513.
+@tbl-model-results contains a table of the best performing model results, in terms of accuracy. The random forest model a (with the kitchen sink recipe) obtained the highest accuracy of 0.949, while the null model, elastic net model a, and elastic net model b all obtained the lowest accuracy of 0.513.
 
 ## Tuning Parameters
-Here are the visualizations of the tuning of my elastic net, k nearest neighbors, random forest, and boosted tree models, as well as the selected best values.
+Here are the best-performing hyperparameters for each model that I tuned: elastic net, k nearest neighbors, random forest, and boosted tree models.
+Visualizations of tuning parameters may be found in the "Appendix: Technical Info" section.
 
 ```{r}
-#| label: fig-autoplot-tuned-en-a
-#| fig-cap: A visualization of the best tuning parameters for the elastic net model a.
-
-autoplot(tuned_en_a)
-```
-
-```{r}
-#| label: fig-selectbest-tuned-en-a
-#| fig-cap: The best tuning parameter values for the elastic net model a.
+#| label: tbl-selectbest-tuned-en-a
+#| tbl-cap: The best tuning parameter values for the elastic net model a.
 
 select_best(tuned_en_a, metric = "accuracy") |> 
   knitr::kable()
 ```
-As seen in @fig-autoplot-tuned-en-a and @fig-selectbest-tuned-en-a, the best parameters to obtain the highest accuracy for the elastic net model a is a penalty of 0 and a mixture of 0.7625.
+As seen in @tbl-selectbest-tuned-en-a, the best parameters to obtain the highest accuracy for the elastic net model a is a penalty of 0 and a mixture of 0.7625.
 
 ```{r}
-#| label: fig-autoplot-tuned-en-b
-#| fig-cap: A visualization of the best tuning parameters for the elastic net model b.
-
-autoplot(tuned_en_b)
-```
-
-```{r}
-#| label: fig-selectbest-tuned-en-b
-#| fig-cap: The best tuning parameter values for the elastic net model b.
+#| label: tbl-selectbest-tuned-en-b
+#| tbl-cap: The best tuning parameter values for the elastic net model b.
 
 select_best(tuned_en_b, metric = "accuracy") |> 
   knitr::kable()
 ```
-@fig-autoplot-tuned-en-b and @fig-selectbest-tuned-en-b show that the best parameters to obtain the highest accuracy for the elastic net model b are also a penalty of 0 and a mixture of 0.7625.
+@tbl-selectbest-tuned-en-b show that the best parameters to obtain the highest accuracy for the elastic net model b are also a penalty of 0 and a mixture of 0.7625.
 
 ```{r}
-#| label: fig-autoplot-tuned-knn-a
-#| fig-cap: A visualization of the best tuning parameters for the k nearest neighbors model a.
-
-autoplot(tuned_knn_a)
-```
-
-```{r}
-#| label: fig-selectbest-tuned-knn-a
-#| fig-cap: The best tuning parameter values for the k nearest neighbors model a.
+#| label: tbl-selectbest-tuned-knn-a
+#| tbl-cap: The best tuning parameter values for the k nearest neighbors model a.
 
 select_best(tuned_knn_a, metric = "accuracy") |> 
   knitr::kable()
 ```
-@fig-autoplot-tuned-knn-a and @fig-selectbest-tuned-knn-a show that the best parameter to obtain the highest accuracy for the k nearest neighbors model a is 1 neighbor.
+@tbl-selectbest-tuned-knn-a shows that the best parameter to obtain the highest accuracy for the k nearest neighbors model a is 1 neighbor.
 
 ```{r}
-#| label: fig-autoplot-tuned-knn-b
-#| fig-cap: A visualization of the best tuning parameters for the k nearest neighbors model b.
-
-autoplot(tuned_knn_b)
-```
-
-```{r}
-#| label: fig-selectbest-tuned-knn-b
-#| fig-cap: The best tuning parameter values for the k nearest neighbors model b.
+#| label: tbl-selectbest-tuned-knn-b
+#| tbl-cap: The best tuning parameter values for the k nearest neighbors model b.
 
 select_best(tuned_knn_b, metric = "accuracy") |> 
   knitr::kable()
 ```
-As seen in @fig-autoplot-tuned-knn-b and @fig-selectbest-tuned-knn-b, the best parameter to obtain the highest accuracy for the k nearest neighbors model b is 34 neighbors.
+As seen in @tbl-selectbest-tuned-knn-b, the best parameter to obtain the highest accuracy for the k nearest neighbors model b is 34 neighbors.
 
 ```{r}
-#| label: fig-autoplot-tuned-rf-a
-#| fig-cap: A visualization of the best tuning parameters for the random forest model a.
-
-autoplot(tuned_rf_a)
-```
-
-```{r}
-#| label: fig-selectbest-tuned-rf-a
-#| fig-cap: The best tuning parameter values for the random forest model a.
+#| label: tbl-selectbest-tuned-rf-a
+#| tbl-cap: The best tuning parameter values for the random forest model a.
 
 select_best(tuned_rf_a, metric = "accuracy") |> 
   knitr::kable()
 ```
-@fig-autoplot-tuned-rf-a and @fig-selectbest-tuned-rf-a show that the best parameters to obtain the highest accuracy for the random forest model a is 15 variables randomly sampled at each split and a minimum of 2 samples required to be present in a node for further splitting to be considered.
+@tbl-selectbest-tuned-rf-a shows that the best parameters to obtain the highest accuracy for the random forest model a is 15 variables randomly sampled at each split and a minimum of 2 samples required to be present in a node for further splitting to be considered.
 
 ```{r}
-#| label: fig-autoplot-tuned-rf-b
-#| fig-cap: A visualization of the best tuning parameters for the random forest model b.
-
-autoplot(tuned_rf_b)
-```
-
-```{r}
-#| label: fig-selectbest-tuned-rf-b
-#| fig-cap: The best tuning parameter values for the random forest model b.
+#| label: tbl-selectbest-tuned-rf-b
+#| tbl-cap: The best tuning parameter values for the random forest model b.
 
 select_best(tuned_rf_b, metric = "accuracy") |> 
   knitr::kable()
 ```
-@fig-autoplot-tuned-rf-b and @fig-selectbest-tuned-rf-b show that the best parameters to obtain the highest accuracy for the random forest model b is 8 variables randomly sampled at each split and a minimum of 2 samples required to be present in a node for further splitting to be considered.
+@tbl-selectbest-tuned-rf-b shows that the best parameters to obtain the highest accuracy for the random forest model b is 8 variables randomly sampled at each split and a minimum of 2 samples required to be present in a node for further splitting to be considered.
 
 ```{r}
-#| label: fig-autoplot-tuned-bt-a
-#| fig-cap: A visualization of the best tuning parameters for the boosted tree model a.
-
-autoplot(tuned_bt_a)
-```
-
-```{r}
-#| label: fig-selectbest-tuned-bt-a
-#| fig-cap: The best tuning parameter values for the boosted tree model a.
+#| label: tbl-selectbest-tuned-bt-a
+#| tbl-cap: The best tuning parameter values for the boosted tree model a.
 
 select_best(tuned_bt_a, metric = "accuracy") |> 
   knitr::kable()
 ```
-As seen in @fig-autoplot-tuned-bt-a and @fig-selectbest-tuned-bt-a, the best parameters to obtain the highest accuracy for the boosted tree model a is 1 variable randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered, and a learning rate of 0.631.
+As seen in @tbl-selectbest-tuned-bt-a, the best parameters to obtain the highest accuracy for the boosted tree model a is 1 variable randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered, and a learning rate of 0.631.
 
 ```{r}
-#| label: fig-autoplot-tuned-bt-b
-#| fig-cap: A visualization of the best tuning parameters for the boosted tree model b.
-
-autoplot(tuned_bt_b)
-```
-
-```{r}
-#| label: fig-selectbest-tuned-bt-b
-#| fig-cap: The best tuning parameter values for the boosted tree model b.
+#| label: tbl-selectbest-tuned-bt-b
+#| tbl-cap: The best tuning parameter values for the boosted tree model b.
 
 select_best(tuned_bt_b, metric = "accuracy") |> 
   knitr::kable()
 ```
-Finally, as visualized by in @fig-autoplot-tuned-bt-b and @fig-selectbest-tuned-bt-b, the best parameters to obtain the highest accuracy for the boosted tree model a is 15 variables randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered, and a learning rate of 0.631.
+Finally, as visualized by @tbl-selectbest-tuned-bt-b, the best parameters to obtain the highest accuracy for the boosted tree model a is 15 variables randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered, and a learning rate of 0.631.
 
 ## Further Tuning?
 The tuning parameters seemed to produce high performing models, although further tuning could be explored in case there was overfitting that needed to be reduced in future explorations.
@@ -470,17 +415,17 @@ LIWC, <https://www.liwc.app/>.
 ## Appendix: Technical Info
 ### Original Regression Model Results
 ```{r}
-#| label: fig-orig-reg-results
-#| fig-cap: The RMSE results from my original project, a regression problem predicting the likes on a comment.
+#| label: tbl-orig-reg-results
+#| tbl-cap: The RMSE results from my original project, a regression problem predicting the likes on a comment.
 
 reg_tbl_result
 ```
-@fig-orig-reg-results shows the RMSEs (on a Yeo-Johnson scale) obtained from my original project, a regression type problem of predicting the number of likes on a comment. As can be seen from the RMSEs, there is not a notable difference in RMSE performance between the null model and the best model, the random forest a model. Thus, my best model was barely better than the simplest possible model/prediction strategy possible, indicating that it was not that successful. After obtaining such unpromising results, I decided to switch to a classification prediction problem of predicting comment length. 
+@tbl-orig-reg-results shows the RMSEs (on a Yeo-Johnson scale) obtained from my original project, a regression type problem of predicting the number of likes on a comment. As can be seen from the RMSEs, there is not a notable difference in RMSE performance between the null model and the best model, the random forest a model. Thus, my best model was barely better than the simplest possible model/prediction strategy possible, indicating that it was not that successful. After obtaining such unpromising results, I decided to switch to a classification prediction problem of predicting comment length. 
 
 ###  Highly Correlated Variables with the Target Variable Table
 ```{r}
-#| label: fig-target-var-cors
-#| fig-cap: A table of the correlations between the target variable of comment length with the numerical predictor variables.
+#| label: tbl-target-var-cors
+#| tbl-cap: A table of the correlations between the target variable of comment length with the numerical predictor variables.
 
 cor_set <- allies_train |> 
   select(comment_length, where(is.numeric))
@@ -496,4 +441,69 @@ correlation_tbl <- correlation |>
 
 correlation_tbl
 ```
-As seen in @fig-target-var-cors, the predictors of the word count of a comment and the average words per sentence of a comment have the strongest correlations with the target variable of comment length, as those are both factors that directly impact/have a direct relationship with how long a comment would be. Thus, it was necessary to remove those predictors from my recipes.
+As seen in @tbl-target-var-cors, the predictors of the word count of a comment and the average words per sentence of a comment have the strongest correlations with the target variable of comment length, as those are both factors that directly impact/have a direct relationship with how long a comment would be. Thus, it was necessary to remove those predictors from my recipes.
+
+### Visualizations of Tuning Parameters
+```{r}
+#| label: fig-autoplot-tuned-en-a
+#| fig-cap: A visualization of the best tuning parameters for the elastic net model a.
+
+autoplot(tuned_en_a)
+```
+As seen in @fig-autoplot-tuned-en-a the best parameters to obtain the highest accuracy for the elastic net model a is a penalty of 0 and a mixture of 0.7625.
+
+```{r}
+#| label: fig-autoplot-tuned-en-b
+#| fig-cap: A visualization of the best tuning parameters for the elastic net model b.
+
+autoplot(tuned_en_b)
+```
+@fig-autoplot-tuned-en-b shows that the best parameters to obtain the highest accuracy for the elastic net model b are also a penalty of 0 and a mixture of 0.7625.
+
+```{r}
+#| label: fig-autoplot-tuned-knn-a
+#| fig-cap: A visualization of the best tuning parameters for the k nearest neighbors model a.
+
+autoplot(tuned_knn_a)
+```
+@fig-autoplot-tuned-knn-a shows that the best parameter to obtain the highest accuracy for the k nearest neighbors model a is 1 neighbor.
+
+```{r}
+#| label: fig-autoplot-tuned-knn-b
+#| fig-cap: A visualization of the best tuning parameters for the k nearest neighbors model b.
+
+autoplot(tuned_knn_b)
+```
+As seen in @fig-autoplot-tuned-knn-b, the best parameter to obtain the highest accuracy for the k nearest neighbors model b is 34 neighbors.
+
+```{r}
+#| label: fig-autoplot-tuned-rf-a
+#| fig-cap: A visualization of the best tuning parameters for the random forest model a.
+
+autoplot(tuned_rf_a)
+```
+@fig-autoplot-tuned-rf-a shows that the best parameters to obtain the highest accuracy for the random forest model a is 15 variables randomly sampled at each split and a minimum of 2 samples required to be present in a node for further splitting to be considered.
+
+```{r}
+#| label: fig-autoplot-tuned-rf-b
+#| fig-cap: A visualization of the best tuning parameters for the random forest model b.
+
+autoplot(tuned_rf_b)
+```
+@fig-autoplot-tuned-rf-b shows that the best parameters to obtain the highest accuracy for the random forest model b is 8 variables randomly sampled at each split and a minimum of 2 samples required to be present in a node for further splitting to be considered.
+
+```{r}
+#| label: fig-autoplot-tuned-bt-a
+#| fig-cap: A visualization of the best tuning parameters for the boosted tree model a.
+
+autoplot(tuned_bt_a)
+```
+As seen in @fig-autoplot-tuned-bt-a, the best parameters to obtain the highest accuracy for the boosted tree model a is 1 variable randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered, and a learning rate of 0.631.
+
+```{r}
+#| label: fig-autoplot-tuned-bt-b
+#| fig-cap: A visualization of the best tuning parameters for the boosted tree model b.
+
+autoplot(tuned_bt_b)
+```
+Finally, as visualized by @fig-autoplot-tuned-bt-b, the best parameters to obtain the highest accuracy for the boosted tree model a is 15 variables randomly sampled at each split, a minimum of 2 samples required to be present in a node for further splitting to be considered, and a learning rate of 0.631.

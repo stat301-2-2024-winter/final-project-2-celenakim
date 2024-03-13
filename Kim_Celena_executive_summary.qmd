@@ -1,0 +1,30 @@
+---
+title: "Executive Summary: Predicting the Length of Comments on the Jubilee Middle Ground video 'Are We Allies? Black Americans vs Asian Americans'"
+subtitle: |
+  | Final Project 
+  | Data Science 2 with R (STAT 301-2)
+author: "Celena Kim"
+date: today
+
+format:
+  html:
+    toc: true
+    embed-resources: true
+    
+execute:
+  echo: false
+  warning: false
+
+from: markdown+emoji 
+---
+
+::: {.callout-tip icon="false"}
+## Github Repo Link
+
+[Celena Kim Repo Link](https://github.com/stat301-2-2024-winter/final-project-2-celenakim)
+:::
+
+
+### Introduction
+The purpose of this EDA report was to investigate the variables that contribute to the overall success rate of Hollywood movies. This was achieved by defining a movie's success based on the factors of critic and audience ratings, opening weekend revenue, gross (domestic, foreign, and worldwide), budget and budget recovery, Oscar wins, and seasonal release date and exploring what possible patterns and correlations may exist among them to ultimately render a film to be a blockbuster or a flop.
+
