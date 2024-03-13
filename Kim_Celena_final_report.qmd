@@ -61,7 +61,7 @@ load(here("regression_attempt/results/reg_tbl_result.rda"))
 
 ## Introduction
 
-The data that I chose for my project was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans \| Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psychology with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video by utilizing the software LIWC[^1], a text analysis program that can categorize text by the overall emotion it conveys. Each comment under the video was analyzed and given a score of how much they communicated various emotions/categories such as anger, clout, affiliation, power, assent, insight, sad, etc. After creating this data set, I ended up with 15,397 observations of comments and 50 variables, 44 of which are my predictor variables.
+The data that I chose for my project was derived from gathering data on the psychological analysis of comments under the Jubilee video titled [Are We Allies? Black Americans vs Asian Americans \| Middle Ground](https://www.youtube.com/watch?v=pXo2ub_nZFc) found on [YouTube](https://www.youtube.com). This video features a poignant discussion between East Asian Americans and Black Americans, highlighting the conflict and tension present between these groups. As I am a part of the Social Cognition and Intergroup Processes Lab on campus, I thought it would be really interesting to combine social psychology with data science to explore topics on bias and race through quantitative analysis. Therefore, I decided to explore the comments under this video by utilizing the software LIWC[^1], a text analysis program that can categorize text by the overall emotion it conveys. Each comment under the video was analyzed and given a score of how much they communicated various emotions/categories such as anger, affiliation, power, assent, insight, sadness, etc. After creating this data set, I ended up with 15,397 observations of comments and 50 variables, 44 of which are my predictor variables.
 
 [^1]: an explanation of how this software works can be found [here](https://www.liwc.app/help/howitworks)
 
@@ -69,10 +69,10 @@ My predictive research question is: **How long is a comment on the Jubilee video
 
 This is a classification problem with the target variable being the length of a comment, either short or long. The predictors are the LIWC emotional categories, as well as a categorical variable of whether a comment contains positive emotion or not.
 
-This prediction model is useful because it could provide insights into the factors of emotional content that influence the level of discussion between the viewers in response to watching the Jubilee video. For content creators such as Jubilee, this prediction could inform their strategies for knowing what type of content resonates with their audience in order to influence heavy engagement and conversation.
+This prediction model is useful because it could provide insights into the factors of emotional response that influence the level of discussion between the viewers in response to watching the Jubilee video. For content creators such as Jubilee, this prediction could inform their strategies for knowing what type of content resonates with their audience in order to influence heavy engagement and conversation.
 
 ## Important Note-- Prediction Problem Type Switch
-Originally, my final project was regression, predicting the likes of a comment with the same LIWC predictors. However, after running my models and obtaining the results for RMSE, I realized that the models were not efficient at predicting. This is most likely due to the fact that the distribution of the comment likes variable is so disproportionately skewed right, with a couple of extreme outliers in the thousands vs. the rest being mostly under 10 likes, that even setting a yeo-johnson transformation could barely help to normalize the distribution. Although I could have decided to just stick with my results and keep the problem type as regression, I wanted to create more efficient models through a classification problem, so I decided to make the change. The results of my regression project can be viewed in the regression attempt folder, and the resulting RMSEs can be viewed in the section "Appendix: technical info". From this, I have learned that predicting a variable with such a wide range of values such as likes was not the best idea, as even transforming the variable could not help to create successful models.
+Originally, my final project was regression, predicting the likes of a comment with the same LIWC predictors. However, after running my models and obtaining the results for RMSE, I realized that the models were not efficient at predicting. This is most likely due to the fact that the distribution of the comment likes variable is so disproportionately skewed right, with a couple of extreme outliers in the thousands vs. the rest being mostly under 10 likes, that even setting a yeo-johnson transformation could barely help to normalize the distribution. Although I could have decided to just stick with my results and keep the problem type as regression, I wanted to create more efficient models through a classification problem, so I decided to make the change. My full regression project can be viewed in the regression attempt folder, and the resulting RMSEs can be viewed in the section "Appendix: Technical Info". From this, I have learned that predicting a variable with such a wide range of values such as likes was not the best idea, as even transforming the variable could not help to create successful models.
 
 ## Data Overview
 
@@ -166,7 +166,7 @@ allies_cor
 In order to determine possible relationships between the numerical predictor variables, I created a correlation plot. @fig-cor-plot shows that some of the variable pairs with the strongest positive correlations seem to be: focus present & verb, affiliation & drives, negative emotion & sadness, cognitive processes & certainty, and achieve & social. Identifying these relationships is useful for adding interaction terms to my recipes as they will be able to capture the joint effect of two variables on the outcome variable of comment likes.
 
 ### Highly Correlated Variables with the Target Variable
-In the initial stages of my project, I was obtaining accuracies very close to/equal to 1, indicating that I may have included variables that were highly correlated with my target variable in my recipe steps. After reviewing the correlations of my target variable with my predictor value, I realized that I had included the variables of the word count of a comment and the average number of words per sentence for a comment, which are variables that are directly linked to the length of a comment, and thus would impact my accuracy. After removing those variables, the accuracies were much more reasonable. A table outlining the correlations between my target variable and predictors can be found in the "Appendix: technical info" section of this report.
+In the initial stages of my project, I was obtaining accuracies very close to/equal to 1, indicating that I may have included variables that were highly correlated with my target variable in my recipe steps. After reviewing the correlations of my target variable with my predictor value, I realized that I had included the variables of the word count of a comment and the average number of words per sentence for a comment, which are variables that are directly linked to the length of a comment, and thus would impact my accuracy. After removing those variables, the accuracies were much more reasonable. A table outlining the correlations between my target variable and predictors can be found in the "Appendix: Technical Info" section of this report.
 
 ## Methods
 I implemented an 80-20 training-test split using stratified sampling (stratified by target variable, comment length, with 4 strata). The resamples were constructed by taking the training dataset and applying repeated V-fold cross-validation (10 folds, 5 repeats) with stratification on the target variable with 4 strata. The prediction problem is classification.
@@ -202,14 +202,16 @@ The following model types were specified with a plan for tuning hyperparameters 
 
 -   **Recipe 4: transformed & selected variables (trees)**: This is the trees version of my complex recipe, only utilizing the variables included in recipe 3: focus present, verb, affiliation, drives, negative emotion, sadness, cognitive processes, certainty, achieve, and social. Numerical predictors were transformed with a BoxCox transformation, factor variables were dummy coded, and predictors were centered/normalized.
 
-The null, logistic regression, elastic net, and k nearest neighbors models used recipes 1 and 3.
+The null model used recipe 1.
 
-The k-nearest neighbors, random forest, and boosted tree models used recipes 3 and 4.
+The logistic regression, elastic net, and k nearest neighbors models each used recipes 1 and 3, to obtain a and b versions of each model.
+
+The k-nearest neighbors, random forest, and boosted tree models used recipes 3 and 4, to obtain a and b versions of each model.
 
 ## Model Building & Selection
 
 ## Assessment Metric
-I decided **accuracy** would be the metric by which I would compare models.
+I decided **accuracy** would be the metric by which I would compare models. Accuracy essentially measures how often each model correctly predicts the class labels of short or long comment lengths.
 
 ## Best Performing Model Results
 ```{r}
@@ -243,7 +245,7 @@ tbl_result_accuracy <- model_results |>
 
 tbl_result_accuracy
 ```
-@fig-model-results contains a table of the best performing model results, in terms of accuracy. The random forest model a (with the kitchen sink recipe) obtained the highest accuracy of 0.949, while the null model, elastic net model a, and elastic net model b model all obtained the lowest accuracy of 0.513.
+@fig-model-results contains a table of the best performing model results, in terms of accuracy. The random forest model a (with the kitchen sink recipe) obtained the highest accuracy of 0.949, while the null model, elastic net model a, and elastic net model b all obtained the lowest accuracy of 0.513.
 
 ## Tuning Parameters
 Here are the visualizations of the tuning of my elastic net, k nearest neighbors, random forest, and boosted tree models, as well as the selected best values.
@@ -418,7 +420,7 @@ conf_mat_rf_df <- as.data.frame.matrix(conf_mat_rf$table)
 
 knitr::kable(conf_mat_rf_df)
 ```
-The confusion matrix in @fig-conf-mat is a representation of the performance of a classification model, with True Positives, True Negatives, False Positives, and False Negatives. In this case, the model correctly predicted that there were 1558 long comments, the model correctly predicted that there were 1499 short comments, the model incorrectly predicted that 22 comments were short when they were actually long, and the model incorrectly predicted that 1 comment was long when it was actually short.
+The confusion matrix in @fig-conf-mat is a representation of the performance of a classification model, with True Positives, True Negatives, False Positives, and False Negatives. In this case, my winning model correctly predicted that there were 1558 long comments, the model correctly predicted that there were 1499 short comments, the model incorrectly predicted that 22 comments were short when they were actually long, and the model incorrectly predicted that 1 comment was long when it was actually short.
 
 ### ROC Curve
 ```{r}
@@ -452,10 +454,12 @@ roc_auc(allies_predicted_prob_rf,
 @fig-roc-auc computes the area under the ROC curve shown previously. With a value of 0.999, this suggests that the random forest a model has very high performance in terms of classification accuracy.
 
 ### Did the effort pay off?
-After assessing my final model's performance, it was very successful, and I do think that the effort of building a predictive model paid off. Compared to the baseline model before choosing the final model, the accuracy of the random forest model a was approximately 85.09% higher than the null, indicating a notable improvement in model performance. The recipes used for these models were both basic kitchen sink recipes, so this model improvement was likely not the result of an improved recipe. Rather, it could be attributed to the fact that the random forest model itself leverages more advanced techniques than the null to carry out these predictions, thus resulting in a higher accuracy value.
+After assessing my final model's performance, it was very successful, and I do think that the effort of building a predictive model paid off. Compared to the baseline model (before choosing the final model), the accuracy of random forest model a was approximately 85.09% higher than the null, indicating a notable improvement in model performance. The recipes used for these models were both basic kitchen sink recipes, so this model improvement was likely not the result of an improved recipe. Rather, it could be attributed to the fact that the random forest model itself leverages more advanced techniques than the null to carry out these predictions, thus resulting in a higher accuracy value.
 
 ## Conclusion
-Overall, I am glad that I decided to switch my project from regression to classification, as I was able to create exponentially more successful models than compared to the regression results. Although I could have just kept my regression problem as my main final report and explained why those models did not perform well, I think that switching over to the classification models taught me how to be resilient in the face of obtaining results that weren't successful and flexible in rerouting to devise another approach. I also have a much clearer understanding of what variables/components would constitute successful model results for both classification and regression problems, in addition to having obtained great practice with both prediction type problems. In the future, I would like to have a second try at tackling a different type of regression problem and obtain more successful results than I had with my original report. For instance, I could possibly predict a certain LIWC emotional category such as level of positive emotion or level of negative emotion based on the other LIWC components present within a comment. Now that I have a better understanding of regression problems, I think this new attempt would result in much greater success.
+Overall, it appears that the random forest model with the basic kitchen sink recipe performed exceptionally well, while the null and elastic net models performed the worst. In terms of recipe engineering, simplicity proved to be the most successful, as the basic kitchen sink recipe version of the random forest model obtained a higher accuracy than the complex recipe version. With this random forest model a, the length of a comment under the Jubilee video "Are We Allies" of being either short or long can be predicted with a very high accuracy.
+
+Moreover, I am glad that I decided to switch my project from regression to classification, as I was able to create exponentially more successful models than compared to the regression results. Although I could have just kept my regression problem as my main final report and explained why those models did not perform well, I think that switching over to the classification models taught me how to be resilient in the face of obtaining results that weren't successful and flexible in rerouting to devise another approach. I also have a much clearer understanding of what variables/components would constitute successful model results for both classification and regression problems, in addition to having obtained great practice with both prediction type problems. In the future, I would like to have a second try at tackling a different type of regression problem and obtain more successful results than I had with my original report. For instance, I could possibly predict a certain LIWC emotional category such as level of positive emotion or level of negative emotion based on the other LIWC components present within a comment. Now that I have a better understanding of regression problems, I think this new attempt would result in much greater success.
 
 ## References
 
@@ -463,8 +467,8 @@ Overall, I am glad that I decided to switch my project from regression to classi
 
 LIWC, <https://www.liwc.app/>.
 
-## Appendix: technical info
-### Original regression model results
+## Appendix: Technical Info
+### Original Regression Model Results
 ```{r}
 #| label: fig-orig-reg-results
 #| fig-cap: The RMSE results from my original project, a regression problem predicting the likes on a comment.
