@@ -39,8 +39,8 @@ autoplot(tuned_rf_b)
 autoplot(tuned_bt_a)
 autoplot(tuned_bt_b)
 
-# SELECTING BEST RMSE ----
-select_best(tuned_en_a, metric = "accuracy")
+# SELECTING BEST ACCURACY ----
+select_best(tuned_en_a, metric = "accuracy") 
 select_best(tuned_en_b, metric = "accuracy")
 select_best(tuned_knn_a, metric = "accuracy")
 select_best(tuned_knn_b, metric = "accuracy")
@@ -94,18 +94,15 @@ tbl_result_roc_auc
 
 
 
-cor_set <- allies_train %>%
+cor_set <- allies_train |> 
   select(comment_length, where(is.numeric))
 
-correlation <- cor(cor_set[, -which(names(cor_set) == "comment_length")], as.numeric(cor_set$comment_length), use = "pairwise.complete.obs")
+correlation <- cor(cor_set[, -which(names(cor_set) == "comment_length")], 
+                   as.numeric(cor_set$comment_length), 
+                   use = "pairwise.complete.obs")
 
-correlation_tbl <- correlation %>%
-  enframe() %>%
-  arrange(desc(value))
-
-predict(log_reg_fit, 
-        titanic_test, 
-        type = "prob")
-
-titanic_predicted_prob_logistic
+correlation_tbl <- correlation |> 
+  enframe() |> 
+  arrange(value) |> 
+  knitr::kable()
 
